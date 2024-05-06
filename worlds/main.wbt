@@ -1,0 +1,183 @@
+#VRML_SIM R2023b utf8
+
+#EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+#EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+#EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/apartment_structure/protos/Wall.proto"
+#EXTERNPROTO "../protos/RovableV2.proto"
+
+WorldInfo {
+  CFM 0.1
+  ERP 0.1
+  basicTimeStep 20
+  coordinateSystem "NUE"
+  contactProperties [
+    ContactProperties {
+      material2 "WheelMat"
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.018660039170923345 -0.6035685771513489 -0.7970927020200572 2.0469755673387695
+  position 1.2321990241224967 1.2630229397411132 -0.21953550328976457
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+DEF surface Solid {
+  translation 0.5 0 0.5
+  rotation -0.9999999999999999 0 0 1.5707953071795862
+  children [
+    Shape {
+      appearance Appearance {
+        texture ImageTexture {
+          url [
+            "world.png"
+          ]
+        }
+      }
+      geometry Plane {
+      }
+    }
+  ]
+  contactMaterial "Metal"
+  boundingObject Plane {
+  }
+}
+Wall {
+  translation 0.5 0 -0.025
+  size 1 0.05 0.025
+}
+Wall {
+  translation 0.5 0 1
+  name "wall(1)"
+  size 1 0.05 0.025
+}
+Wall {
+  translation 1 0 0.5
+  rotation 0 1 0 1.5708
+  name "wall(2)"
+  size 1 0.05 0.025
+}
+Wall {
+  translation -0.025 0 0.5
+  rotation 0 1 0 1.5708
+  name "wall(3)"
+  size 1 0.05 0.025
+}
+Robot {
+  name "Bayes Bot Supervisor"
+  controller "cpp_supervisor"
+  controllerArgs [
+    "0"
+  ]
+  supervisor TRUE
+}
+DEF r0 RovableV2 {
+  hidden linearVelocity_0 6.3838540586736385e-06 -5.836220970029061e-07 -1.4870094223138525e-05
+  hidden angularVelocity_0 -0.0009183472458541904 -2.5281252640577103e-05 -0.0004557977994864864
+  hidden translation_6 -0.006 -0.013 -0.0055
+  hidden rotation_6 0.5660856297388376 -0.5829012577957654 -0.582900663461021 4.1718117049547105
+  hidden linearVelocity_6 0.0001689183157256311 -2.872398189734153e-09 0.0003489773531406122
+  hidden angularVelocity_6 -0.0009517788021770655 -0.00019168958484049904 -0.00036766751472540446
+  hidden translation_7 -0.006 0.0135 -0.0055
+  hidden rotation_7 0.8215369634279087 0.40316085448314254 -0.40316044341437235 1.7661197051697601
+  hidden linearVelocity_7 0.00022179573583697623 -4.580098785395678e-09 7.726169585743037e-05
+  hidden angularVelocity_7 -0.0022884855979657644 -0.00020459937321066062 -0.0009333157099294335
+  hidden translation_8 0.007 -0.014 -0.0055
+  hidden rotation_8 -0.5569797031280336 -0.5872709398595941 -0.5872703410694575 2.125219566473378
+  hidden linearVelocity_8 -0.0002279656746955302 8.09437555285113e-09 -0.00010519472771927522
+  hidden angularVelocity_8 -0.001660000095889546 -0.00019602069842517618 -0.0006701783774170958
+  hidden translation_9 0.007 0.0125 -0.0055
+  hidden rotation_9 0.4300630346122545 0.6383755232201737 -0.6383748723230482 2.3292894027673032
+  hidden linearVelocity_9 -0.00014977533420111827 6.788709416402698e-09 -0.00035328617782178336
+  hidden angularVelocity_9 -0.0009518507957554856 -0.00020675412926224123 -0.0003826188475723608
+  translation 0.564404112890446 0.010228721067115082 0.7612081081087331
+  rotation -0.4295957820424187 -0.6405758579412137 -0.636482548287257 2.3406959613494362
+  name "r0"
+  controller "inspection_controller"
+  controllerArgs [
+    "0"
+  ]
+  customData "0.750000,-1,1,2,1,0,1,0,0,3040,0"
+  extensionSlot [
+    Receiver {
+      rotation 0.5773502691896257 0.5773502691896257 0.5773502691896258 2.0943951023931957
+    }
+    Emitter {
+      rotation 0.5773502691896257 0.5773502691896257 0.5773502691896258 2.0943951023931957
+    }
+  ]
+}
+DEF r1 RovableV2 {
+  translation 0.838996 0.0083583 0.72736
+  rotation -0.32958899838320116 0.6712129967073646 0.6639609967429393 2.50555
+  name "r0(1)"
+  controller "inspection_controller"
+  controllerArgs [
+    "0"
+  ]
+  customData "0.750000,-1,1,2,1,0,1,0,0,3040,0"
+  extensionSlot [
+    Receiver {
+      rotation 1 0 0 0
+    }
+    Emitter {
+      rotation 1 0 0 0
+    }
+  ]
+}
+DEF r2 RovableV2 {
+  translation 0.592231 0.0156296 0.374919
+  rotation 0.7280732123902721 -0.4882741424371564 -0.48114214035664055 -1.889045307179586
+  name "r0(2)"
+  controller "inspection_controller"
+  controllerArgs [
+    "0"
+  ]
+  customData "0.750000,-1,1,2,1,0,1,0,0,3040,0"
+  extensionSlot [
+    Receiver {
+      rotation -0.5773502691896258 -0.5773502691896258 -0.5773502691896258 2.0943951023931953
+    }
+    Emitter {
+      rotation -0.5773502691896258 -0.5773502691896258 -0.5773502691896258 2.0943951023931953
+    }
+  ]
+}
+DEF r3 RovableV2 {
+  translation 0.304277 0.0156758 0.314023
+  rotation -0.4279100429551099 0.6427730645238131 0.6354020637838863 2.33526
+  name "r0(3)"
+  controller "inspection_controller"
+  controllerArgs [
+    "0"
+  ]
+  customData "0.750000,-1,1,2,1,0,1,0,0,3040,0"
+  extensionSlot [
+    Receiver {
+      rotation 0.5773502691896257 0.5773502691896257 0.5773502691896258 2.0943951023931957
+    }
+    Emitter {
+      rotation 0.5773502691896257 0.5773502691896257 0.5773502691896258 2.0943951023931957
+    }
+  ]
+}
+DEF r4 RovableV2 {
+  translation 0.404277 0.0156758 0.41402300000000003
+  rotation 0.7280736822992934 -0.48827378693787327 -0.48114179004997654 -1.889045307179586
+  name "r0(4)"
+  controller "inspection_controller"
+  controllerArgs [
+    "0"
+  ]
+  customData "0.750000,-1,1,2,1,0,1,0,0,3040,0"
+  extensionSlot [
+    Receiver {
+      rotation 1 0 0 0
+    }
+    Emitter {
+      rotation 1 0 0 0
+    }
+  ]
+}
