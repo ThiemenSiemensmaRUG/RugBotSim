@@ -50,14 +50,6 @@ int main() {
       if (i == 4){penalty = z;}
       }
 
-
-
-
-
-
-
-
-
   // Loop to gather robot nodes from the world
   while (1) {
     try {  

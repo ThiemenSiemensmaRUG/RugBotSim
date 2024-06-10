@@ -37,7 +37,7 @@ Radio_Rover::Radio_Rover(Supervisor *robot, int timeStep)
 void Radio_Rover::sendMessage(const int *data, int size)
 {
    
-    emitter->send(data, 4);
+    emitter->send(data, size);
     
     
 }
