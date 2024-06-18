@@ -1,6 +1,6 @@
 // File:          inspection_controller.cpp
 // Date:          1-11-23
-// Description:   RugRobot simulation controller for tiled setup
+// Description:   RugBot simulation controller 
 // Author:        Thiemen Siemensma
 // Modifications:
 
@@ -23,12 +23,14 @@
 #include <webots/Keyboard.hpp>
 #include <webots/PositionSensor.hpp>
 #include <webots/Supervisor.hpp>
+
 #include <queue>
 #include <vector>
 #include <cmath>
 #include <unistd.h>
-#include "environment.hh"
-#include "RugBot_Algorithms.hh"
+
+#include "Algorithm1.hh"
+
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -41,10 +43,10 @@ using namespace webots;
 enum Side { LEFT, RIGHT, FORWARD, BACKWARD };
 
 int main(int argc, char **argv) {
-  std::cout << "Starting main " << '\n';
-  Environment arena = Environment("world.txt",false);
-  RugRobot robot;
-  robot.setSpeed(100,100);
-  //robot.run(); 
+  Algorithm1 algo;
+  algo.run();
+
+  
+
 }
 

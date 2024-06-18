@@ -1,5 +1,5 @@
-#ifndef INCLUDED_ROVABLE_H_
-#define INCLUDED_ROVABLE_H_
+#ifndef INCLUDED_RUGBOT_HH_
+#define INCLUDED_RUGBOT_HH_
 
 #include <algorithm>
 #include <webots/DistanceSensor.hpp>
@@ -13,10 +13,14 @@
 #include <random>
 #include <cmath>
 
+
 using namespace webots;
 
+
+
 class RugRobot {
-private:
+public:
+
     Supervisor *d_robot;
     Motor *leftMotor;
     Motor *rightMotor;
@@ -27,6 +31,13 @@ private:
     Emitter *emitter;
     Receiver *receiver;
 
+    double timeStep;
+    double rw_time;
+    double rw_angle;
+    double ca_angle;
+    double spend_time;
+
+    double CA_Threshold = 80.0;
     std::size_t static const n_sensors = 3;
     const char *distance_sensors_names[n_sensors] = {
         "left distance sensor", 
@@ -49,33 +60,50 @@ private:
     enum RStates {
         STATE_FW,                       
         STATE_BW,                       
-        STATE_TR,                      
+        STATE_TR,         
+        STATE_CA,
+        STATE_TURN,             
         STATE_RL,                    
         STATE_PAUSE,
         STATE_RESET,
         STATE_RECV,
         STATE_SEND,
     };
-public:
-    RStates state = STATE_PAUSE;
 
-    RugRobot();
+    RStates state = STATE_FW;
+
+    std::default_random_engine generator;
+
+    std::uniform_real_distribution<double> angle_dist;
+    std::uniform_real_distribution<double> speed_dist;
+    std::cauchy_distribution<double> rw_time_gen;
+    std::uniform_real_distribution<double> rw_angle_gen;
+    std::uniform_real_distribution<double> ca_angle_gen;
+
+
+
+    RugRobot(double timeStep);
     ~RugRobot();
     void setSpeed(double speedl, double speedr);
-    void turnAngle(double Angle);
+    int turnAngle(double Angle);
     void clearAngle();
     void sendMessage(const int *data, int size);
-    std::vector<int> RugRobot::getMessages();
+    std::vector<int> getMessages();
+    bool collAvoid();
+    int RandomWalk();
+    void generateRW();
+    std::vector<int> getPos();
 
-    enum {TIME_STEP = 20};
 };
 
-RugRobot::RugRobot() {
+RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     d_robot = new Supervisor();
+
+
 
     for (std::size_t i = 0; i < n_sensors; ++i) {
         d_distance_sensors[i] = d_robot->getDistanceSensor(distance_sensors_names[i]);
-        d_distance_sensors[i]->enable(TIME_STEP);
+        d_distance_sensors[i]->enable(timeStep);
     }
 
     leftMotor = d_robot->getMotor(dMotorNames[0]);
@@ -91,23 +119,46 @@ RugRobot::RugRobot() {
     customData = d_this_robot_node->getField("customData");
 
     gyro = d_robot->getGyro("gyro");
-    gyro->enable(TIME_STEP); 
+    gyro->enable(timeStep); 
 
     std::string name = d_robot->getName();
     int SeedRov = ((int) name[1]) * 10;
     srand(SeedRov);
     std::cout << "RugRobot " << name[1] << " with Seed " << SeedRov << '\n';
-    std::default_random_engine generator(SeedRov);
-    std::uniform_real_distribution<double> angle_dist(lower_bound_angle, upper_bound_angle);
-    std::uniform_real_distribution<double> speed_dist(lower_bound_speed, upper_bound_speed);
+    generator.seed(SeedRov);
+    angle_dist = std::uniform_real_distribution<double>(lower_bound_angle, upper_bound_angle);
+    speed_dist = std::uniform_real_distribution<double>(lower_bound_speed, upper_bound_speed);
+    rw_time_gen = std::cauchy_distribution<double>(5000, 0);
+    rw_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
+    ca_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
+    
+    ca_angle = ca_angle_gen(generator);
 
-    motor_dev = angle_dist(generator);
-    speed_dev = speed_dist(generator);
+    motor_dev = 0;//angle_dist(generator);
+  
+
+    speed_dev = 1;//speed_dist(generator);
+
     std::cout << "Motor deviations[a,s]:" << motor_dev << ',' << speed_dev << '\n';
+
+    generateRW();
+    
+
+    
 }
 
 RugRobot::~RugRobot() {
     delete d_robot;
+}
+
+
+bool RugRobot::collAvoid() {
+    for (std::size_t i = 0; i < n_sensors; ++i) {
+        if (d_distance_sensors[i]->getValue() < CA_Threshold) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void RugRobot::setSpeed(double speedl, double speedr) {
@@ -118,24 +169,23 @@ void RugRobot::setSpeed(double speedl, double speedr) {
     rightMotor->setVelocity(speedr / 100 * (1 + motor_dev) * speed_dev * 10);
 }
 
-void RugRobot::turnAngle(double Angle) {
+int RugRobot::turnAngle(double Angle) {
     double Pgain = 2.5;
     double Igain = 0.1;
-    double dt = TIME_STEP / 1000.0;
+    double dt = timeStep / 1000.0;
     double e = Angle - refAngle;
-
     double gyro_val_z = gyro->getValues()[2] * 180 / M_PI;
     angleIntegrator += e * dt;
     refAngle += gyro_val_z * dt;
-
     if (std::abs(e) > 2.5) {
         double left = -Pgain * e - Igain * angleIntegrator;
         double right = Pgain * e + Igain * angleIntegrator;
         setSpeed(left, right);
+        return 0;
     } else {
         clearAngle();
-        setSpeed(0, 0);
-        // Handle state transition if necessary
+        setSpeed(0, 0);  
+        return 1;
     }
 }
 
@@ -165,6 +215,70 @@ std::vector<int> RugRobot::getMessages() {
     return messages;
 }
 
+void RugRobot::generateRW(){
+    rw_time =rw_time_gen(generator);
+    rw_angle = rw_angle_gen(generator);
+    rw_time = std::clamp(rw_time,1000.0,20000.0);
+    std::cout<<"RW parameters= "<<rw_time<<',' <<rw_angle<<'\n';
+    state = STATE_PAUSE;
+    
+}   
+
+int RugRobot::RandomWalk(){
+    if (spend_time == 0.0){state= STATE_FW;}
+    spend_time+= (double) timeStep;
 
 
-#endif
+
+    if ((spend_time > rw_time) && (state == STATE_FW)){
+        state = STATE_TURN;
+        std::cout <<"TURN state"<<'\n';
+        }
+
+    if (collAvoid() && state==STATE_FW){
+        state = STATE_CA;
+        std::cout <<"CA state"<<'\n';
+    }
+    if (state == STATE_CA){
+        if(turnAngle(ca_angle)==1){
+            std::cout <<"CA state exit"<<'\n';
+            state = STATE_FW;
+            ca_angle = ca_angle_gen(generator);
+        }
+    }
+
+    if (state == STATE_FW){
+        setSpeed(100,100);
+        }
+
+    else if (state == STATE_TURN){
+        if(turnAngle(rw_angle)==1){
+            std::cout <<"TURN state exit"<<'\n';
+            state = STATE_RESET;
+        }}
+    if (state == STATE_RESET){
+        spend_time = 0;
+        generateRW();
+        return 1;
+    }
+    return 0;
+
+    }
+
+std::vector<int>RugRobot::getPos() {
+    std::vector<int> pos;
+    const double *coordinates = translationData->getSFVec3f();
+    const double xPos = coordinates[0];
+    const double yPos = coordinates[2];
+
+    pos.push_back((int) (xPos*100));
+    pos.push_back((int) (yPos*100));
+    std::cout<<pos[0]<<","<<pos[1]<<'\n';
+    return pos;
+}
+
+
+
+
+
+#endif // INCLUDED_RUGBOT_HH_
