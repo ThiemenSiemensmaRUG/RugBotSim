@@ -128,7 +128,7 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     generator.seed(SeedRov);
     angle_dist = std::uniform_real_distribution<double>(lower_bound_angle, upper_bound_angle);
     speed_dist = std::uniform_real_distribution<double>(lower_bound_speed, upper_bound_speed);
-    rw_time_gen = std::cauchy_distribution<double>(5000, 0);
+    rw_time_gen = std::cauchy_distribution<double>(7500, 0);
     rw_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
     ca_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
     
@@ -225,7 +225,8 @@ void RugRobot::generateRW(){
 }   
 
 int RugRobot::RandomWalk(){
-    if (spend_time == 0.0){state= STATE_FW;}
+
+    if (spend_time == (double) timeStep){state= STATE_FW;}
     spend_time+= (double) timeStep;
 
 

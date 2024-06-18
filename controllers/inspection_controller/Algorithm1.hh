@@ -48,7 +48,9 @@ private:
     double sample_length = 4.5; //Sample length in seconds
     double dt = 1/sample_freq; //Time between samples
 
-    double cutoff_freq = 15.0;  // Cutoff frequency in Hz
+    double cutoff_freq = 1.0;  // Cutoff frequency in Hz
+    std::vector<double> b = { 0.04125354, 0.08250707, 0.04125354 };
+    std::vector<double> a = {  1.      ,   -1.34896775 , 0.51398189 };
 
     int N_samples = ((sample_freq) * sample_length);
     int half_size = N_samples / 2 + 1;
@@ -95,11 +97,9 @@ void Algorithm1::run() {
                 pos_abs_fft_results.assign(abs_fft_results.begin(), abs_fft_results.begin() + half_size);
 
                 detectPeaks(freqArray);
-                states = STATE_RW;
-
-
-                        
+                states = STATE_RW;                        
                 break;
+
 
             case STATE_PAUSE:
                 // Pause logic here
@@ -109,6 +109,7 @@ void Algorithm1::run() {
 }
 
 void Algorithm1::getSample(int posx, int posy) {
+    
     // Construct the file path based on posx and posy
     std::string filePath = "/home/thiemenrug/Documents/GitHub/RugBotSim/measurements/acc_x" + std::to_string(posx) + "_y" + std::to_string(posy) + ".txt";
     std::cout << "Attempting to open file: " << filePath << std::endl; // Add this line for debugging
@@ -139,37 +140,57 @@ void Algorithm1::getSample(int posx, int posy) {
     }
 }
 void Algorithm1::detectPeaks(Array freqArray){
-    saveFilteredData(pos_abs_fft_results,"fft_output.txt");
-    filtered_fft = butter_lowpass_filter(pos_abs_fft_results, cutoff_freq, sample_freq);
-    saveFilteredData(filtered_fft,"fft_filtered.txt");
-    // Example peak detection and sorting (replace with your actual implementation)
+    //saveFilteredData(pos_abs_fft_results,"fft_output.txt");
+
+    // Apply Butterworth filter in forward direction and get filtered output
+    std::vector<double> filtered_fft_forward = forwardButterworth(b, a, pos_abs_fft_results);
+
+    // Apply Butterworth filter in backward direction using forward filtered output for zero phase shift
+    std::vector<double> filtered_fft_backward = backwardButterworth(b, a, filtered_fft_forward);
+
+    filtered_fft = filtered_fft_backward;
+    //saveFilteredData(filtered_fft,"fft_filtered.txt");
+
+    // Detect peaks in the signal
     std::vector<int> index;
     for (int i = 1; i < filtered_fft.size() - 1; ++i) {
         if (filtered_fft[i-1] < filtered_fft[i] && filtered_fft[i+1] < filtered_fft[i]) {
             index.push_back(i);
         }
     }
-    // Constants
+    // Number of peaks wanted
     int N_peaks = 3;
 
     // Sort indices based on filtered_data values
     std::sort(index.begin(), index.end(), [&](int i1, int i2) {
         return filtered_fft[i1] > filtered_fft[i2];
     });
-        // Get top N peaks (indices in this case)
+    // Get top N peaks (indices)
     std::vector<int> top_indices;
+    const double min_distance = 0.1;  // Adjust this minimum distance as needed
+    double last_freq = -1.0;
     for (int i = 0; i < N_peaks && i < index.size(); ++i) {
-        top_indices.push_back(index[i]);
+        int idx = index[i];
+        double current_freq = freqArray[idx];
+
+        // Check if the current peak is far enough from the last selected peak
+        if (last_freq == -1.0 || std::abs(current_freq - last_freq) >= min_distance) {
+            top_indices.push_back(idx);
+            last_freq = current_freq;
+        }
     }
-    // peak_mag.clear();
-    // peak_freq.clear();
-    // for (const auto& idx : top_indices) {
-    //     peak_freq.push_back(freqArray[idx]);
-    //     peak_mag.push_back(filtered_fft[idx]);
-    //     std::cout << "Mag: " << filtered_fft[idx] << ", Frequency: " << freqArray[idx]  << std::endl;
-    // }
 
 
+    peak_mag.clear();
+    peak_freq.clear();
+    for (const auto& idx : top_indices) {
+
+        peak_freq.push_back(freqArray[idx]);
+        peak_mag.push_back(filtered_fft[idx]);
+
+        std::cout << "Mag: " << filtered_fft[idx] << ", Frequency: " << freqArray[idx]  << std::endl;
+    }
+    appendValuesToFile(peak_freq, peak_mag);
 }
 
 void Algorithm1::saveFilteredData(const std::vector<double>& data, const std::string& filename) {
