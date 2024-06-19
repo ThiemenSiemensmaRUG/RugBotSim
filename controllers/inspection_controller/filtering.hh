@@ -148,8 +148,9 @@ void appendValuesToFile(const std::vector<double>& peak_freq, const std::vector<
     }
 
     for (size_t i = 0; i < peak_freq.size(); ++i) {
-        outFile  << peak_freq[i] << "," << peak_mag[i] << std::endl;
+        outFile  << peak_freq[i]  << ",";
     }
+    outFile<<std::endl;
 
     outFile.close(); // Close the file
 }
