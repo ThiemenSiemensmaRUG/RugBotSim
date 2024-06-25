@@ -12,7 +12,7 @@
 #include <webots/Gyro.hpp>
 #include <random>
 #include <cmath>
-
+#include <string>  
 
 using namespace webots;
 
@@ -37,7 +37,7 @@ public:
     double ca_angle;
     double spend_time;
 
-    double CA_Threshold = 80.0;
+    double CA_Threshold = 60.0;
     std::size_t static const n_sensors = 3;
     const char *distance_sensors_names[n_sensors] = {
         "left distance sensor", 
@@ -47,8 +47,8 @@ public:
     DistanceSensor *d_distance_sensors[n_sensors];
     const char *dMotorNames[2] = {"left motor", "right motor"};
 
-    double lower_bound_angle = -0.125;
-    double upper_bound_angle = 0.125;
+    double lower_bound_angle = -0.0125;
+    double upper_bound_angle = 0.0125;
     double lower_bound_speed = 0.95;
     double upper_bound_speed = 1.05;
     double speed_dev = 1;
@@ -92,6 +92,7 @@ public:
     bool collAvoid();
     int RandomWalk();
     void generateRW();
+    void setCustomData(const std::string& inputString);
     std::vector<int> getPos();
 
 };
@@ -118,6 +119,7 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     translationData = d_this_robot_node->getField("translation");
     customData = d_this_robot_node->getField("customData");
 
+
     gyro = d_robot->getGyro("gyro");
     gyro->enable(timeStep); 
 
@@ -128,7 +130,7 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     generator.seed(SeedRov);
     angle_dist = std::uniform_real_distribution<double>(lower_bound_angle, upper_bound_angle);
     speed_dist = std::uniform_real_distribution<double>(lower_bound_speed, upper_bound_speed);
-    rw_time_gen = std::cauchy_distribution<double>(7500, 0);
+    rw_time_gen = std::cauchy_distribution<double>(7500, 1000);
     rw_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
     ca_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
     
@@ -147,8 +149,15 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     
 }
 
+
+
 RugRobot::~RugRobot() {
     delete d_robot;
+}
+
+
+void RugRobot::setCustomData(const std::string& inputString){
+    customData->setSFString(inputString);
 }
 
 
@@ -219,7 +228,7 @@ void RugRobot::generateRW(){
     rw_time =rw_time_gen(generator);
     rw_angle = rw_angle_gen(generator);
     rw_time = std::clamp(rw_time,1000.0,20000.0);
-    std::cout<<"RW parameters= "<<rw_time<<',' <<rw_angle<<'\n';
+    //std::cout<<"RW parameters= "<<rw_time<<',' <<rw_angle<<'\n';
     state = STATE_PAUSE;
     
 }   
@@ -233,16 +242,16 @@ int RugRobot::RandomWalk(){
 
     if ((spend_time > rw_time) && (state == STATE_FW)){
         state = STATE_TURN;
-        std::cout <<"TURN state"<<'\n';
+        //std::cout <<"TURN state"<<'\n';
         }
 
     if (collAvoid() && state==STATE_FW){
         state = STATE_CA;
-        std::cout <<"CA state"<<'\n';
+        //std::cout <<"CA state"<<'\n';
     }
     if (state == STATE_CA){
         if(turnAngle(ca_angle)==1){
-            std::cout <<"CA state exit"<<'\n';
+            //std::cout <<"CA state exit"<<'\n';
             state = STATE_FW;
             ca_angle = ca_angle_gen(generator);
         }
@@ -254,7 +263,7 @@ int RugRobot::RandomWalk(){
 
     else if (state == STATE_TURN){
         if(turnAngle(rw_angle)==1){
-            std::cout <<"TURN state exit"<<'\n';
+            //std::cout <<"TURN state exit"<<'\n';
             state = STATE_RESET;
         }}
     if (state == STATE_RESET){
@@ -274,7 +283,7 @@ std::vector<int>RugRobot::getPos() {
 
     pos.push_back((int) (xPos*100));
     pos.push_back((int) (yPos*100));
-    std::cout<<pos[0]<<","<<pos[1]<<'\n';
+    //std::cout<<pos[0]<<","<<pos[1]<<'\n';
     return pos;
 }
 

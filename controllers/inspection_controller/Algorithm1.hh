@@ -6,13 +6,12 @@
 #include <complex>
 #include <vector>
 #include <cmath>
+#include <utility>
 #include <filesystem>
 #include "filtering.hh"
-
-
 #include "RugBot.hh"
-
-
+#include "SHM.hh"
+#include "radio.hh"
 
 typedef std::complex<double> Complex;
 typedef std::vector<Complex> CArray;
@@ -30,22 +29,33 @@ public:
 
 
     AlgoStates states = STATE_RW;
-    RugRobot robot;
+
+
+    
+
     // Time step for the simulation
     enum { TIME_STEP = 20 };
     
 
 
-    Algorithm1() : robot(TIME_STEP){};
+    Algorithm1() : robot(TIME_STEP),naturalFreq(1.0,1.0,100.0),radio(robot.d_robot,TIME_STEP) {};
+
     void run();
     void getSample(int posx, int posy);
     void detectPeaks(Array freqArray);
     void saveFilteredData(const std::vector<double>& data, const std::string& filename);
+    void recvSample();
+    void sendSample(int sample);
+
 private:
+    RugRobot robot;
+    eigenFreq naturalFreq;
+    Radio_Rover radio;
     std::vector<int> pos;
 
     double sample_freq = 200.0; //Sample rate in Hz
     double sample_length = 4.5; //Sample length in seconds
+    double sample_pause = 0.0;
     double dt = 1/sample_freq; //Time between samples
 
     double cutoff_freq = 1.0;  // Cutoff frequency in Hz
@@ -61,13 +71,15 @@ private:
     std::vector<double> pos_abs_fft_results;
     std::vector<double> peak_freq;
     std::vector<double> peak_mag;
+
+
 };
 
 
 void Algorithm1::run() {
     std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
     
-
+    robot.setCustomData("");
     CArray fft_results(N_samples); //complex array to store FFT results
     Array freqArray = createFrequencyArray(sample_freq, N_samples);
 
@@ -79,13 +91,19 @@ void Algorithm1::run() {
             case STATE_RW:
 
                 if(robot.RandomWalk()==1){
-                    std::cout<<"random walk done" <<'\n';
+                    //std::cout<<"random walk done" <<'\n';
                     states = STATE_OBS;
                 }
-                
+                if (naturalFreq.iteration>0)
+                    {recvSample();}
                 break;
 
             case STATE_OBS:
+                sample_pause+=TIME_STEP;
+                if (sample_pause < (sample_length * 1000)){
+                    break;
+                }
+                sample_pause = 0.0;
                 pos = roundToNearest10(robot.getPos());
                 getSample(pos[0],pos[1]);
                 for (size_t i = 0; i < numbers.size(); ++i) {
@@ -93,11 +111,18 @@ void Algorithm1::run() {
                 }
                 fft(fft_results);
                 abs_fft_results = compute_abs_fft(fft_results);
-
                 pos_abs_fft_results.assign(abs_fft_results.begin(), abs_fft_results.begin() + half_size);
-
                 detectPeaks(freqArray);
-                states = STATE_RW;                        
+
+                naturalFreq.update(naturalFreq.checkSample(peak_freq[0]));
+
+                sendSample(naturalFreq.checkSample(peak_freq[0]));
+
+                //std::cout<<peak_freq[0]<<","<<naturalFreq.checkSample(peak_freq[0])<<","<<naturalFreq.getEstimatedFreq()<<'\n';
+                robot.setCustomData(std::string(robot.d_robot->getName()) + "," +std::to_string(naturalFreq.getEstimatedFreq()) );
+                
+                
+                states = STATE_RW;                  
                 break;
 
 
@@ -108,11 +133,32 @@ void Algorithm1::run() {
     }
 }
 
+
+void Algorithm1::recvSample(){
+    std::vector<int> messages = radio.getMessages();
+        // Process received messages
+        for (int sample : messages) {
+            //std::cout <<"recv " << sample<<'\n';
+            naturalFreq.update(sample);
+        }
+}
+
+void Algorithm1::sendSample(int sample){
+
+    // Determine the message to send based on decision flag or observation color
+    int const *message;
+
+    message = &sample;
+    // Send the message
+    radio.sendMessage(message, sizeof(message));
+
+}
+
 void Algorithm1::getSample(int posx, int posy) {
     
     // Construct the file path based on posx and posy
     std::string filePath = "/home/thiemenrug/Documents/GitHub/RugBotSim/measurements/acc_x" + std::to_string(posx) + "_y" + std::to_string(posy) + ".txt";
-    std::cout << "Attempting to open file: " << filePath << std::endl; // Add this line for debugging
+    //std::cout << "Attempting to open file: " << filePath << std::endl; // Add this line for debugging
 
     // Open the file
     std::ifstream inputFile(filePath);
@@ -183,14 +229,26 @@ void Algorithm1::detectPeaks(Array freqArray){
 
     peak_mag.clear();
     peak_freq.clear();
+
+    std::vector<std::pair<double, double>> peaks;
     for (const auto& idx : top_indices) {
-
-        peak_freq.push_back(freqArray[idx]);
-        peak_mag.push_back(filtered_fft[idx]);
-
-        std::cout << "Mag: " << filtered_fft[idx] << ", Frequency: " << freqArray[idx]  << std::endl;
+        peaks.emplace_back( freqArray[idx],filtered_fft[idx]);
     }
-    appendValuesToFile(peak_freq, peak_mag);
+
+    // Sort peaks based on frequency
+    std::sort(peaks.begin(), peaks.end(), [](const std::pair<double, double>& a, const std::pair<double, double>& b) {
+        return a.first < b.first;
+    });
+
+    // Extract sorted frequencies and magnitudes
+    for (const auto& peak : peaks) {
+        peak_mag.push_back(peak.second);
+        peak_freq.push_back(peak.first);
+        //std::cout << "Mag: " << peak.second << ", Frequency: " << peak.first << std::endl;
+    }
+
+    //appendValuesToFile(peak_freq, peak_mag);
+
 }
 
 void Algorithm1::saveFilteredData(const std::vector<double>& data, const std::string& filename) {

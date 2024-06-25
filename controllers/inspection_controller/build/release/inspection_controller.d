@@ -16,4 +16,4 @@ build/release/inspection_controller.o: inspection_controller.cpp \
  /usr/local/webots/include/controller/cpp/webots/Node.hpp \
  /usr/local/webots/include/controller/cpp/webots/Field.hpp \
  /usr/local/webots/include/controller/cpp/webots/../../c/webots/contact_point.h \
- Algorithm1.hh filtering.hh RugBot.hh
+ Algorithm1.hh filtering.hh RugBot.hh SHM.hh radio.hh
