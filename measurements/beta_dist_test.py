@@ -21,20 +21,20 @@ def calc_conf(val,dec,alpha,beta):
 
 
 a = 0
-b = 100
+b = 10
 np.random.seed(5)
 
 # Number of incoming samples
 num_samples = 500
 # Calculate the Butterworth filter coefficients
-learning_rate =1
-bf, af = butter(1,0.01, btype='low', analog=False)
+learning_rate =10
+bf, af = butter(1,0.99, btype='low', analog=False)
 print(bf,af)
 
-mean = 9.1
+mean = 1.777
 
-alpha =1
-beta = 4
+alpha =2
+beta = 2
 
 
 
@@ -43,6 +43,7 @@ samples = np.random.normal(mean,0.1,num_samples)
 
 num_samples = num_samples
 # Lists to store results1
+unfiltered_means = np.zeros(num_samples)
 filtered_means = np.zeros(num_samples)
 
 expected_means = np.zeros(num_samples)
@@ -56,21 +57,19 @@ for sample in samples:
     else:
         alpha += ((alpha) / (alpha+beta)) * learning_rate
 
-    expected_mean =((alpha-1) / (alpha+beta-2)) 
-
-
+    expected_mean =((alpha-1) / (alpha+beta-2)) *b
+    unfiltered_means[i] = expected_mean
+    
     ##########################################################################
     expected_means[i] = (expected_mean)
     
     if i>3:
         for j in range(1,len(af)):
-            filtered_means[i] += bf[0] *samples[i]
+            filtered_means[i] += bf[0] *unfiltered_means[i]
             filtered_means[i] -= af[j] * filtered_means[i - j] 
-            filtered_means[i] += bf[j] * samples[i - j] 
+            filtered_means[i] += bf[j] * unfiltered_means[i - j] 
     else:
         filtered_means[i] = np.mean(expected_means[i-(min(1,i)):i])
-
-    
 
     #print(np.mean(filtered_means[i-10:i]),filtered_means[i],expected_means[i],sample,(sample) < filtered_means[i],alpha,beta)
 

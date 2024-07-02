@@ -43,7 +43,6 @@ int main() {
       if (supervisor->getFromDef(temp) != NULL) {
         robots.push_back(supervisor->getFromDef(temp));
         start_itt += 1;
-        std::cout << temp << '\n';
       } else {
         break;
       }
@@ -72,18 +71,18 @@ int main() {
     customData.push_back(robot->getField("customData"));
   }
 
-  std::cout<<robots.size()<<'\n';
+
   // Seed the random number generator
   srand(1);
   std::mt19937 gen(10); // Standard mersenne_twister_engine seeded with rd()
   std::uniform_real_distribution<> dis(0.05, 0.95);
-  std::cout << "first random number"  << rand() <<'\n';
-  std::cout << "first RV number"  << dis(gen) <<'\n';
+  // std::cout << "first random number"  << rand() <<'\n';
+  // std::cout << "first RV number"  << dis(gen) <<'\n';
   
-  // Print initial pose information for each robot
-  for (Node* robot : robots) {
-    std::cout << "init pose " << robot->getDef() << "=" << *robot->getField("translation")->getSFVec3f() << '\n';
-  }
+  // // Print initial pose information for each robot
+  // for (Node* robot : robots) {
+  //   std::cout << "init pose " << robot->getDef() << "=" << *robot->getField("translation")->getSFVec3f() << '\n';
+  // }
   
 
 
@@ -105,7 +104,7 @@ int main() {
 
     // Print information at specified time intervals
     if(( (int(t) % print_time_interval) == 0) && (show_info)) {
-      std::cout << "time = " << t << '\n';
+
       show_info= false;
       for (int i = 0; i < robots.size(); i++) {
 
@@ -116,8 +115,8 @@ int main() {
         int pos = data_rov.find_last_of(",");
         int str_len = (int) data_rov.length();
         
-        outputFile <<t<<","<< data_rov << '\n';
-        outputFile.flush(); // Ensure all buffered data is written to file
+        // outputFile <<t<<","<< data_rov << '\n';
+        // outputFile.flush(); // Ensure all buffered data is written to file
         }
       }
      
@@ -138,6 +137,20 @@ int main() {
       }
       if ((int(t) % print_time_interval != 0)) {
         show_info = true;
+    }
+
+
+  if(t>1200){
+    // Pause simulation and exit
+    supervisor->simulationSetMode(supervisor->SIMULATION_MODE_PAUSE);
+    std::cout<<"Quiting simulation" << '\n';
+    supervisor->simulationQuit(0);
+    if (supervisor->step(TIME_STEP) == -1) {
+      return cleanUp(supervisor);
+    }
+
+    delete supervisor;
+    return 0;
     }
 
 

@@ -14,19 +14,23 @@ class eigenFreq {
         float const stopNr = 1.0e-8;
         double alpha_0 =0;
         double beta_0=0;
-        double upper_freq = 100.0;
-        double alpha = 0;
-        double beta =0;
-        double learning_rate = 10;
-        std::vector<double> b = { 0.15, 0.15};//{0.00779294, 0.00779294};//
-        std::vector<double> a ={ 1.   ,      -0.96}; //{1,-0.98441413};//
+
+
 
         double mode = 0;
         double mean = 0;
         std::vector<double> filtered ;
         std::vector<double> unfiltered;
 
+
     public:
+        std::vector<double> b = { 0.15, 0.15};//{0.00779294, 0.00779294};//
+        std::vector<double> a ={ 1.   ,      -0.96}; //{1,-0.98441413};//
+        double alpha = 0;
+        double beta =0;
+        double upper_freq = 100.0;
+        double learning_rate = 1;
+
 
         eigenFreq(double alpha_0 = 1.0, double beta_0 = 1.0, double upper_freq = 100.0) 
         : alpha_0(alpha_0), beta_0(beta_0), upper_freq(upper_freq), alpha(alpha_0), beta(beta_0), mode(0), mean(0) {};
@@ -64,10 +68,10 @@ double eigenFreq::getMode(){
 void eigenFreq::update(int sample){
 
     if (sample ==1){
-        beta += beta / (beta + alpha) * learning_rate/(1);
+        beta += beta / (beta + alpha) * learning_rate;
     }
     else{
-        alpha += alpha / (beta + alpha) * learning_rate/(1);
+        alpha += alpha / (beta + alpha) * learning_rate;
     }    
 
     
@@ -104,11 +108,11 @@ void eigenFreq::update(int sample){
 double eigenFreq::getEstimatedFreq(){
     
     if (iteration <3){
-        
+
         return getMode() * upper_freq;
     }
 
-    else{return filtered[iteration-1]* upper_freq ;}
+    else{return filtered[iteration-1] * upper_freq ;}
     
 };
 
@@ -121,7 +125,7 @@ double eigenFreq::getBeta(){
 
 int eigenFreq::checkSample(double sample){
     
-    if (sample < getEstimatedFreq()){return 1;}
+    if ((sample) < getEstimatedFreq()){return 1;}
     else{return 0;}
 }
 

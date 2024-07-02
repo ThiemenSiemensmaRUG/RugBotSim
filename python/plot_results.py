@@ -1,28 +1,74 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy  as np
+# Function to validate each row
+def is_valid_row(row):
+    try:
+        # Check if all columns have the expected number of elements and types
+        if len(row) < 5:
+            return False
+        # Convert each element to the expected type
+        for i in range(len(row)):
+            row[i] = float(row[i])
 
-# Step 3: Read the data into a pandas DataFrame
-df = pd.read_csv('python/data_rov.txt', names=['time', 'robot_id', 'value'])
+        
+        return True
+    except ValueError:
+        return False
 
-# Step 4: Plot the data
-fig, ax = plt.subplots(figsize=(10, 6))
 
-# Loop through each robot_id and plot its data
-for robot_id, group in df.groupby('robot_id'):
-    ax.plot(group['time'], group['value'], marker='o', linestyle='-', label=f'Robot {robot_id}')
+class analysis():
+    def __init__(self,filename) -> None:
+        self.filename = filename
 
-# Calculate the mean value for each time step
-mean_values = df.groupby('time')['value'].mean()
 
-# Plot the mean values
-ax.plot(mean_values.index, mean_values, marker='x', linestyle='--', color='black', label='Mean')
+    def read_data(self):
+        column_names = ['time', 'rov_num', 'value', 'posx', 'posy', 'alpha', 'beta','count']
 
-ax.set_xlabel('Time')
-ax.set_ylabel('Value')
-ax.set_ylim([0, 15])
-ax.set_title('Plotted Values over Time for Robots')
-ax.legend()
+        # Read and filter the data
+        valid_rows = []
+        with open(self.filename, 'r') as file:
+            for line in file:
+                row = line.strip().split(',')
+                if is_valid_row(row):
+                    valid_rows.append(row)
 
-plt.grid(True)
-plt.tight_layout()
+        # Create DataFrame from valid rows
+        self.data = pd.DataFrame(valid_rows, columns=column_names).dropna()
+        self.data = self.data[['time','rov_num','value','count']]
+
+        
+        temp  = (self.data.groupby(['time'])['value'].mean().reset_index())
+
+        temp= temp.sort_values(by = 'time')
+        self.mean = temp['value']
+        self.time = temp['time']
+        temp = (self.data.groupby(['time'])['value'].std().reset_index())
+
+        temp= temp.sort_values(by = 'time')
+        self.std = temp['value']
+
+        temp = (self.data.groupby(['time'])['count'].mean().reset_index())
+
+        temp= temp.sort_values(by = 'time')
+        self.count = temp['count']
+        
+        
+# Plot mean value over time
+labels = ["No filter","Slow filter","Faster filter 6 robots","Fast filter 2 robots","Fast fitler high learning rate"]
+plt.figure(figsize=(12, 6))
+i=0
+outputfolder= "jobfiles/Run_1/"
+for file in [4,0,1,2,3]:
+    filename = outputfolder+ "I_" + str(file) +f"/webots_log_{file}.txt"
+    x = analysis(filename)
+    x.read_data()
+    plt.semilogy(x.time,abs((x.std)),label=labels[i])
+    del x
+    i+=1
+
+plt.xlabel("Time")
+plt.title("Target value = 1.77")
+plt.ylabel("Error")
+plt.legend()
 plt.show()

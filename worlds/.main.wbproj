@@ -9,8 +9,6 @@ orthographicViewHeight: 0.174458
 textFiles: 0 "controllers/inspection_controller/inspection_controller.cpp" "controllers/cpp_supervisor/cpp_supervisor.cpp"
 globalOptionalRendering: LightSensorRays::CoordinateSystem::JointAxes
 consoles: Console:All:All
-renderingDevicePerspectives: r0(1):camera;1;0.790278;0;0
-renderingDevicePerspectives: r0(2):camera;1;0.790278;0;0
 renderingDevicePerspectives: r0:camera;1;0.0554687;0;0
 renderingDevicePerspectives: r1:camera;1;0.598437;0;0
 renderingDevicePerspectives: r2:camera;1;0.598437;0;0

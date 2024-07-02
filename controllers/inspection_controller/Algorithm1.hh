@@ -12,10 +12,14 @@
 #include "RugBot.hh"
 #include "SHM.hh"
 #include "radio.hh"
+#include "controller_settings.hh"
 
 typedef std::complex<double> Complex;
 typedef std::vector<Complex> CArray;
 typedef std::vector<double> Array;
+
+
+
 
 
 
@@ -35,10 +39,8 @@ public:
 
     // Time step for the simulation
     enum { TIME_STEP = 20 };
-    
 
-
-    Algorithm1() : robot(TIME_STEP),naturalFreq(1.0,1.0,100.0),radio(robot.d_robot,TIME_STEP) {};
+    Algorithm1() : settings(),robot(TIME_STEP),naturalFreq(2.0,2.0,100.0),radio(robot.d_robot,TIME_STEP) {};
 
     void run();
     void getSample(int posx, int posy);
@@ -48,11 +50,13 @@ public:
     void sendSample(int sample);
 
 private:
+    ControllerSettings settings;
     RugRobot robot;
     eigenFreq naturalFreq;
     Radio_Rover radio;
     std::vector<int> pos;
 
+ 
     double sample_freq = 200.0; //Sample rate in Hz
     double sample_length = 4.5; //Sample length in seconds
     double sample_pause = 0.0;
@@ -77,21 +81,33 @@ private:
 
 
 void Algorithm1::run() {
-    std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
-    
+    //std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
+    pos = roundToNearest10(robot.getPos());
     robot.setCustomData("");
+    settings.readSettings();
+
+    for (int i = 0; i <= 1; ++i) {
+        naturalFreq.a[i] = (double)settings.values[i];
+    }
+    for (int i = 0; i <= 1; ++i) {
+        naturalFreq.b[i] = (double)settings.values[i+2];
+    }
+    naturalFreq.learning_rate = settings.values[4];
+    naturalFreq.upper_freq = settings.values[5];
+    
     CArray fft_results(N_samples); //complex array to store FFT results
     Array freqArray = createFrequencyArray(sample_freq, N_samples);
 
-
+    
 
     while(robot.d_robot->step(TIME_STEP) != -1) {
         
         switch(states) {
+
             case STATE_RW:
 
                 if(robot.RandomWalk()==1){
-                    //std::cout<<"random walk done" <<'\n';
+ 
                     states = STATE_OBS;
                 }
                 if (naturalFreq.iteration>0)
@@ -105,6 +121,7 @@ void Algorithm1::run() {
                 }
                 sample_pause = 0.0;
                 pos = roundToNearest10(robot.getPos());
+
                 getSample(pos[0],pos[1]);
                 for (size_t i = 0; i < numbers.size(); ++i) {
                     fft_results[i] = Complex(numbers[i], 0);
@@ -116,11 +133,7 @@ void Algorithm1::run() {
 
                 naturalFreq.update(naturalFreq.checkSample(peak_freq[0]));
 
-                sendSample(naturalFreq.checkSample(peak_freq[0]));
-
-                //std::cout<<peak_freq[0]<<","<<naturalFreq.checkSample(peak_freq[0])<<","<<naturalFreq.getEstimatedFreq()<<'\n';
-                robot.setCustomData(std::string(robot.d_robot->getName()) + "," +std::to_string(naturalFreq.getEstimatedFreq()) );
-                
+                sendSample(naturalFreq.checkSample(peak_freq[0]));  
                 
                 states = STATE_RW;                  
                 break;
@@ -129,6 +142,17 @@ void Algorithm1::run() {
             case STATE_PAUSE:
                 // Pause logic here
                 break;
+        }
+        if(robot.d_robot->getTime()>5){
+        robot.setCustomData( std::to_string((int) robot.d_robot->getTime())+
+        ","+std::string(robot.d_robot->getName().substr(1,1)) + 
+        ","+std::to_string(naturalFreq.getEstimatedFreq()) +
+        ","+std::to_string(robot.getPos()[0])+
+        ","+std::to_string(robot.getPos()[1])+
+        ","+std::to_string(naturalFreq.alpha)+
+        ","+std::to_string(naturalFreq.beta)+
+        "," + std::to_string(naturalFreq.iteration));
+        
         }
     }
 }

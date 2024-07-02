@@ -141,7 +141,7 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
 
     speed_dev = 1;//speed_dist(generator);
 
-    std::cout << "Motor deviations[a,s]:" << motor_dev << ',' << speed_dev << '\n';
+    //std::cout << "Motor deviations[a,s]:" << motor_dev << ',' << speed_dev << '\n';
 
     generateRW();
     
