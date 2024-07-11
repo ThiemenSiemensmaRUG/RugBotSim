@@ -1,0 +1,106 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "../protos/RovableV2.proto"
+
+WorldInfo {
+  CFM 0.1
+  ERP 0.1
+  basicTimeStep 20
+  coordinateSystem "NUE"
+  contactProperties [
+    ContactProperties {
+      material2 "WheelMat"
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.1925921807186387 -0.6691465356635923 -0.7177403191513292 2.316919496005195
+  position 2.2084568665922713 2.0198270618414162 -0.09752769031243588
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+DEF surface Solid {
+  translation 0.5 0 0.5
+  rotation -0.9999999999999999 0 0 1.5707953071795862
+  children [
+    Shape {
+      appearance Appearance {
+        texture ImageTexture {
+          url [
+            ""
+          ]
+        }
+      }
+      geometry Plane {
+      }
+    }
+  ]
+  contactMaterial "Metal"
+  boundingObject Plane {
+  }
+}
+Wall {
+  translation 0.5 0 -0.025
+  size 1 0.05 0.025
+}
+Wall {
+  translation 0.5 0 1
+  name "wall(1)"
+  size 1 0.05 0.025
+}
+Wall {
+  translation 1 0 0.5
+  rotation 0 1 0 1.5708
+  name "wall(2)"
+  size 1 0.05 0.025
+}
+Wall {
+  translation -0.025 0 0.5
+  rotation 0 1 0 1.5708
+  name "wall(3)"
+  size 1 0.05 0.025
+}
+Robot {
+  name "Bayes Bot Supervisor"
+  controller "cpp_supervisor"
+  controllerArgs [
+    "0"
+  ]
+  supervisor TRUE
+}
+   DEF r0 RovableV2 {
+    translation 0.9104308447003244 0.0125 0.9030447383534144
+    rotation 0.9692399906134817 -0.1740313773369305 -0.1740313773369305 4.681151032580498
+    name "r0"
+    controller "inspection_controller"
+    controllerArgs [
+        "2"
+    ]
+    supervisor TRUE
+    customData ""
+    extensionSlot [
+        Receiver {
+        }
+        Emitter {
+        }
+    ]
+    }
+DEF r1 RovableV2 {
+    translation 0.12638479564302946 0.0125 0.8019489903165046
+    rotation -0.5434339109930753 -0.5935821697047388 -0.5935821697047388 2.146016464156469
+    name "r1"
+    controller "inspection_controller"
+    controllerArgs [
+        "2"
+    ]
+    supervisor TRUE
+    customData ""
+    extensionSlot [
+        Receiver {
+        }
+        Emitter {
+        }
+    ]
+    }
