@@ -4,7 +4,7 @@ Swarm of miniature robots. Simulated version of RugBot in WeBots.
 
 ## Overview
 
-This repository simulates the RugBot robot used for surface inspection tasks at the Distributed Robotic Systems Lab, Groningen. It is part of the ENTEG institute, within the DTPA department, led by PI Bahar Haghighat and supervised by PhD student Thiemen Siemensma.
+This repository simulates the RugBot robot used for surface inspection tasks at the Distributed Robotic Systems Lab, Groningen. It is part of the ENTEG institute, specifically the DTPA department.
 
 ### Distributed Robotic Systems Lab, Groningen
 
