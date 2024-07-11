@@ -21,7 +21,55 @@ The `main` branch is dedicated to developing core functionalities for the RugBot
 
 ## Installation
 
-Instructions for setting up and running the simulation will be provided here.
+
+### Installing Webots 2023b
+
+1. **Download Webots:**
+   - Visit the Webots download page: [Webots Download](https://cyberbotics.com/download).
+   - Download the Webots 2023b for Ubuntu Linux as a `.tar.bz2` archive.
+
+2. **Extract Webots:**
+   - Open a terminal.
+   - Navigate to the directory where the downloaded `.tar.bz2` file is located.
+   - Use the following command to extract:
+
+     ```bash
+     tar -xvjf webots-2023b-rev1-x86-64.tar.bz2
+     ```
+
+   Replace `webots-2023b-rev1-x86-64.tar.bz2` with the actual filename.
+
+3. **Install Dependencies:**
+   - Check for any missing dependencies as per Webots documentation or runtime error messages.
+
+4. **Launch Webots:**
+   - Navigate to the extracted directory.
+   - Start Webots using:
+
+     ```bash
+     ./webots
+     ```
+
+### Setting Up GitHub Desktop
+
+1. **Download GitHub Desktop:**
+   - Visit the GitHub Desktop website: [GitHub Desktop](https://desktop.github.com/).
+   - Download the `.deb` package for Ubuntu.
+
+2. **Install GitHub Desktop:**
+   - Open a terminal.
+   - Navigate to the directory where the downloaded `.deb` file is located.
+   - Install GitHub Desktop using:
+
+     ```bash
+     sudo dpkg -i github-desktop-*.deb
+     ```
+
+   Replace `github-desktop-*.deb` with the actual filename.
+
+3. **Launch GitHub Desktop:**
+   - Open GitHub Desktop from the Applications menu or by typing `github-desktop` in the terminal.
+
 
 ## Usage
 
