@@ -160,8 +160,8 @@ Robot {
     def save_settings(self,run_dir,c_settings,s_settings):
         # Open a file in write mode
 
-        fcsettings =  f"{run_dir}Iteration_{self.instance}/c_settings.txt"
-        fssettings =  f"{run_dir}Iteration_{self.instance}/s_settings.txt"
+        fcsettings =  f"{run_dir}Instance_{self.instance}/c_settings.txt"
+        fssettings =  f"{run_dir}Instance_{self.instance}/s_settings.txt"
         for file,setting in zip([fcsettings,fssettings],[c_settings,s_settings]):
             with open(file, 'w') as file:
                 for value in setting.values():

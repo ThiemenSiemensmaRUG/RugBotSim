@@ -14,11 +14,11 @@ line=$((INSTANCE_ID + 1))
 WB_TIMEOUT=1500
 
 # Set the input directory (relative to the current working directory)
-INPUT_DIR=Iteration_${INSTANCE_ID}
+INPUT_DIR=Instance_${INSTANCE_ID}
 echo "webots input directory is " ${INPUT_DIR}
 echo $(pwd)
 # Set the output directory to put results (relative to the current working directory)
-OUTPUT_DIR=Iteration_${INSTANCE_ID}
+OUTPUT_DIR=Instance_${INSTANCE_ID}
 echo "webots output directory is " ${OUTPUT_DIR}
 JOB_BASE_DIR=$(pwd)/tmp/job_${INSTANCE_ID}
 

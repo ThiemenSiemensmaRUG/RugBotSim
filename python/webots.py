@@ -22,12 +22,12 @@ class WebotsEvaluation():
         
 
         run_dir = f"jobfiles/Run_{self.run}/"
-        os.makedirs(os.path.dirname(f"{run_dir}Iteration_{self.instance}/"), exist_ok=True)
+        os.makedirs(os.path.dirname(f"{run_dir}Instance_{self.instance}/"), exist_ok=True)
 
         world = createWorld(self.instance,self.instance,f"world_{self.instance}",self.robots)
         world.save_settings(run_dir,c_settings,s_settings)
         world.create_world()
-        setup =  f"{run_dir}Iteration_{self.instance}/settings.txt"
+        setup =  f"{run_dir}Instance_{self.instance}/settings.txt"
 
         with open(setup, 'w') as file:
             for value in [settings.values()]:
