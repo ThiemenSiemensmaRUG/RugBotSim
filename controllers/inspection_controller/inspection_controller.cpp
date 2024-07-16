@@ -29,7 +29,7 @@
 #include <cmath>
 #include <unistd.h>
 
-#include "Algorithm1.hh"
+#include "Algorithm_Template.hh"
 
 
 // All the webots classes are defined in the "webots" namespace
