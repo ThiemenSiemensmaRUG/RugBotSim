@@ -235,10 +235,8 @@ void RugRobot::generateRW(){
 
 int RugRobot::RandomWalk(){
 
-    if (spend_time == (double) timeStep){state= STATE_FW;}
-    spend_time+= (double) timeStep;
-
-
+    if (spend_time ==0){state= STATE_FW;}
+    
 
     if ((spend_time > rw_time) && (state == STATE_FW)){
         state = STATE_TURN;
@@ -258,6 +256,7 @@ int RugRobot::RandomWalk(){
     }
 
     if (state == STATE_FW){
+        spend_time+= (double) timeStep;
         setSpeed(100,100);
         }
 

@@ -110,7 +110,7 @@ int main() {
 
         Field* data = customData[i];
         const std::string data_rov = data->getSFString();
-        std::cout << data_rov << '\n';
+        //std::cout << data_rov << '\n';
 
         int pos = data_rov.find_last_of(",");
         int str_len = (int) data_rov.length();

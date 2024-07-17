@@ -1,6 +1,4 @@
 
-
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -35,17 +33,17 @@ void BetaDistribution::update(int sample) {
 }
 
 double BetaDistribution::getMode(){
-    return (alpha - 1) / (alpha+beta - 2);
+    return ((double)alpha - 1) / ((double)alpha+(double)beta - 2);
 }
 
 double BetaDistribution::getMean(){
-    return alpha / (alpha+beta);
+    return (double) alpha / ( (double) alpha+ (double) beta);
 }
 
 
 double BetaDistribution::getCDF(double x){
-    int a = alpha;
-    int b = beta;
+    double a =(double) alpha;
+    double b =(double) beta;
 
     if (x < 0.0 || x > 1.0) return 1.0/0.0;
 

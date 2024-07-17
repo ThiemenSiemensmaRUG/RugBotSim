@@ -1,0 +1,178 @@
+ERROR: Missing declaration for 'TexturedBackground', add: 'EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"' to '/home/thiemenrug/Documents/GitHub/RugBotSim/worlds/world_4.wbt'.
+ERROR: Missing declaration for 'TexturedBackgroundLight', add: 'EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"' to '/home/thiemenrug/Documents/GitHub/RugBotSim/worlds/world_4.wbt'.
+ERROR: Missing declaration for 'Wall', add: 'EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/apartment_structure/protos/Wall.proto"' to '/home/thiemenrug/Documents/GitHub/RugBotSim/worlds/world_4.wbt'.
+ERROR: Missing declaration for 'Plastic', add: 'EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Plastic.proto"' to '/home/thiemenrug/Documents/GitHub/RugBotSim/protos/RovableV2.proto'.
+ERROR: Missing declaration for 'CorrodedMetal', add: 'EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/CorrodedMetal.proto"' to '/home/thiemenrug/Documents/GitHub/RugBotSim/protos/RovableV2.proto'.
+ERROR: Missing declaration for 'BrushedAluminium', add: 'EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/BrushedAluminium.proto"' to '/home/thiemenrug/Documents/GitHub/RugBotSim/protos/RovableV2.proto'.
+INFO: RovableV2 "r0" > Camera "camera" > Pose  > Shape  > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
+INFO: RovableV2 "r0" > DEF WHEEL4 HingeJoint > Solid "wheel4" > USE WHEEL_BOUNDING > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
+INFO: RovableV2 "r0" > DEF WHEEL3 HingeJoint > Solid "wheel3" > USE WHEEL_BOUNDING > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
+INFO: RovableV2 "r0" > DEF WHEEL1 HingeJoint > Solid "wheel1" > DEF WHEEL_BOUNDING Pose > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
+INFO: RovableV2 "r0" > DEF WHEEL2 HingeJoint > Solid "wheel2" > USE WHEEL_BOUNDING > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
+INFO: RovableV2 "r0" > Emitter "emitter": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
+INFO: RovableV2 "r0" > Receiver "receiver": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
+INFO: RovableV2 "r0" > Camera "camera": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
+INFO: RovableV2 "r0" > Emitter "emitter": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
+INFO: RovableV2 "r0" > Receiver "receiver": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
+WARNING: DEF surface Solid > Shape  > Appearance "appearance" > ImageTexture : First item of 'url' field is empty.
+WARNING: DEF surface Solid > Shape  > Appearance "appearance" > ImageTexture : First item of 'url' field is empty.
+WARNING: DEF surface Solid > Shape  > Appearance "appearance" > ImageTexture : First item of 'url' field is empty.
+INFO: cpp_supervisor: Starting controller: /home/thiemenrug/Documents/GitHub/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/thiemenrug/Documents/GitHub/RugBotSim/controllers/inspection_controller/inspection_controller 4
+MAIN SUPERVISOR LOOP
+File data_rov.txt opened successfully
+RugRobot 0 with Seed 480
+RW parameters= 8017.72,-143.853
+RW parameters= 4235.33,-87.8066
+RW parameters= 7771.12,54.3247
+RW parameters= 4709.13,153.293
+RW parameters= 7108.07,25.7347
+RW parameters= 7010.34,101.868
+RW parameters= 7746.85,-49.4777
+RW parameters= 5067.16,39.8883
+RW parameters= 7137.22,57.3918
+RW parameters= 7085.85,-154.484
+RW parameters= 8095.6,-131.108
+RW parameters= 7855.8,18.6442
+RW parameters= 10563.1,-40.2368
+RW parameters= 7627.33,71.3457
+RW parameters= 8114.45,-14.924
+RW parameters= 8215.84,5.27852
+RW parameters= 7608.74,-46.3043
+RW parameters= 7260.28,-39.8104
+RW parameters= 4433.36,35.0272
+RW parameters= 10400.2,131.689
+RW parameters= 8136.7,19.4368
+RW parameters= 4581.8,108.832
+RW parameters= 7032.37,76.8256
+RW parameters= 8038.3,-29.1681
+RW parameters= 7646.11,-141.062
+RW parameters= 4293.83,-139.41
+RW parameters= 8265.73,-125.508
+RW parameters= 4480.39,-8.98631
+RW parameters= 2272.15,109.181
+RW parameters= 8091.8,162.093
+RW parameters= 9673.37,126.899
+RW parameters= 7839.15,-106.664
+RW parameters= 7024.9,-25.3758
+RW parameters= 7095.29,77.2474
+RW parameters= 7688.13,-137.105
+RW parameters= 7271.98,84.1219
+RW parameters= 8700.22,2.99545
+RW parameters= 7959.21,-120.833
+RW parameters= 8815.1,69.3779
+RW parameters= 7450.54,-104.772
+RW parameters= 6836.81,141.84
+RW parameters= 7615.3,-155.423
+RW parameters= 6366.8,125.343
+RW parameters= 5806.08,-6.64476
+RW parameters= 8200.38,0.88697
+RW parameters= 9276.69,-88.093
+RW parameters= 12315.5,-24.556
+RW parameters= 17580.1,-140.77
+RW parameters= 6218.86,-21.2563
+RW parameters= 5738.74,-3.77636
+RW parameters= 7646.67,-128.165
+RW parameters= 7542.07,-46.8976
+RW parameters= 4725.14,147
+RW parameters= 8717.92,66.068
+RW parameters= 6806.26,75.1005
+RW parameters= 7113.83,33.74
+RW parameters= 6185.91,-111.936
+RW parameters= 7602.23,161.173
+RW parameters= 8118.32,46.7515
+RW parameters= 2812.64,50.9773
+RW parameters= 6565.46,36.0634
+RW parameters= 6869.1,153.358
+RW parameters= 3825.03,-33.8434
+RW parameters= 7936.11,34.7142
+RW parameters= 7152.2,-9.53051
+RW parameters= 1000,137.193
+RW parameters= 6877.2,-27.8792
+INFO: cpp_supervisor: Starting controller: /home/thiemenrug/Documents/GitHub/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/thiemenrug/Documents/GitHub/RugBotSim/controllers/inspection_controller/inspection_controller 4
+MAIN SUPERVISOR LOOP
+File data_rov.txt opened successfully
+RugRobot 0 with Seed 480
+RW parameters= 8017.72,-143.853
+INFO: The simulation has run!
+Saving the .wbt file will store the current world state: the objects position and rotation and other fields may differ from the original file!
+Do you want to save this modified world?
+INFO: cpp_supervisor: Starting controller: /home/thiemenrug/Documents/GitHub/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/thiemenrug/Documents/GitHub/RugBotSim/controllers/inspection_controller/inspection_controller 4
+MAIN SUPERVISOR LOOP
+File data_rov.txt opened successfully
+RugRobot 0 with Seed 480
+RW parameters= 8017.72,-143.853
+INFO: cpp_supervisor: Starting controller: /home/thiemenrug/Documents/GitHub/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/thiemenrug/Documents/GitHub/RugBotSim/controllers/inspection_controller/inspection_controller 4
+MAIN SUPERVISOR LOOP
+RugRobot 0 with Seed 480
+RW parameters= 8017.72,-143.853
+File data_rov.txt opened successfully
+INFO: cpp_supervisor: Starting controller: /home/thiemenrug/Documents/GitHub/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/thiemenrug/Documents/GitHub/RugBotSim/controllers/inspection_controller/inspection_controller 4
+MAIN SUPERVISOR LOOP
+File data_rov.txt opened successfully
+RugRobot 0 with Seed 480
+RW parameters= 8017.72,-143.853
+RW parameters= 7010.35,54.9324
+RW parameters= 9074.2,34.0607
+RW parameters= 7771.12,54.3247
+RW parameters= 3122.31,127.821
+RW parameters= 6688.31,18.8743
+RW parameters= 7746.85,-49.4777
+RW parameters= 4744.17,140.121
+RW parameters= 5673.15,-8.1091
+RW parameters= 8983.93,163.902
+RW parameters= 7254.79,135.006
+RW parameters= 7726.42,-118.444
+RW parameters= 7954.59,-140.829
+RW parameters= 1408.11,-36.1598
+RW parameters= 10229.9,47.654
+RW parameters= 7627.33,71.3457
+RW parameters= 8114.45,-14.924
+RW parameters= 8138.33,-108.807
+RW parameters= 7608.74,-46.3043
+RW parameters= 10261.7,36.1213
+RW parameters= 10400.2,131.689
+RW parameters= 8136.7,19.4368
+RW parameters= 8130.28,-136.538
+RW parameters= 6784.49,129.876
+RW parameters= 6238.89,-123.413
+RW parameters= 11343.4,175.741
+RW parameters= 7646.11,-141.062
+RW parameters= 6846.9,135.474
+RW parameters= 4293.83,-139.41
+RW parameters= 8265.73,-125.508
+RW parameters= 7342.44,-139.961
+RW parameters= 9673.37,126.899
+RW parameters= 7839.15,-106.664
+RW parameters= 7024.9,-25.3758
+RW parameters= 7688.13,-137.105
+RW parameters= 7073.88,154.31
+RW parameters= 6391.76,90.5562
+RW parameters= 8700.22,2.99545
+RW parameters= 7959.21,-120.833
+RW parameters= 8815.1,69.3779
+RW parameters= 7450.54,-104.772
+RW parameters= 6836.81,141.84
+RW parameters= 7615.3,-155.423
+RW parameters= 6366.8,125.343
+RW parameters= 5806.08,-6.64476
+RW parameters= 8200.38,0.88697
+RW parameters= 12315.5,-24.556
+RW parameters= 17580.1,-140.77
+RW parameters= 12829,102.939
+RW parameters= 20000,-31.8966
+RW parameters= 9805.47,14.1022
+RW parameters= 4725.14,147
+RW parameters= 8717.92,66.068
+RW parameters= 6806.26,75.1005
+RW parameters= 7113.83,33.74
+RW parameters= 6185.91,-111.936
+RW parameters= 7602.23,161.173
+RW parameters= 8118.32,46.7515
+INFO: cpp_supervisor: Terminating.
+INFO: inspection_controller: Terminating.
+Quiting simulation

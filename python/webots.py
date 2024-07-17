@@ -46,7 +46,7 @@ for i in range(1):
 
     x = WebotsEvaluation()
     x.instance = 4
-    x.robots = 6
+    x.robots = 1
     c_settings = {}
     s_settings = {}
     x.job_setup(c_settings=c_settings,s_settings=s_settings)

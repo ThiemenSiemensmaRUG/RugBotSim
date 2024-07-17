@@ -10,10 +10,9 @@
 #include <filesystem>
 #include "filtering.hh"
 #include "RugBot.hh"
-
 #include "radio.hh"
 #include "controller_settings.hh"
-
+#include "BetaDistribution.hh"
 typedef std::complex<double> Complex;
 typedef std::vector<Complex> CArray;
 typedef std::vector<double> Array;
@@ -28,26 +27,33 @@ public:
     enum AlgoStates {
         STATE_RW,  // State: Random Walk
         STATE_OBS, // State: Observe Color
-        STATE_PAUSE // etc....
+        RESET, //reset state
     };
 
 
     AlgoStates states = STATE_RW;
 
 
+    int tau = 1000;
+    int time = 0;
+    int intersample_time =0;
+    int pauseCount = tau; 
+
+
     // Time step for the simulation
     enum { TIME_STEP = 20 };
 
-    Algorithm1() : settings(),robot(TIME_STEP),radio(robot.d_robot,TIME_STEP) {};
+    Algorithm1() : settings(),robot(TIME_STEP), beta(1,1),radio(robot.d_robot,TIME_STEP) {};
 
     void run();
     void recvSample();
     void sendSample(int sample);
+    void pause(int *pauseCount);
 
 private:
     ControllerSettings settings;
     RugRobot robot;
-
+    BetaDistribution beta;
     Radio_Rover radio;
     std::vector<int> pos;
 
@@ -61,25 +67,32 @@ void Algorithm1::run() {
     settings.readSettings();
 
     while(robot.d_robot->step(TIME_STEP) != -1) {
-        
+  
+        time = (int) robot.d_robot->getTime();
+        intersample_time+=TIME_STEP;
         switch(states) {
-
             case STATE_RW:
-
-                if(robot.RandomWalk()==1){
- 
-                    states = STATE_OBS;
-                }
-
+                if ((intersample_time-tau)>0){
+                    pause(&pauseCount);
+                    break;
+                } 
+                robot.RandomWalk();
                 break;
 
             case STATE_OBS:
-                states = STATE_RW;                  
+                pauseCount = tau;
+
+                beta.update(1);
+                std::cout<<beta.alpha<<","<<beta.beta<<'\n';
+                std::cout<<beta.getCDF(0.5)<<'\n';
+                states = STATE_RW; 
                 break;
 
-
-            case STATE_PAUSE:
                 // Pause logic here
+                break;
+            case RESET:
+                //reset state
+
                 break;
         }
         if(robot.d_robot->getTime()>5){
@@ -89,6 +102,21 @@ void Algorithm1::run() {
     }
 }
 
+
+void Algorithm1::pause(int *pause_Time) {
+    // Stop the robot's movement
+    robot.setSpeed(0, 0);
+    
+    // Check if pause time has elapsed, if yes, transition to observation state
+    if (*pause_Time <= 0) {
+        states = STATE_OBS;
+        intersample_time = 0;
+        return;
+    }
+    
+    // Decrease pause time based on the time step
+    *pause_Time = *pause_Time - 1 * TIME_STEP;
+};
 
 void Algorithm1::recvSample(){
     std::vector<int> messages = radio.getMessages();

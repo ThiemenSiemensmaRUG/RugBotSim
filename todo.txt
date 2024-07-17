@@ -1,0 +1,2 @@
+2. beta update based on given brid (positions of tiles)
+3. rewrite cpp Supervisor

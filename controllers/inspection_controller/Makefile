@@ -39,7 +39,7 @@
 ###
 ### ---- C++ Sources ----
 ### if your program uses several C++ source files:
-### CXX_SOURCES = my_plugin.cc my_clever_algo.cpp my_graphics.c++
+CXX_SOURCES = inspection_controller.cpp
 ###
 ### ---- Compilation options ----
 ### if special compilation flags are necessary:
@@ -56,12 +56,12 @@
 ###
 ### ---- Webots included libraries ----
 ### if you want to use the Webots C API in your C++ controller program:
-### USE_C_API = true
+#USE_C_API = true
 ###
 ### ---- Debug mode ----
 ### if you want to display the gcc command line for compilation and link, as
 ### well as the rm command details used for cleaning:
-### VERBOSE = 1
+VERBOSE = 1
 ###
 ###-----------------------------------------------------------------------------
 CXX_EXTENSION = ccp
@@ -72,4 +72,8 @@ SOURCES = $(filter %.$(CXX_EXTENSION),$(ALL_FILES))
 null :=
 space := $(null) $(null)
 WEBOTS_HOME_PATH?=$(subst $(space),\ ,$(strip $(subst \,/,$(WEBOTS_HOME))))
+
+# Define a rule to print the WEBOTS_HOME_PATH
+# Define a rule to print the WEBOTS_HOME_PATH
+$(info $$WEBOTS_HOME_PATH is [${WEBOTS_HOME_PATH}])
 include $(WEBOTS_HOME_PATH)/resources/Makefile.include
