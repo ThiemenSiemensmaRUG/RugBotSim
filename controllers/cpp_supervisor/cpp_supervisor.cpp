@@ -18,7 +18,7 @@ double calculateFitness(int final_decision, int correct_decision, double fill_ra
     double final_d_error = 1+std::abs(static_cast<double>(final_decision) - static_cast<double>(correct_decision))*5;
     if ( time ==0){time = t_max;}
     if (final_decision == -1){
-      final_d_error = 1;
+      final_d_error = 2;
     }
     
     double fill_error = std::abs(fill_ratio - correct_fill_ratio) / fill_offset;
