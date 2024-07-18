@@ -31,6 +31,13 @@ public:
         RESET, //reset state
     };
 
+    enum feedbackStrategy {
+        NON,
+        POSITIVE,
+        SOFT
+    };
+
+    feedbackStrategy feedback = POSITIVE;
 
     AlgoStates states = STATE_RW;
 
@@ -38,9 +45,17 @@ public:
     int tau = 1000;
     int time = 0;
     int intersample_time =0;
-    int pauseCount = tau; 
+    int pauseCount = 1000; 
     int sample = 0;
+    int recvs = 0;
+    int sends = 0;
+    int message = 0;
     int d_f = -1;
+    int min_swarmCount = 400;
+    int SampleTime = 0;
+    int decisionTime = 0;
+    double p_c = 0.95;
+    
     // Time step for the simulation
     enum { TIME_STEP = 20 };
 
@@ -51,6 +66,9 @@ public:
     void recvSample();
     void sendSample(int sample);
     void pause(int *pauseCount);
+    void check_decision();
+    int calculateMessage(int sample);
+    void setSimulationSetup();
 
 private:
     ControllerSettings settings;
@@ -59,18 +77,21 @@ private:
     Radio_Rover radio;
     Environment environ;
 
+    //random generator for softfeedback and softfeedback parameters
+    std::random_device sf_rd;
+    std::bernoulli_distribution soft_feedback;
+    double delta = 0;
+    double nu = 1250;
+
 };
 
 void Algorithm1::run() {
     std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
 
     robot.setCustomData("");
-    
-    settings.readSettings();
 
-    robot.setRWTimeGenParams(settings.values[0],settings.values[1]);
-    tau = settings.values[2];
-    robot.CA_Threshold = settings.values[3];
+    setSimulationSetup();
+
     while(robot.d_robot->step(TIME_STEP) != -1) {
         time = (int) robot.d_robot->getTime();
 
@@ -81,17 +102,22 @@ void Algorithm1::run() {
                 recvSample();
                 if ((intersample_time-tau)>0){
                     pause(&pauseCount);
+                    SampleTime+=TIME_STEP;
                     break;
                 } 
                 robot.RandomWalk();
                 break;
 
             case STATE_OBS:
-                pauseCount = tau;
+                pauseCount = 1000;
+                SampleTime+=TIME_STEP;
                 sample = environ.getSample(robot.getPos()[0],robot.getPos()[1],0);
                 beta.update(sample);
+                beta.onboard_update(sample);
+                check_decision();
+                message = calculateMessage(sample);
                 print_data(1);
-                sendSample(sample);
+                sendSample(message);
                 states = STATE_RW; 
                 break;
 
@@ -111,12 +137,22 @@ if(robot.d_robot->getTime() > 5) {
         std::to_string(print_bool) + "," +
         std::to_string((int) robot.d_robot->getTime()) + "," +
         std::string(robot.d_robot->getName().substr(1, 1)) + "," +
+        std::to_string(sample) + "," +
+        std::to_string(message) + "," +
         std::to_string(beta.getBelief()) + "," +
         std::to_string(beta.alpha) + "," +
         std::to_string(beta.beta) + "," +
+        std::to_string(sends) + "," +
+        std::to_string(recvs) + "," +
         std::to_string(beta.getMean()) + "," +
+        std::to_string(beta.getOnboardMean()) + "," +
         std::to_string(robot.getPos()[0]) + "," +
-        std::to_string(robot.getPos()[1]);
+        std::to_string(robot.getPos()[1]) + "," +
+        std::to_string(robot.RWtime) + "," +
+        std::to_string(robot.CAtime) + "," +
+        std::to_string(SampleTime) + "," +
+        std::to_string(decisionTime) + "," +
+        std::to_string(d_f);
 
     // Set the custom data
     robot.setCustomData(customData);
@@ -126,6 +162,30 @@ if(robot.d_robot->getTime() > 5) {
 }
 
 
+}
+
+void Algorithm1::setSimulationSetup() {
+    // Settings in the simulation based on input file
+    settings.readSettings();
+    
+    // Print settings to show the values read
+    std::cout << "Settings values: ";
+    for (int value : settings.values) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+
+    robot.setRWTimeGenParams(settings.values[0], settings.values[1]);
+    tau = settings.values[2];
+    robot.CA_Threshold = settings.values[3];
+    min_swarmCount = settings.values[4];
+    feedback = static_cast<feedbackStrategy>(settings.values[5]);
+
+    // Print the updated values
+    std::cout << "tau: " << tau << std::endl;
+    std::cout << "CA_Threshold: " << robot.CA_Threshold << std::endl;
+    std::cout << "min_swarmCount: " << min_swarmCount << std::endl;
+    std::cout << "feedback: " << feedback << std::endl;
 }
 
 
@@ -148,6 +208,7 @@ void Algorithm1::recvSample(){
     std::vector<int> messages = radio.getMessages();
         // Process received messages
         for (int sample : messages) {
+            recvs+=1;
             beta.update(sample);
         }
 }
@@ -156,10 +217,35 @@ void Algorithm1::sendSample(int sample){
 
     // Determine the message to send based on decision flag or observation color
     int const *message;
-
+    sends+=1;
     message = &sample;
     // Send the message
     radio.sendMessage(message, sizeof(message));
+
+}
+
+void Algorithm1::check_decision(){
+    if ((recvs > min_swarmCount) && (d_f ==-1)){
+        if (beta.getBelief() > p_c){d_f = 0; decisionTime = time;}
+        if (beta.getBelief() < (1- p_c)) {d_f =1; decisionTime = time;}
+    }
+
+    return;
+}
+
+int Algorithm1::calculateMessage(int sample){
+    if (feedback == NON){return sample;}
+
+    if (feedback == POSITIVE){
+        if (d_f == -1){return sample;}
+        else{return d_f;}
+    }
+
+    if (feedback == SOFT){
+        delta = exp(-1.0*nu * beta.getVariance()) * pow((1-beta.getBelief()),2);
+        soft_feedback.param(std::bernoulli_distribution::param_type( delta * (1.0 - beta.getBelief()) + (1-delta) * sample ));
+        return soft_feedback(sf_rd);
+    }
 
 }
 

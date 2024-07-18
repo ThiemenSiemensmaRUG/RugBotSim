@@ -13,15 +13,20 @@ public:
     int beta_0;
     int alpha;
     int beta;
+    int onboard_alpha;
+    int onboard_beta;
     // Constructor
     BetaDistribution(int a0, int b0) 
-        : alpha_0(a0), beta_0(b0), alpha(a0), beta(b0) {}
+        : alpha_0(a0), beta_0(b0), alpha(a0), beta(b0), onboard_alpha(a0),onboard_beta(b0) {}
 
     void update(int sample);
+    void onboard_update(int sample);
     double getMode();
     double getMean();
     double getBelief();
     double getCDF(double a, double b, double x) ;
+    double getVariance();
+    double getOnboardMean();
 
 private:
     float const tinyNr = 1.0e-30;
@@ -33,12 +38,27 @@ void BetaDistribution::update(int sample) {
     alpha+= (sample);
 }
 
+void BetaDistribution::onboard_update(int sample) {
+    onboard_beta += (1-sample);
+    onboard_alpha+= (sample);
+}
+
+
+double BetaDistribution::getOnboardMean(){
+    return (double) onboard_alpha / ( (double) onboard_alpha+ (double) onboard_beta);
+}
+
 double BetaDistribution::getMode(){
     return (((double) alpha) - 1) / (((double) alpha)+((double) beta) - 2);
 }
 
 double BetaDistribution::getMean(){
     return (double) alpha / ( (double) alpha+ (double) beta);
+}
+
+double BetaDistribution::getVariance(){
+    return (((double) alpha) * ((double) beta)) / 
+                ((((double) alpha) + ((double) beta))*(((double) alpha) + ((double) beta))* ((((double) alpha) + ((double) beta)+1.0)));
 }
 
 double BetaDistribution::getBelief(){

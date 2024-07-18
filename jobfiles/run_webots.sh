@@ -41,6 +41,7 @@ cp ${INPUT_DIR}/world.txt $WB_WORKING_DIR/world.txt
 
 
 
+
 # PATH : This line defines the path to the Webots world to be launched, each instance will open a unique world file. 
 WEBWORLD="$(pwd)/../../worlds/world_${INSTANCE_ID}.wbt"  
 echo "Running file $WEBWORLD"
@@ -48,6 +49,7 @@ time timeout $WB_TIMEOUT webots --minimize --batch --mode=fast --stdout --stderr
 
 
 mv $WB_WORKING_DIR/webots_log.txt ${OUTPUT_DIR}/webots_log_${INSTANCE_ID}.txt
+mv $WB_WORKING_DIR/fitness.txt ${OUTPUT_DIR}/fitness.txt
 
 rm -r $JOB_BASE_DIR
 

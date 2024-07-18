@@ -102,6 +102,7 @@ void Environment::readFile() {
 
             // Read each line from the file
             std::string line;
+            std::cout << "grid parameters" ;
             while (std::getline(file, line)) {
                 // Use a stringstream to parse the line
                 std::istringstream lineStream(line);
@@ -114,13 +115,14 @@ void Environment::readFile() {
                 if (lineStream >> x >> comma >> y) {
                     // Store the pair (x, y) in the grid
                     d_grid.push_back(std::make_pair(x, y));
-                    //std::cout << x << y << '\n';
+                    std::cout << x << y << ",";
                
                 } else {
                     // Print a warning for unsupported file formatting
                     std::cout << "Unsupported file formatting in world file" << '\n';
                 }
             }
+            std::cout << std::endl;
         }
     // File is automatically closed when 'file' goes out of scope
 }
@@ -160,7 +162,7 @@ int Environment::getSample(double x, double y, int method_read) {
         return 0; // BLACK TILE
     }
     if (method_read ==1){
-        
+        return 0;
     }
 }
 

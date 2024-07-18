@@ -36,6 +36,8 @@ public:
     double rw_angle;
     double ca_angle;
     double spend_time;
+    int CAtime = 0;
+    int RWtime = 0;
 
     double CA_Threshold = 60.0;
     std::size_t static const n_sensors = 3;
@@ -257,8 +259,8 @@ void RugRobot::generateRW(){
 
 int RugRobot::RandomWalk(){
 
-    if (spend_time ==0){state= STATE_FW;}
-    
+    if (spend_time < (timeStep-1)){state= STATE_FW;}
+    RWtime+=timeStep;
 
     if ((spend_time > rw_time) && (state == STATE_FW)){
         state = STATE_TURN;
@@ -270,6 +272,7 @@ int RugRobot::RandomWalk(){
         //std::cout <<"CA state"<<'\n';
     }
     if (state == STATE_CA){
+        CAtime+=timeStep;
         if(turnAngle(ca_angle)==1){
             //std::cout <<"CA state exit"<<'\n';
             

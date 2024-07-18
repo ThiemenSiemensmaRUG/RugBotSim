@@ -5,4 +5,5 @@ build/release/cpp_supervisor.o: cpp_supervisor.cpp \
  /usr/local/webots/include/controller/cpp/webots/Node.hpp \
  /usr/local/webots/include/controller/cpp/webots/Field.hpp \
  /usr/local/webots/include/controller/cpp/webots/../../c/webots/contact_point.h \
- /usr/local/webots/include/controller/cpp/webots/Robot.hpp
+ /usr/local/webots/include/controller/cpp/webots/Robot.hpp \
+ supervisor_settings.hh
