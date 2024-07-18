@@ -17,4 +17,4 @@ build/release/inspection_controller.o: inspection_controller.cpp \
  /usr/local/webots/include/controller/cpp/webots/Field.hpp \
  /usr/local/webots/include/controller/cpp/webots/../../c/webots/contact_point.h \
  Algorithm_Template.hh filtering.hh RugBot.hh radio.hh \
- controller_settings.hh BetaDistribution.hh
+ controller_settings.hh BetaDistribution.hh Environment.hh

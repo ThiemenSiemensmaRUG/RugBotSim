@@ -20,7 +20,8 @@ public:
     void update(int sample);
     double getMode();
     double getMean();
-    double getCDF(double x);
+    double getBelief();
+    double getCDF(double a, double b, double x) ;
 
 private:
     float const tinyNr = 1.0e-30;
@@ -33,23 +34,25 @@ void BetaDistribution::update(int sample) {
 }
 
 double BetaDistribution::getMode(){
-    return ((double)alpha - 1) / ((double)alpha+(double)beta - 2);
+    return (((double) alpha) - 1) / (((double) alpha)+((double) beta) - 2);
 }
 
 double BetaDistribution::getMean(){
     return (double) alpha / ( (double) alpha+ (double) beta);
 }
 
+double BetaDistribution::getBelief(){
 
-double BetaDistribution::getCDF(double x){
-    double a =(double) alpha;
-    double b =(double) beta;
+    return getCDF((double) alpha,(double) beta,0.5);
+}
 
+
+double BetaDistribution::getCDF(double a, double b, double x) {
     if (x < 0.0 || x > 1.0) return 1.0/0.0;
 
     /*The continued fraction converges nicely for x < (a+1)/(a+b+2)*/
     if (x > (a+1.0)/(a+b+2.0)) {
-        return (1.0-BetaDistribution::getCDF(1.0-x)); /*Use the fact that beta is symmetrical.*/
+        return (1.0-BetaDistribution::getCDF(b,a,1.0-x)); /*Use the fact that beta is symmetrical.*/
     }
 
     /*Find the first part before the continued fraction.*/

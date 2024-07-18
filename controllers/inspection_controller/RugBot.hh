@@ -47,10 +47,7 @@ public:
     DistanceSensor *d_distance_sensors[n_sensors];
     const char *dMotorNames[2] = {"left motor", "right motor"};
 
-    double lower_bound_angle = -0.0125;
-    double upper_bound_angle = 0.0125;
-    double lower_bound_speed = 0.95;
-    double upper_bound_speed = 1.05;
+
     double speed_dev = 1;
     double motor_dev = 0;
 
@@ -93,9 +90,15 @@ public:
     int RandomWalk();
     void generateRW();
     void setCustomData(const std::string& inputString);
-    std::vector<int> getPos();
+    std::vector<double> getPos();
+    void setRWTimeGenParams(double location, double scale);
+    void setAngleDistParams(double lower_bound, double upper_bound);
+    void setSpeedDistParams(double lower_bound, double upper_bound);
 
 };
+
+
+
 
 RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     d_robot = new Supervisor();
@@ -126,27 +129,46 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     std::string name = d_robot->getName();
     int SeedRov = ((int) name[1]) * 10;
     srand(SeedRov);
-    std::cout << "RugRobot " << name[1] << " with Seed " << SeedRov << '\n';
     generator.seed(SeedRov);
-    angle_dist = std::uniform_real_distribution<double>(lower_bound_angle, upper_bound_angle);
-    speed_dist = std::uniform_real_distribution<double>(lower_bound_speed, upper_bound_speed);
-    rw_time_gen = std::cauchy_distribution<double>(7500, 1000);
+    std::cout << "RugRobot " << name[1] << " with Seed " << SeedRov <<","  << rw_angle_gen(generator)<<'\n';
+    
+
+    
+    
+ 
+
     rw_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
     ca_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
-    
+    setRWTimeGenParams(15000.0,0.0);
+    setAngleDistParams(0,0);
+    setSpeedDistParams(1,1);
+
+
     ca_angle = ca_angle_gen(generator);
-
-    motor_dev = 0;//angle_dist(generator);
-  
-
-    speed_dev = 1;//speed_dist(generator);
+    motor_dev = angle_dist(generator);
+    speed_dev = speed_dist(generator);
 
     //std::cout << "Motor deviations[a,s]:" << motor_dev << ',' << speed_dev << '\n';
 
-    generateRW();
+
     
 
     
+}
+
+void RugRobot::setRWTimeGenParams(double location, double scale) {
+    rw_time_gen = std::cauchy_distribution<double>(location, scale);
+    std::cout << "new random walk paramters loc, scale "<<location <<","<<scale<<'\n'; 
+    generateRW();
+}
+
+
+void RugRobot::setAngleDistParams(double lower_bound, double upper_bound) {
+    angle_dist = std::uniform_real_distribution<double>(lower_bound, upper_bound);
+}
+
+void RugRobot::setSpeedDistParams(double lower_bound, double upper_bound) {
+    speed_dist = std::uniform_real_distribution<double>(lower_bound, upper_bound);
 }
 
 
@@ -164,6 +186,7 @@ void RugRobot::setCustomData(const std::string& inputString){
 bool RugRobot::collAvoid() {
     for (std::size_t i = 0; i < n_sensors; ++i) {
         if (d_distance_sensors[i]->getValue() < CA_Threshold) {
+            
             return true;
         }
     }
@@ -227,8 +250,7 @@ std::vector<int> RugRobot::getMessages() {
 void RugRobot::generateRW(){
     rw_time =rw_time_gen(generator);
     rw_angle = rw_angle_gen(generator);
-    rw_time = std::clamp(rw_time,1000.0,20000.0);
-    //std::cout<<"RW parameters= "<<rw_time<<',' <<rw_angle<<'\n';
+    rw_time = std::clamp(rw_time,0.0,100000.0);
     state = STATE_PAUSE;
     
 }   
@@ -250,6 +272,7 @@ int RugRobot::RandomWalk(){
     if (state == STATE_CA){
         if(turnAngle(ca_angle)==1){
             //std::cout <<"CA state exit"<<'\n';
+            
             state = STATE_FW;
             ca_angle = ca_angle_gen(generator);
         }
@@ -274,15 +297,15 @@ int RugRobot::RandomWalk(){
 
     }
 
-std::vector<int>RugRobot::getPos() {
-    std::vector<int> pos;
+std::vector<double>RugRobot::getPos() {
+    std::vector<double> pos;
     const double *coordinates = translationData->getSFVec3f();
     const double xPos = coordinates[0];
     const double yPos = coordinates[2];
 
-    pos.push_back((int) (xPos*100));
-    pos.push_back((int) (yPos*100));
-    //std::cout<<pos[0]<<","<<pos[1]<<'\n';
+    pos.push_back((double) (xPos));
+    pos.push_back((double) (yPos));
+
     return pos;
 }
 

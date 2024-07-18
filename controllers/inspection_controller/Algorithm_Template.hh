@@ -13,6 +13,7 @@
 #include "radio.hh"
 #include "controller_settings.hh"
 #include "BetaDistribution.hh"
+#include "Environment.hh"
 typedef std::complex<double> Complex;
 typedef std::vector<Complex> CArray;
 typedef std::vector<double> Array;
@@ -38,14 +39,15 @@ public:
     int time = 0;
     int intersample_time =0;
     int pauseCount = tau; 
-
-
+    int sample = 0;
+    int d_f = -1;
     // Time step for the simulation
     enum { TIME_STEP = 20 };
 
-    Algorithm1() : settings(),robot(TIME_STEP), beta(1,1),radio(robot.d_robot,TIME_STEP) {};
+    Algorithm1() : settings(),robot(TIME_STEP), beta(1,1),radio(robot.d_robot,TIME_STEP),environ("world.txt") {};
 
     void run();
+    void print_data(int print_bool);
     void recvSample();
     void sendSample(int sample);
     void pause(int *pauseCount);
@@ -55,23 +57,28 @@ private:
     RugRobot robot;
     BetaDistribution beta;
     Radio_Rover radio;
-    std::vector<int> pos;
-
+    Environment environ;
 
 };
 
 void Algorithm1::run() {
-    //std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
-    pos = roundToNearest10(robot.getPos());
+    std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
+
     robot.setCustomData("");
+    
     settings.readSettings();
 
+    robot.setRWTimeGenParams(settings.values[0],settings.values[1]);
+    tau = settings.values[2];
+    robot.CA_Threshold = settings.values[3];
     while(robot.d_robot->step(TIME_STEP) != -1) {
-  
         time = (int) robot.d_robot->getTime();
-        intersample_time+=TIME_STEP;
+
+        if (robot.state == 0){intersample_time+=TIME_STEP;}
+        
         switch(states) {
             case STATE_RW:
+                recvSample();
                 if ((intersample_time-tau)>0){
                     pause(&pauseCount);
                     break;
@@ -81,25 +88,44 @@ void Algorithm1::run() {
 
             case STATE_OBS:
                 pauseCount = tau;
-
-                beta.update(1);
-                std::cout<<beta.alpha<<","<<beta.beta<<'\n';
-                std::cout<<beta.getCDF(0.5)<<'\n';
+                sample = environ.getSample(robot.getPos()[0],robot.getPos()[1],0);
+                beta.update(sample);
+                print_data(1);
+                sendSample(sample);
                 states = STATE_RW; 
                 break;
 
-                // Pause logic here
-                break;
             case RESET:
                 //reset state
 
                 break;
         }
-        if(robot.d_robot->getTime()>5){
-        robot.setCustomData( std::to_string((int) robot.d_robot->getTime())+
-        ","+std::string(robot.d_robot->getName().substr(1,1)) );
-        }
+        //print_data(0);
+        
     }
+}
+
+void Algorithm1::print_data(int print_bool) {//0 for not printing and only in custom data, 1 for also printing.
+if(robot.d_robot->getTime() > 5) {
+    std::string customData = 
+        std::to_string(print_bool) + "," +
+        std::to_string((int) robot.d_robot->getTime()) + "," +
+        std::string(robot.d_robot->getName().substr(1, 1)) + "," +
+        std::to_string(beta.getBelief()) + "," +
+        std::to_string(beta.alpha) + "," +
+        std::to_string(beta.beta) + "," +
+        std::to_string(beta.getMean()) + "," +
+        std::to_string(robot.getPos()[0]) + "," +
+        std::to_string(robot.getPos()[1]);
+
+    // Set the custom data
+    robot.setCustomData(customData);
+
+    if (print_bool){
+        std::cout << customData << std::endl;}
+}
+
+
 }
 
 
@@ -122,7 +148,7 @@ void Algorithm1::recvSample(){
     std::vector<int> messages = radio.getMessages();
         // Process received messages
         for (int sample : messages) {
-            //Do something
+            beta.update(sample);
         }
 }
 

@@ -35,6 +35,7 @@ export WB_WORKING_DIR=$JOB_BASE_DIR
 
 cp ${INPUT_DIR}/c_settings.txt $WB_WORKING_DIR/c_settings.txt 
 cp ${INPUT_DIR}/s_settings.txt $WB_WORKING_DIR/s_settings.txt 
+cp ${INPUT_DIR}/world.txt $WB_WORKING_DIR/world.txt 
 
 
 

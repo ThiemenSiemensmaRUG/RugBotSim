@@ -16,7 +16,7 @@ using namespace webots;
 
 
 
-int print_time_interval = 10;
+int print_time_interval = 500;
 
 // Get the working directory path
 char *pPath = getenv("WB_WORKING_DIR");

@@ -166,6 +166,38 @@ Robot {
             with open(file, 'w') as file:
                 for value in setting.values():
                     file.write(str(value) + '\n')
+            file.close()
+
+
+    def saveGrid(self,run_dir=None,size=5,fill_ratio=0.48,seed = 1):
+        np.random.seed(seed)
+
+        grid = np.zeros((size,size), dtype=int)
+        total_cells = size*size
+        filled_cells = int(fill_ratio * total_cells)
+
+        # Get random indices to fill
+        indices = np.random.choice(total_cells, filled_cells, replace=False)
+        # Convert indices to row, column format
+        
+        row_indices, col_indices = np.unravel_index(indices, (size,size))
+        # Fill the grid at selected indices
+        grid[row_indices, col_indices] = 1
+        map_list = []
+        for x, row in enumerate(grid):
+          for y, value in enumerate(row):
+              if value == 1:
+                  map_list.append((y, x))
+
+        map = np.array(map_list)
+        
+        filename =f"{run_dir}Instance_{self.instance}/world.txt"
+
+        np.savetxt(filename, map.astype(int), delimiter=',', fmt='%d', footer="-1")
+        
+
+
+        
 
 
 

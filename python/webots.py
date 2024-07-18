@@ -10,6 +10,7 @@ class WebotsEvaluation():
         self.instance =1
         self.robots = 4
         pass
+
     def run_webots_instance(self):
         # Method to run a Webots instance with given parameters
         subprocess.check_call(['.././run_webots.sh', str(self.run), str(self.instance), 
@@ -18,14 +19,14 @@ class WebotsEvaluation():
         os.chdir("../../")
         print(os.getcwd())
 
-    def job_setup(self,c_settings= {},s_settings = {},settings={}):
-        
 
+
+    def job_setup(self,c_settings= {},s_settings = {},settings={}):
         run_dir = f"jobfiles/Run_{self.run}/"
         os.makedirs(os.path.dirname(f"{run_dir}Instance_{self.instance}/"), exist_ok=True)
-
         world = createWorld(self.instance,self.instance,f"world_{self.instance}",self.robots)
         world.save_settings(run_dir,c_settings,s_settings)
+        world.saveGrid(run_dir,5,0.48,1)
         world.create_world()
         setup =  f"{run_dir}Instance_{self.instance}/settings.txt"
 
@@ -46,8 +47,8 @@ for i in range(1):
 
     x = WebotsEvaluation()
     x.instance = 4
-    x.robots = 1
-    c_settings = {}
+    x.robots = 4
+    c_settings = {"gamma0":10000,"gamma":1000,"tau":3000,"thetaC":50}
     s_settings = {}
     x.job_setup(c_settings=c_settings,s_settings=s_settings)
     x.run_webots_instance()

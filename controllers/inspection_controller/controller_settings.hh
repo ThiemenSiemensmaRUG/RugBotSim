@@ -21,7 +21,7 @@ void ControllerSettings::readSettings()
 {   
     char prob_name[256];
     sprintf(prob_name, "%s/c_settings.txt", pPath);
-    
+    std::cout<<prob_name<<'\n';
     //Dont set the parameters if the pointer is NULL
     if (pPath != NULL) {
         std::ifstream file(prob_name);

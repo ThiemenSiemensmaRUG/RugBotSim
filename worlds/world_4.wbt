@@ -14,8 +14,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.1676044440912245 -0.667931457921333 -0.7251043496214556 2.3102340938726025
-  position 2.253768311013078 1.9579189321241899 -0.19627897041091436
+  orientation 0.1925921807186387 -0.6691465356635923 -0.7177403191513292 2.316919496005195
+  position 2.2084568665922713 2.0198270618414162 -0.09752769031243588
 }
 TexturedBackground {
 }
@@ -70,21 +70,71 @@ Robot {
   ]
   supervisor TRUE
 }
-DEF r0 RovableV2 {
-  translation 0.26244328076369106 0.0125 0.14284943080764423
-  rotation -0.820705659397458 -0.4040063245996179 -0.4040063245996179 1.76711
-  name "r0"
-  controller "inspection_controller"
-  controllerArgs [
-    "4"
-  ]
-  customData "13,0"
-  extensionSlot [
-    Receiver {
-      rotation -0.5773502691896258 -0.5773502691896258 -0.5773502691896258 2.0943951023931953
+   DEF r0 RovableV2 {
+    translation 0.26244328076369106 0.0125 0.14284943080764423
+    rotation 0.232888646937643 -0.6876637543623897 -0.6876637543623897 3.5992129856469175
+    name "r0"
+    controller "inspection_controller"
+    controllerArgs [
+        "4"
+    ]
+    supervisor TRUE
+    customData ""
+    extensionSlot [
+        Receiver {
+        }
+        Emitter {
+        }
+    ]
     }
-    Emitter {
-      rotation -0.5773502691896258 -0.5773502691896258 -0.5773502691896258 2.0943951023931953
+DEF r1 RovableV2 {
+    translation 0.18947504372216922 0.0125 0.10986358611163091
+    rotation 0.22030291066327326 -0.6897342341631629 -0.6897342341631629 3.5752710800278553
+    name "r1"
+    controller "inspection_controller"
+    controllerArgs [
+        "4"
+    ]
+    supervisor TRUE
+    customData ""
+    extensionSlot [
+        Receiver {
+        }
+        Emitter {
+        }
+    ]
     }
-  ]
-}
+DEF r2 RovableV2 {
+    translation 0.876159538778947 0.0125 0.7704071163462276
+    rotation 0.6139997991789715 0.5581237526786432 0.5581237526786432 4.242892501828404
+    name "r2"
+    controller "inspection_controller"
+    controllerArgs [
+        "4"
+    ]
+    supervisor TRUE
+    customData ""
+    extensionSlot [
+        Receiver {
+        }
+        Emitter {
+        }
+    ]
+    }
+DEF r3 RovableV2 {
+    translation 0.24973535812128583 0.0125 0.5330120073573321
+    rotation 0.5129110051706691 -0.6070100084738363 -0.6070100084738363 4.089438620496254
+    name "r3"
+    controller "inspection_controller"
+    controllerArgs [
+        "4"
+    ]
+    supervisor TRUE
+    customData ""
+    extensionSlot [
+        Receiver {
+        }
+        Emitter {
+        }
+    ]
+    }

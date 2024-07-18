@@ -1,2 +1,4 @@
-2. beta update based on given brid (positions of tiles)
-3. rewrite cpp Supervisor
+2. Rewrite the supervisor (get fitness)
+3. right output formats of supervisor (include sampling locations and times)
+4. include PSO optimization
+5. include Abaqus data (mm accuracy) in getsample
