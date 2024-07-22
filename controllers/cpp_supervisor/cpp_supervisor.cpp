@@ -15,15 +15,16 @@ using namespace webots;
 
 
 double calculateFitness(int final_decision, int correct_decision, double fill_ratio, double correct_fill_ratio, double time , double t_max,double fill_offset) {
-    double final_d_error = 1+std::abs(static_cast<double>(final_decision) - static_cast<double>(correct_decision))*5;
+    double final_d_error =  std::abs(static_cast<double>(final_decision) - static_cast<double>(correct_decision))*5;
+
     if ( time ==0){time = t_max;}
     if (final_decision == -1){
-      final_d_error = 2;
+      final_d_error = 1;
     }
     
     double fill_error = std::abs(fill_ratio - correct_fill_ratio) / fill_offset;
     double t_error = std::abs(time / t_max);
-    double total_error = final_d_error * fill_error * t_error;
+    double total_error = (final_d_error + fill_error )  + t_error;
 
     // Print errors and sum
     std::cout << "Final Decision Error: " << final_d_error << std::endl;

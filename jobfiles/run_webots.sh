@@ -11,7 +11,7 @@ NUM_ROBOTS=$3
 line=$((INSTANCE_ID + 1))
 
 # Kill webots after WB_TIMEOUT seconds
-WB_TIMEOUT=1500
+WB_TIMEOUT=60
 
 # Set the input directory (relative to the current working directory)
 INPUT_DIR=Instance_${INSTANCE_ID}

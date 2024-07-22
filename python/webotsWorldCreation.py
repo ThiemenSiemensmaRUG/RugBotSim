@@ -153,8 +153,7 @@ Robot {
                 self.ry.append(POSE[1])
                 self.rz.append(POSE[2])
                 self.w.append(POSE[3])
-                if i ==0:
-                  print(self.initialX,self.initialY,self.rx,self.ry,self.rz,self.w)
+
 
 
     def save_settings(self,run_dir,c_settings,s_settings):
@@ -209,3 +208,9 @@ Robot {
         self.create_header()
         self.create_robots_in_world()
         self.file.close()
+
+
+        
+
+
+    
