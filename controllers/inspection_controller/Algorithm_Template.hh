@@ -243,12 +243,12 @@ int Algorithm1::calculateMessage(int sample){
     }
 
     if (feedback == SOFT){
-        std::cout << "---------message---------"<<std::endl;
-        std::cout<<beta.alpha << ","<<beta.beta<<std::endl;
+        // std::cout << "---------message---------"<<std::endl;
+        // std::cout<<beta.alpha << ","<<beta.beta<<std::endl;
         delta = exp(-1.0*eta * beta.getVariance()) * (0.5-beta.getBelief()) * (0.5-beta.getBelief());
 
-        std::cout<<"nu = "<<eta<<", p = "<<beta.getBelief()<<", var = "<<beta.getVariance()<<", O = "<<sample<<", delta = "<<delta<<std::endl;
-        std::cout<<"probability = "<<delta * (1.0 - beta.getBelief()) + (1-delta) * sample <<std::endl;
+        // std::cout<<"nu = "<<eta<<", p = "<<beta.getBelief()<<", var = "<<beta.getVariance()<<", O = "<<sample<<", delta = "<<delta<<std::endl;
+        // std::cout<<"probability = "<<delta * (1.0 - beta.getBelief()) + (1-delta) * sample <<std::endl;
         soft_feedback.param(std::bernoulli_distribution::param_type( delta * (1.0 - beta.getBelief()) + (1-delta) * sample ));
         return soft_feedback(sf_rd);
     }

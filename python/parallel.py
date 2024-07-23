@@ -12,7 +12,7 @@ def launch_instance(x,reevaluation = 0,run_dir=0,feedback =0,fill_ratio = 0.48,n
     
     world_creation_seed = instance
     grid_seed = instance
-    c_settings = {"gamma0":x[0],"gamma":x[1],"tau":x[2],"thetaC":x[3],"swarmCount":x[4],"feedback":feedback,'eta':1000}
+    c_settings = {"gamma0":x[0],"gamma":x[1],"tau":x[2],"thetaC":x[3],"swarmCount":x[4],"feedback":feedback,'eta':700}
     s_settings = {"right_dec":right_dec,"fill_ratio":fill_ratio,"offset_f":0.04,"check_interval":10,"autoexit":1}
 
     settings = {"reevaluation":reevaluation,"word_creation_seed":world_creation_seed,"grid_seed":grid_seed}
@@ -31,6 +31,6 @@ def launch_batch(batch_size,workers,x_,run_dir,feedback,fill_ratio,robots):
         [future.result() for future in futures]
 
 
-
-x_=[3000,10000,3000,60,300]
-launch_batch(batch_size=100,workers=5,x_=x_,run_dir=2,feedback=2,fill_ratio=0.48,robots=4)
+x_=[5000,10000,3000,60,300]
+for feedback in [2]:
+    launch_batch(batch_size=100,workers=8,x_=x_,run_dir=feedback,feedback=feedback,fill_ratio=0.48,robots=4)

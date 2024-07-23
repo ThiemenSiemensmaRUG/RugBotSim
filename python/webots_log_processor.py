@@ -3,8 +3,9 @@ import numpy as np
 
 
 class WebotsProcessor:
-    def __init__(self, filename) -> None:
-        self.filename = filename
+    def __init__(self, folder,instance) -> None:
+        self.filename = folder + f"/webots_log_{instance}.txt"
+        self.world_file = folder + "/world.txt"
         self.data = None
         self._read_file()
 
@@ -28,6 +29,24 @@ class WebotsProcessor:
         self.data = pd.DataFrame(data_list, columns=columns)
         self.i_data = self.interpolate_data()
         
+    def read_world_file(self):
+        with open(self.world_file, 'r') as file:
+            lines = file.readlines()
+        
+        entries = []
+        for line in lines:
+            if ',' in line:
+                row, col = map(int, line.split(','))
+                entries.append((row, col))
+        # Initialize a 5x5 matrix filled with zeros
+        matrix = np.ones((5, 5), dtype=int)
+
+        # Fill the matrix with the given entries
+        for (row, col) in entries:
+            matrix[row, col] = -1
+        
+        return matrix, matrix.reshape(1,25)
+
     def get_summary(self):
         """Returns a summary of the DataFrame"""
         return self.data.describe()
