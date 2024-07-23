@@ -26,7 +26,7 @@ JOB_BASE_DIR=$(pwd)/tmp/job_${INSTANCE_ID}
 if [ ! -d $JOB_BASE_DIR ]
 
 then
-   echo "(`date`) Create job base directory for the Webots instance of this run_particle_local.sh script as $JOB_BASE_DIR"
+   echo "(`date`) Create job base directory for the Webots instance of this run_webots.sh script as $JOB_BASE_DIR"
    mkdir -p $JOB_BASE_DIR
 fi
 
