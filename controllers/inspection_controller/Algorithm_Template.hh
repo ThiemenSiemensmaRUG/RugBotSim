@@ -81,7 +81,7 @@ private:
     std::random_device sf_rd;
     std::bernoulli_distribution soft_feedback;
     double delta = 0;
-    double nu = 1250;
+    double eta = 1250;
 
 };
 
@@ -180,12 +180,13 @@ void Algorithm1::setSimulationSetup() {
     robot.CA_Threshold = settings.values[3];
     min_swarmCount = settings.values[4];
     feedback = static_cast<feedbackStrategy>(settings.values[5]);
-
+    eta = settings.values[6];
     // Print the updated values
     std::cout << "tau: " << tau << std::endl;
     std::cout << "CA_Threshold: " << robot.CA_Threshold << std::endl;
     std::cout << "min_swarmCount: " << min_swarmCount << std::endl;
     std::cout << "feedback: " << feedback << std::endl;
+    std::cout << "eta: " << eta << std::endl;
 }
 
 
@@ -242,7 +243,12 @@ int Algorithm1::calculateMessage(int sample){
     }
 
     if (feedback == SOFT){
-        delta = exp(-1.0*nu * beta.getVariance()) * pow((1-beta.getBelief()),2);
+        std::cout << "---------message---------"<<std::endl;
+        std::cout<<beta.alpha << ","<<beta.beta<<std::endl;
+        delta = exp(-1.0*eta * beta.getVariance()) * (0.5-beta.getBelief()) * (0.5-beta.getBelief());
+
+        std::cout<<"nu = "<<eta<<", p = "<<beta.getBelief()<<", var = "<<beta.getVariance()<<", O = "<<sample<<", delta = "<<delta<<std::endl;
+        std::cout<<"probability = "<<delta * (1.0 - beta.getBelief()) + (1-delta) * sample <<std::endl;
         soft_feedback.param(std::bernoulli_distribution::param_type( delta * (1.0 - beta.getBelief()) + (1-delta) * sample ));
         return soft_feedback(sf_rd);
     }
