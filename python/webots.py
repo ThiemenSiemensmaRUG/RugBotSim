@@ -11,13 +11,15 @@ class WebotsEvaluation():
         self.robots = robots
         pass
 
-    def run_webots_instance(self):
+    def run_webots_instance(self,print_ = False):
         # Method to run a Webots instance with given parameters
         subprocess.check_call(['.././run_webots.sh', str(self.run), str(self.instance), 
                                str(self.robots)])
-        print(os.getcwd())
+        if print_:
+            print(os.getcwd())
         os.chdir("../../")
-        print(os.getcwd())
+        if print_:
+            print(os.getcwd())
 
 
 
@@ -50,7 +52,7 @@ class WebotsEvaluation():
                 fitness_value = file.readline().strip()
             return float(fitness_value)
         else:
-            return 100
+            return 100 #probably an error occurred.
    
 
     def move_results(self, output_folder, output_name):
@@ -73,7 +75,6 @@ class WebotsEvaluation():
         
         if os.path.exists(source_dir):
             shutil.rmtree(source_dir)
-            print(f"Directory {source_dir} has been removed")
         else:
             raise FileNotFoundError(f"Source directory not found at {source_dir}")
 
