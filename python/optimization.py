@@ -8,7 +8,7 @@ def rosenbrock(x,particle=0,iteration=0,reevaluation=0):
     #value = value - (len(x)-1)
     return value 
 def cost_function(x,particle=0,iteration=0,reevaluation=0):
-    run_dir = 2
+    run_dir = 4
     job = WebotsEvaluation(run = run_dir,instance = particle * reevaluation,robots=4)
     
     world_creation_seed = (particle+1) * (iteration + 1) * reevaluation
@@ -19,16 +19,20 @@ def cost_function(x,particle=0,iteration=0,reevaluation=0):
     job.job_setup(c_settings=c_settings,s_settings=s_settings,settings=settings,world_creation_seed=world_creation_seed,grid_seed=grid_seed,fill_ratio=0.48,gridsize=5)
     job.run_webots_instance()
     fitness = job.get_fitness()
-    job.move_results("/home/thiemenrug/Desktop/",f"pso_{run_dir}/I{iteration}/P{particle}/R{reevaluation}")
-    job.remove_run_dir()
+    #job.move_results("/home/thiemenrug/Desktop/",f"pso_{run_dir}/I{iteration}/P{particle}/R{reevaluation}")
+    #job.remove_run_dir()
     del x
 
     return fitness
 
 
+
+
+print(cost_function([3716.3827655 , 7750.7940762 , 5159.38636727 , 114.21678047 , 133.2693057],23,2,1001))
+
 bounds = np.array([[0,20000],[0,20000],[1000,6000],[50,150],[0,500]])
 #bounds = np.array([[-100,100],[-100,100]])
 
-pso = PSO(1,0,[1,0.4],0.5,0.5,bounds,0,cost_function,10,10,5,.2,2)
-pso.pso_threaded(5)
-pso.webots_data.to_csv("jobfiles/pso.csv")
+# pso = PSO(1,0,[1,0.4],0.5,0.5,bounds,0,cost_function,50,25,8,.2,2)
+# pso.pso_threaded(5)
+# pso.webots_data.to_csv("jobfiles/pso.csv")

@@ -194,7 +194,7 @@ class PSO:
             # Update particles
             self.update_particles(i)
             self.extend_short_list(i)
-            
+            self.webots_data.to_csv("temporary_output.csv")
             
     
     def extend_short_list(self,iteration):

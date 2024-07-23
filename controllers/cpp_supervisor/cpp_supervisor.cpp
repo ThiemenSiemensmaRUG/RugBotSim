@@ -15,21 +15,20 @@ using namespace webots;
 
 
 double calculateFitness(int final_decision, int correct_decision, double fill_ratio, double correct_fill_ratio, double time , double t_max,double fill_offset) {
-    double final_d_error =  std::abs(static_cast<double>(final_decision) - static_cast<double>(correct_decision))*5;
+    double final_d_error = 0;
 
-    if ( time ==0){time = t_max;}
-    if (final_decision == -1){
-      final_d_error = 1;
-    }
+
+    if(time ==1){time = t_max;}
+    if(final_decision != correct_decision){final_d_error = 5.0;}
+    if(final_decision == correct_decision){final_d_error = std::abs(time / t_max);}
+
     
     double fill_error = std::abs(fill_ratio - correct_fill_ratio) / fill_offset;
-    double t_error = std::abs(time / t_max);
-    double total_error = (final_d_error + fill_error )  + t_error;
+    double total_error = final_d_error * fill_error;
 
     // Print errors and sum
     std::cout << "Final Decision Error: " << final_d_error << std::endl;
     std::cout << "Fill Ratio Error: " << fill_error << std::endl;
-    std::cout << "Time Error: " << t_error << std::endl;
     std::cout << "Total Error: " << total_error << std::endl;
 
     return total_error;
@@ -121,7 +120,7 @@ int main() {
   while (supervisor->step(TIME_STEP) != -1) {
     const double t = supervisor->getTime();
 
-    if(( (int(t) % print_time_interval) == 0) && (show_info)) {
+    if(( (int(t) % print_time_interval) == 0) && (show_info) && (t>50.0)) {//time condition to prevent from reading non-robot state custom data
       show_info= false;
       for (int i = 0; i < robots.size(); i++) {
 

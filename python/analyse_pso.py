@@ -180,7 +180,7 @@ class analyse():
         return  dimensions,std
 
 ## processing the long output file
-x=analyse("jobfiles/pso_webots.csv")
+x=analyse("intermediate_result.csv")
 iterations,mean_fitness,mean_personal_best,std_personal_best,global_best=x.get_results()
 plt.figure()
 plt.plot(range(0,x.max_iter),mean_personal_best,label="$\\mu (\mathcal{P}_i)$")
