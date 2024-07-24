@@ -1,6 +1,12 @@
 #VRML_SIM R2023b utf8
 
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Plastic.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/CorrodedMetal.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/BrushedAluminium.proto"                                                                   
 EXTERNPROTO "../protos/RovableV2.proto"
+                        
 
 WorldInfo {
   CFM 0.1
@@ -71,8 +77,8 @@ Robot {
   supervisor TRUE
 }
    DEF r0 RovableV2 {
-    translation 0.4771136108196932 0.0125 0.6417252523915298
-    rotation -0.37736233483660653 -0.6548273315335368 -0.6548273315335368 2.419912357363241
+    translation 0.3753704974226676 0.0125 0.48243259904116453
+    rotation 0.1855110542987761 -0.6948329470933846 -0.6948329470933846 3.5084443802005403
     name "r0"
     controller "inspection_controller"
     controllerArgs [
@@ -88,8 +94,8 @@ Robot {
     ]
     }
 DEF r1 RovableV2 {
-    translation 0.17834031763283098 0.0125 0.05977439878106116
-    rotation 0.2816494180592823 -0.6784812470904659 -0.6784812470904659 3.6906677576398526
+    translation 0.45208332840553084 0.0125 0.4185641569549065
+    rotation -0.35695142404707925 -0.6605246705728569 -0.6605246705728569 2.455884348871696
     name "r1"
     controller "inspection_controller"
     controllerArgs [
@@ -105,8 +111,8 @@ DEF r1 RovableV2 {
     ]
     }
 DEF r2 RovableV2 {
-    translation 0.2966433255304982 0.0125 0.7793132470115753
-    rotation -0.4345428481859836 -0.6368565431439067 -0.6368565431439067 2.3217412934239645
+    translation 0.2829698437010704 0.0125 0.6214963316931357
+    rotation 0.9989883902970564 -0.03179776762365977 -0.03179776762365977 4.711376858832112
     name "r2"
     controller "inspection_controller"
     controllerArgs [
@@ -122,8 +128,8 @@ DEF r2 RovableV2 {
     ]
     }
 DEF r3 RovableV2 {
-    translation 0.5913113348549598 0.0125 0.5523710429780132
-    rotation -0.3654173273865525 -0.658205962007968 -0.658205962007968 2.440906511454707
+    translation 0.3218393343196812 0.0125 0.35155701562794706
+    rotation 0.828428189928786 -0.3960471778281694 -0.3960471778281694 4.525265544218954
     name "r3"
     controller "inspection_controller"
     controllerArgs [

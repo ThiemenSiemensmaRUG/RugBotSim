@@ -18,7 +18,9 @@ public:
     // Constructor
     BetaDistribution(int a0, int b0) 
         : alpha_0(a0), beta_0(b0), alpha(a0), beta(b0), onboard_alpha(a0),onboard_beta(b0) {}
-
+    ~BetaDistribution() {
+        // No dynamic memory allocation, so no cleanup needed
+    }
     void update(int sample);
     void onboard_update(int sample);
     double getMode();

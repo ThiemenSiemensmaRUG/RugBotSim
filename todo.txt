@@ -1,2 +1,2 @@
-4. include PSO optimization
-5. include Abaqus data (mm accuracy) in getsample
+1. include Abaqus data (mm accuracy) in getsample
+2. Error bug fixing

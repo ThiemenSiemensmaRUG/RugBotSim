@@ -13,6 +13,11 @@ class ControllerSettings
 public:
     std::vector<double> values;
     void readSettings();
+       // Constructor
+    ControllerSettings() = default;
+
+    // Destructor
+    ~ControllerSettings() = default;
     
 };
 

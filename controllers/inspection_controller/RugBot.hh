@@ -151,11 +151,25 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     speed_dev = speed_dist(generator);
 
     //std::cout << "Motor deviations[a,s]:" << motor_dev << ',' << speed_dev << '\n';
+}
+// Destructor definition
+RugRobot::~RugRobot() {
+    // Clean up dynamically allocated sensors
+    for (std::size_t i = 0; i < n_sensors; ++i) {
+        delete d_distance_sensors[i];
+    }
 
-
+    // Clean up dynamically allocated motors
+    delete leftMotor;
+    delete rightMotor;
     
+    // Clean up other Webots objects if they are dynamically allocated
+    delete gyro;
+    delete d_robot;
+    delete emitter;
+    delete receiver;
 
-    
+    // If any other resources were allocated dynamically, clean them up here
 }
 
 void RugRobot::setRWTimeGenParams(double location, double scale) {
@@ -175,9 +189,6 @@ void RugRobot::setSpeedDistParams(double lower_bound, double upper_bound) {
 
 
 
-RugRobot::~RugRobot() {
-    delete d_robot;
-}
 
 
 void RugRobot::setCustomData(const std::string& inputString){

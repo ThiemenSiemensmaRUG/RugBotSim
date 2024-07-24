@@ -61,6 +61,10 @@ public:
 
     Algorithm1() : settings(),robot(TIME_STEP), beta(1,1),radio(robot.d_robot,TIME_STEP),environ("world.txt") {};
 
+    ~Algorithm1() {
+        // Destructor body can be left empty if no special cleanup is needed.
+        // If your members have their own destructors, they will be called automatically.
+    }
     void run();
     void print_data(int print_bool);
     void recvSample();
@@ -92,44 +96,71 @@ void Algorithm1::run() {
 
     setSimulationSetup();
 
-    while(robot.d_robot->step(TIME_STEP) != -1) {
+    while(robot.d_robot->step(robot.d_robot->getBasicTimeStep()) != -1) {
         time = (int) robot.d_robot->getTime();
 
         if (robot.state == 0){intersample_time+=TIME_STEP;}
         
-        switch(states) {
-            case STATE_RW:
-                recvSample();
-                if ((intersample_time-tau)>0){
-                    pause(&pauseCount);
-                    SampleTime+=TIME_STEP;
+            switch (states) {
+                case STATE_RW:
+                    try {
+                        recvSample();
+                        if ((intersample_time - tau) > 0) {
+                            pause(&pauseCount);
+                            SampleTime += TIME_STEP;
+                            break;
+                        }
+                        robot.RandomWalk();
+                    } catch (const std::exception &e) {
+                        std::cerr << "Error in STATE_RW: " << e.what() << std::endl;
+                        states = RESET;  // Transition to RESET state to handle the error
+                    }
                     break;
-                } 
-                robot.RandomWalk();
-                break;
 
-            case STATE_OBS:
-                pauseCount = 1000;
-                SampleTime+=TIME_STEP;
-                sample = environ.getSample(robot.getPos()[0],robot.getPos()[1],0);
-                beta.update(sample);
-                beta.onboard_update(sample);
-                check_decision();
-                message = calculateMessage(sample);
-                print_data(1);
-                sendSample(message);
-                states = STATE_RW; 
-                break;
+                case STATE_OBS:
+                    try {
+                        pauseCount = 1000;
+                        SampleTime += TIME_STEP;
+                        auto sample = environ.getSample(robot.getPos()[0], robot.getPos()[1], 0);
+                        beta.update(sample);
+                        beta.onboard_update(sample);
+                        check_decision();
+                        message = calculateMessage(sample);
+                        print_data(1);
+                        sendSample(message);
+                        states = STATE_RW;
+                    } catch (const std::exception &e) {
+                        std::cerr << "Error in STATE_OBS: " << e.what() << std::endl;
+                        states = RESET;  // Transition to RESET state to handle the error
+                    }
+                    break;
 
-            case RESET:
-                //reset state
+                case RESET:
+                    try {
+                        // Reset state logic goes here
+                        std::cout << "Resetting state..." << std::endl;
+                        states = STATE_RW;  // Transition back to a default state
+                    } catch (const std::exception &e) {
+                        std::cerr << "Error in RESET state: " << e.what() << std::endl;
+                        // Handle further errors or perform additional cleanup
+                    }
+                    break;
 
-                break;
+                default:
+                    std::cerr << "Unknown state: " << states << std::endl;
+                    states = RESET;  // Transition to RESET state to handle unknown state
+                    break;
+            }
+
+            // Optionally, print additional data or debug information
+            // print_data(0);
+
         }
-        //print_data(0);
+
+        return;
         
-    }
 }
+
 
 void Algorithm1::print_data(int print_bool) {//0 for not printing and only in custom data, 1 for also printing.
 if(robot.d_robot->getTime() > 5) {
@@ -252,6 +283,7 @@ int Algorithm1::calculateMessage(int sample){
         soft_feedback.param(std::bernoulli_distribution::param_type( delta * (1.0 - beta.getBelief()) + (1-delta) * sample ));
         return soft_feedback(sf_rd);
     }
+    else{ return sample;}//in exception cases
 
 }
 

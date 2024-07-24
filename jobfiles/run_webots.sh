@@ -3,6 +3,7 @@
 RUN=$1
 INSTANCE_ID=$2
 NUM_ROBOTS=$3
+PORT=$4
 
 line=$((INSTANCE_ID + 1))
 
@@ -35,10 +36,13 @@ cp ${INPUT_DIR}/world.txt $WB_WORKING_DIR/world.txt
 
 # Define the path to the Webots world file to be launched, each instance will open a unique world file
 WEBWORLD="$(pwd)/../../worlds/world_${INSTANCE_ID}.wbt"
-echo "Running file $WEBWORLD"
+
+
+# Print the file being run and the port number
+echo "Running file $WEBWORLD on port $PORT"
 
 # Run Webots in batch mode with a timeout
-time timeout $WB_TIMEOUT webots --minimize --batch --mode=fast --stdout --stderr --no-rendering $WEBWORLD &> $WB_WORKING_DIR/webots_log.txt 
+time timeout $WB_TIMEOUT webots --minimize --batch --mode=fast --stdout --port=$PORT --stderr --no-rendering $WEBWORLD &> $WB_WORKING_DIR/webots_log.txt
 
 # Move output files to the output directory
 mv $WB_WORKING_DIR/webots_log.txt ${OUTPUT_DIR}/webots_log_${INSTANCE_ID}.txt

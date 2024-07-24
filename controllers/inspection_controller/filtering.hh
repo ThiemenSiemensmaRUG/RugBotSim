@@ -66,7 +66,7 @@ std::vector<double> butter_lowpass_filter(const std::vector<double>& data, doubl
 std::vector<double> forwardButterworth(const std::vector<double>& b, const std::vector<double>& a, const std::vector<double>& fft) {
     int len_fft = fft.size();
     int len_b = b.size();
-    int len_a = a.size();
+
 
     std::vector<double> filtered_fft(len_fft, 0.0);
 
@@ -86,7 +86,7 @@ std::vector<double> forwardButterworth(const std::vector<double>& b, const std::
 std::vector<double> backwardButterworth(const std::vector<double>& b, const std::vector<double>& a, const std::vector<double>& fft_out) {
     int len_fft = fft_out.size();
     int len_b = b.size();
-    int len_a = a.size();
+
 
     std::vector<double> filtered_fft(len_fft, 0.0);
 

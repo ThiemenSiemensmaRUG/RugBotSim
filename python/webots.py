@@ -11,11 +11,11 @@ class WebotsEvaluation():
         self.robots = robots
         pass
 
-    def run_webots_instance(self, timeout=60, print_=False):
+    def run_webots_instance(self, timeout=120, print_=False,port=1234):
         # Method to run a Webots instance with given parameters
         try:
             subprocess.check_call(['.././run_webots.sh', str(self.run), str(self.instance), 
-                                   str(self.robots)], timeout=timeout)
+                                   str(self.robots),str(port)], timeout=timeout)
         except subprocess.TimeoutExpired:
             print(f"Webots instance {self.instance} timed out after {timeout} seconds")
         
@@ -58,7 +58,7 @@ class WebotsEvaluation():
                 fitness_value = file.readline().strip()
             return float(fitness_value)
         else:
-            return 100 #probably an error occurred.
+            return 100 #probably an error occurred 
    
 
     def move_results(self, output_folder, output_name):

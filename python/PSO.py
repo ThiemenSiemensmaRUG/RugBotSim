@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from concurrent.futures import ThreadPoolExecutor,ProcessPoolExecutor
+
 import concurrent.futures
 # Top-level function to evaluate a particle initially
 def evaluate_particle_initial(particle, iteration,r, seed, sigma, objective_func):
@@ -114,7 +114,7 @@ class PSO:
 
                     
                     # Evaluate the objective function at the particle's current position without reevaluation
-                    particle.re_eval_value  = self.objective_func(particle.position, particle=particle.number, iteration=i, reevaluation=0)
+                    particle.re_eval_value  = self.objective_func(particle.position, particle=particle.number, iteration=i, reevaluation=r+1000)
                     
                     # Modify the evaluation value by adding normally distributed noise scaled by sigma
     
@@ -157,7 +157,7 @@ class PSO:
             
         return
     
-    def pso_threaded(self,min_processes=8):
+    def pso_threaded(self,min_processes=4):#be carefull using to many processes, causes conflicts and crashes in webots
         num_processes = min(min_processes, len(self.particles))  # Number of processes
 
         for i in range(self.iterations):
@@ -169,6 +169,7 @@ class PSO:
                    
                     futures = [process_executor.submit(evaluate_particle_initial, particle, i, r+1000, self.seed, self.sigma, self.objective_func) for particle in self.particles]
                     self.particles = [future.result() for future in futures]
+                
 
             for particle in self.particles:
                 particle.current_value = fitness(particle.current_values.copy())   
@@ -179,7 +180,7 @@ class PSO:
             
             # Reevaluations
             for r in range(2,self.reevaluations+2):
-                with ProcessPoolExecutor(max_workers=num_processes) as process_executor:
+                with concurrent.futures.ProcessPoolExecutor(max_workers=num_processes) as process_executor:
                     reevaluation_futures = [process_executor.submit(reevaluate_particle, particle, i, r, self.seed, self.sigma, self.objective_func) for particle in top_particles]
                     reevaluated_particles = [future.result() for future in reevaluation_futures]
                 
