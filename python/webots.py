@@ -11,13 +11,19 @@ class WebotsEvaluation():
         self.robots = robots
         pass
 
-    def run_webots_instance(self,print_ = False):
+    def run_webots_instance(self, timeout=60, print_=False):
         # Method to run a Webots instance with given parameters
-        subprocess.check_call(['.././run_webots.sh', str(self.run), str(self.instance), 
-                               str(self.robots)])
+        try:
+            subprocess.check_call(['.././run_webots.sh', str(self.run), str(self.instance), 
+                                   str(self.robots)], timeout=timeout)
+        except subprocess.TimeoutExpired:
+            print(f"Webots instance {self.instance} timed out after {timeout} seconds")
+        
         if print_:
             print(os.getcwd())
+        
         os.chdir("../../")
+        
         if print_:
             print(os.getcwd())
 
