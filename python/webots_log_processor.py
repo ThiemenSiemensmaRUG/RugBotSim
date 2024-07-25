@@ -72,7 +72,7 @@ class WebotsProcessor:
             robot_data = self.filter_by_robot_id(robot_id).copy()
             # Compute X and Y distances
             robot_data['time_diff'] = robot_data['time'].diff()
-            times.append(robot_data[['time', 'robot_id', 'time_diff']])
+            times.append(robot_data[['time', 'robot_id', 'time_diff']].iloc[:-1])
         all_times =pd.concat(times).reset_index(drop=True).dropna()
  
         return all_times['time_diff']
@@ -81,7 +81,20 @@ class WebotsProcessor:
         """Adds a binary indicator column for d_f"""
         self.data['d_f_indicator'] = np.where(self.data['d_f'].astype(float).isin([0, 1]), 1, 0)
         
+    def get_state_times(self):
+        self._add_d_f_indicator()
+        robot_ids = self.data['robot_id'].unique()
+        ca_times = []
+        rw_times = []
+        for robot_id in robot_ids:
+            robot_data = self.filter_by_robot_id(robot_id).copy()
+            robot_data.at[robot_data.index[-1], 'd_f_indicator'] = 1
 
+            index = (robot_data['d_f_indicator'] == 1.0).argmax()
+            ca_times.append(robot_data['ca_time'].iloc[index])
+            rw_times.append(robot_data['rw_time'].iloc[index])
+        
+        return np.array(ca_times).mean() / 1000, np.array(rw_times).mean() / 1000
 
     def get_dec_time_acc(self):
         self._add_d_f_indicator()

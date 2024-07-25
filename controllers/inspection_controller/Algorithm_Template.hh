@@ -55,7 +55,7 @@ public:
     int SampleTime = 0;
     int decisionTime = 0;
     double p_c = 0.95;
-    
+ 
     // Time step for the simulation
     enum { TIME_STEP = 20 };
 
@@ -98,19 +98,21 @@ void Algorithm1::run() {
 
     while(robot.d_robot->step(robot.d_robot->getBasicTimeStep()) != -1) {
         time = (int) robot.d_robot->getTime();
-
-        if (robot.state == 0){intersample_time+=TIME_STEP;}
+        
+        //
         
             switch (states) {
                 case STATE_RW:
                     try {
-                        recvSample();
-                        if ((intersample_time - tau) > 0) {
+                        if (((intersample_time - tau) > -(TIME_STEP + 1)) ) {
                             pause(&pauseCount);
                             SampleTime += TIME_STEP;
                             break;
                         }
                         robot.RandomWalk();
+                        if(robot.state == RugRobot::STATE_FW){intersample_time+=TIME_STEP;}
+                        recvSample();
+
                     } catch (const std::exception &e) {
                         std::cerr << "Error in STATE_RW: " << e.what() << std::endl;
                         states = RESET;  // Transition to RESET state to handle the error
@@ -121,7 +123,7 @@ void Algorithm1::run() {
                     try {
                         pauseCount = 1000;
                         SampleTime += TIME_STEP;
-                        auto sample = environ.getSample(robot.getPos()[0], robot.getPos()[1], 0);
+                        sample = environ.getSample(robot.getPos()[0], robot.getPos()[1], 0);
                         beta.update(sample);
                         beta.onboard_update(sample);
                         check_decision();
@@ -129,6 +131,7 @@ void Algorithm1::run() {
                         print_data(1);
                         sendSample(message);
                         states = STATE_RW;
+                        intersample_time =0;
                     } catch (const std::exception &e) {
                         std::cerr << "Error in STATE_OBS: " << e.what() << std::endl;
                         states = RESET;  // Transition to RESET state to handle the error
@@ -140,6 +143,7 @@ void Algorithm1::run() {
                         // Reset state logic goes here
                         std::cout << "Resetting state..." << std::endl;
                         states = STATE_RW;  // Transition back to a default state
+                        //recvSample();
                     } catch (const std::exception &e) {
                         std::cerr << "Error in RESET state: " << e.what() << std::endl;
                         // Handle further errors or perform additional cleanup
@@ -166,7 +170,7 @@ void Algorithm1::print_data(int print_bool) {//0 for not printing and only in cu
 if(robot.d_robot->getTime() > 5) {
     std::string customData = 
         std::to_string(print_bool) + "," +
-        std::to_string((int) robot.d_robot->getTime()) + "," +
+        std::to_string((double) robot.d_robot->getTime()) + "," +
         std::string(robot.d_robot->getName().substr(1, 1)) + "," +
         std::to_string(sample) + "," +
         std::to_string(message) + "," +
@@ -207,6 +211,8 @@ void Algorithm1::setSimulationSetup() {
     std::cout << std::endl;
 
     robot.setRWTimeGenParams(settings.values[0], settings.values[1]);
+    robot.setAngleDistParams(-.1,.1);
+    robot.setSpeedDistParams(.95,1.05);
     tau = settings.values[2];
     robot.CA_Threshold = settings.values[3];
     min_swarmCount = settings.values[4];
@@ -226,9 +232,8 @@ void Algorithm1::pause(int *pause_Time) {
     robot.setSpeed(0, 0);
     
     // Check if pause time has elapsed, if yes, transition to observation state
-    if (*pause_Time <= 0) {
+    if (*pause_Time <= TIME_STEP) {
         states = STATE_OBS;
-        intersample_time = 0;
         return;
     }
     

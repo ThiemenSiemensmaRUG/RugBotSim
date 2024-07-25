@@ -176,7 +176,7 @@ Robot {
 
     def saveGrid(self,run_dir=None,size=5,fill_ratio=0.48,seed = 1):
         np.random.seed(seed)
-        np.random.seed(self.instance ) # 100 for PSO
+
         grid = np.zeros((size,size), dtype=int)
         total_cells = size*size
         filled_cells = int(fill_ratio * total_cells)

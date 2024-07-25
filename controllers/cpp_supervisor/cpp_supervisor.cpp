@@ -103,7 +103,9 @@ int main() {
 
     std::cout << "MAIN SUPERVISOR LOOP" << '\n';
     bool show_info = false;
-
+    for (Node* robot : robots) {
+      std::cout << "init pose " << robot->getDef() << "=" << *robot->getField("translation")->getSFVec3f() << '\n';
+    }
     // Main simulation loop
     while (supervisor->step(TIME_STEP) != -1) {
       const double t = supervisor->getTime();
@@ -129,6 +131,7 @@ int main() {
         }
 
       }
+
 
 
 
