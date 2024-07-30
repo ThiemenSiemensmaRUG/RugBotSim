@@ -27,12 +27,9 @@ double calculateFitness(int final_decision, int correct_decision, double fill_ra
     double final_d_error = 0;
 
     if (time < 1) { 
-        time = t_max; 
+        time = 2*t_max; 
     }
-    if (time == 0) {
-        std::cerr << "Error: time cannot be zero." << std::endl;
-        return 100;  // Return an error value or handle it appropriately
-    }
+
 
     if ((final_decision != correct_decision) &&(final_decision !=-1)) {
         final_d_error = 5.0;
