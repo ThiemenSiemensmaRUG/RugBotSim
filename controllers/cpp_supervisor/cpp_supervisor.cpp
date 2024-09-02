@@ -27,7 +27,7 @@ double calculateFitness(int final_decision, int correct_decision, double fill_ra
     double final_d_error = 0;
 
     if (time < 1) { 
-        time = 2*t_max; 
+        time = 3 * t_max; 
     }
 
 

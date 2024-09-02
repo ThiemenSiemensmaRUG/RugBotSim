@@ -32,6 +32,7 @@ def launch_batch(batch_size,workers,x_,run_dir,feedback,fill_ratio,robots):
 
 
 #x_=[420 ,14730  ,2078 ,   76,249]
-x_ = [7565,15000,2025,50,85*4]
-for feedback in [1]:
-    launch_batch(batch_size=1,workers=6,x_=x_,run_dir=9,feedback=1,fill_ratio=0.48,robots=5)
+x_ = [ 5715, 19805,  2513, 51,305 ]
+
+for feedback in [0,1,2]:
+    launch_batch(batch_size=100,workers=6,x_=x_,run_dir=feedback,feedback=feedback,fill_ratio=0.48,robots=5)

@@ -15,7 +15,7 @@ plt.rcParams.update({
     "ytick.labelsize": 11,  # Y-axis tick font size
     "lines.linewidth": 1.0,  # Line width
     "lines.markersize": 4,  # Marker size (adjusted for better visibility)
-    "figure.figsize": (3.75, 2.75),  # Figure size in inches for a single column
+    "figure.figsize": (3.85, 2.75),  # Figure size in inches for a single column
     "figure.subplot.left": 0.1,  # Adjust subplot parameters as needed
     "figure.subplot.right": 0.95,
     "figure.subplot.bottom": 0.15,
@@ -122,10 +122,12 @@ class analyse():
         mean_fitness = np.zeros(self.max_iter)
         global_best = np.ones(self.max_iter) * np.inf
         std_fitness = np.zeros(self.max_iter)
+        fitness_vals = np.zeros(shape=(self.max_iter,self.n_particles))
         personal_best = np.ones(shape = (self.max_iter,self.n_particles))*10000000000
         mean_personal_best = np.ones(self.max_iter)*np.inf
         for i in range(self.min_iter,self.max_iter):
             df1 = self.df[self.df['Iteration']==i]
+            fitness_vals[i,:] = df1['Fitness'].astype(float)
             mean_fitness[i] = df1['Fitness'].astype(float).mean()
             std_fitness[i] = df1['Fitness'].astype(float).std()
             min_iteration = df1['Fitness'].astype(float).min()
@@ -145,7 +147,7 @@ class analyse():
         std_personal_best = personal_best.std(axis = 1)        
         iterations = self.df['Iteration']
 
-        return iterations,mean_fitness,mean_personal_best,std_personal_best,global_best
+        return iterations,fitness_vals,mean_personal_best,std_personal_best,global_best
 
 
 
@@ -180,16 +182,20 @@ class analyse():
         return  dimensions,std
 
 ## processing the long output file
-x=analyse("intermediate_result.csv")
-iterations,mean_fitness,mean_personal_best,std_personal_best,global_best=x.get_results()
+x=analyse("jobfiles/pso_6.csv")
+iterations,fitness_vals,mean_personal_best,std_personal_best,global_best=x.get_results()
 plt.figure()
-plt.semilogy(range(0,x.max_iter),mean_personal_best,label="$\\mu (\mathcal{P}_i)$")
-plt.semilogy(range(0,x.max_iter),mean_fitness,label="$\\mu (\mathcal{C}_i)$")
-#plt.fill_between(range(0,x.max_iter),mean_personal_best - std_personal_best, mean_personal_best + std_personal_best,label = "$\\sigma (\mathcal{P}_i)$",alpha = .4)
-plt.semilogy(range(0,x.max_iter),global_best,label = '$\mathcal{G}_b$',linestyle = line_styles[2],marker = line_markers[0])
+plt.plot(range(0,x.max_iter),mean_personal_best,label="$\\mu (\mathcal{P}_i)$")
+
+plt.plot(range(x.max_iter),np.mean(fitness_vals,axis=1),color = 'red',linestyle = line_styles[1],label="$\\mu (\mathcal{C}_i)$",marker = line_markers[3])
+
+
+
+plt.fill_between(range(0,x.max_iter),mean_personal_best - std_personal_best, mean_personal_best + std_personal_best,label = "$\\sigma (\mathcal{P}_i)$",alpha = .4)
+plt.plot(range(0,x.max_iter),global_best,label = '$\mathcal{G}_b$',linestyle = line_styles[2],marker = line_markers[0])
 plt.xlabel("Iterations")
 plt.ylabel("Fitness Value")
-
+plt.grid()
 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=4)
 plt.tight_layout()
 plt.savefig('convergence.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
@@ -209,6 +215,7 @@ for i in range(5):
 
 plt.xlabel("Iterations")
 plt.ylabel("$\mu (\mathbf{p}_i)$")
+plt.grid()
 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=5)
 plt.tight_layout()
 plt.savefig('dimensions.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)

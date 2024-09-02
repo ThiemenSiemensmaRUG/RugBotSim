@@ -8,7 +8,7 @@ def rosenbrock(x,particle=0,iteration=0,reevaluation=0):
     return value 
 
 def cost_function(x,particle=0,iteration=0,reevaluation=0):
-    job = WebotsEvaluation(run = run_dir,instance = particle * reevaluation,robots=4)
+    job = WebotsEvaluation(run = run_dir,instance = particle * reevaluation,robots=5)
     
     world_creation_seed = (particle+1) * (iteration + 1) * reevaluation
     grid_seed = reevaluation * (iteration +1)
@@ -41,7 +41,7 @@ def cost_function(x,particle=0,iteration=0,reevaluation=0):
 
 bounds = np.array([[0,20000],[0,20000],[1000,6000],[50,150],[0,500]])
 
-run_dir = 4
+run_dir = 6
 pso = PSO(1,0,[1,0.4],0.75,0.75,bounds,0,cost_function,50,25,10,.2,10)
 pso.pso_threaded(5)
 pso.webots_data.to_csv(f"jobfiles/pso_{run_dir}.csv")

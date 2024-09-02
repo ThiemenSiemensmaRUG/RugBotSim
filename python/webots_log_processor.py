@@ -43,7 +43,7 @@ class WebotsProcessor:
 
         # Fill the matrix with the given entries
         for (row, col) in entries:
-            matrix[row, col] = -1
+            matrix[row, col] = 0
         
         return matrix, matrix.reshape(1,25)
 
@@ -129,7 +129,7 @@ class WebotsProcessor:
             # Create a new DataFrame with a continuous time range (0 to 1200 seconds, in 1 second steps)
             continuous_time = pd.DataFrame({'time': np.arange(0, 1201)})
             # Merge with the original data to get the continuous time index
-            robot_data = pd.merge(continuous_time, robot_data, on='time', how='left')
+            robot_data = pd.merge(continuous_time.astype(float), robot_data.astype(float), on='time', how='left')
             # Interpolate missing values
             robot_data = robot_data.interpolate(method='linear')
             # Fill remaining NaN values if any (e.g., if data doesn't start from 0)
@@ -146,6 +146,14 @@ class WebotsProcessor:
         average_means = self.i_data.groupby('time')['beta_belief'].mean().reset_index()
         return np.array(average_means['time']),np.array(average_means['beta_belief'])
     
+    def compute_average_estimate_f_over_time(self):
+        """Computes the average means of beta beliefs over robots for each time step"""
+        # Group by time and compute the mean of beta beliefs for each time step across all robots
+        average_means = self.i_data.groupby('time')['beta_onboard_mean'].mean().reset_index()
+        return np.array(average_means['time']),np.array(average_means['beta_onboard_mean'])
+    
+
+
     def compute_std_beliefs_over_time(self):
         """Computes the average means of beta beliefs over robots for each time step"""
         # Group by time and compute the std of beta beliefs for each time step across all robots

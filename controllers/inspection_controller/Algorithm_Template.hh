@@ -218,7 +218,7 @@ void Algorithm1::setSimulationSetup() {
     min_swarmCount = settings.values[4];
     feedback = static_cast<feedbackStrategy>(settings.values[5]);
     eta = settings.values[6];
-    // Print the updated values
+    // Print the updated values 
     std::cout << "tau: " << tau << std::endl;
     std::cout << "CA_Threshold: " << robot.CA_Threshold << std::endl;
     std::cout << "min_swarmCount: " << min_swarmCount << std::endl;

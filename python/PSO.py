@@ -25,7 +25,7 @@ def add_noise(value,seed, iteration,number,evaluation,sigma):
     return value 
 
 def fitness(values):
-    fitness = np.mean(values)
+    fitness = np.mean(values) + np.std(values)
     return fitness
 
 
