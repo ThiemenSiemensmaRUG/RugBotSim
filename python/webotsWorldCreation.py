@@ -174,7 +174,7 @@ Robot {
             file.close()
 
 
-    def saveGrid(self,run_dir=None,size=5,fill_ratio=0.48,seed = 1):
+    def saveGrid(self,run_dir=None,size=5,fill_ratio=0.48,seed = 1,grid_ = None):
         np.random.seed(seed)
 
         grid = np.zeros((size,size), dtype=int)
@@ -188,11 +188,16 @@ Robot {
         row_indices, col_indices = np.unravel_index(indices, (size,size))
         # Fill the grid at selected indices
         grid[row_indices, col_indices] = 1
+        if (grid_) != None:
+          grid = grid_
+          print(grid)
+
         map_list = []
         for x, row in enumerate(grid):
           for y, value in enumerate(row):
               if value == 1:
                   map_list.append((y, x))
+
 
         map = np.array(map_list)
         
@@ -209,7 +214,7 @@ Robot {
     def create_world(self):
         np.random.seed(self.seed)
         random.seed(self.seed)
-        self.file = open(r"worlds/" + self.name+ ".wbt", 'w')
+        self.file = open(r"worlds/" + self.name+ ".wbt",'w')
         self.randomizePosition()
         self.create_header()
         self.create_robots_in_world()

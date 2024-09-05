@@ -135,12 +135,6 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     srand(SeedRov);
     generator.seed(SeedRov);
     
-    
-
-    
-    
- 
-
     rw_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
     ca_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
     std::cout << "RugRobot " << name[1] << " with Seed " << SeedRov <<","  << rw_angle_gen(generator)<<'\n';
@@ -148,7 +142,8 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     setRWTimeGenParams(15000.0,0.0);
     setAngleDistParams(0,0);
     setSpeedDistParams(1,1);
-
+    setAngleDistParams(-0.15,0.15);
+    setSpeedDistParams(0.85,1.15);
 
     ca_angle = ca_angle_gen(generator);
     motor_dev = angle_dist(generator);
@@ -271,7 +266,11 @@ void RugRobot::generateRW(){
     rw_time =rw_time_gen(generator);
     rw_angle = rw_angle_gen(generator);
     rw_time = std::clamp(rw_time,1000.0,100000.0);
+
+    setAngleDistParams(-0.1,0.1);
+    setSpeedDistParams(0.8,1.2);
     state = STATE_PAUSE;
+
     
 }   
 
@@ -287,18 +286,23 @@ int RugRobot::RandomWalk(){
 
     if (collAvoid() && state==STATE_FW){
         state = STATE_CA;
+
     }
     if (state == STATE_CA){
+        
         CAtime+=timeStep;
+       
         if(turnAngle(ca_angle)==1){
             state = STATE_FW;
             ca_angle = ca_angle_gen(generator);
         }
+
     }
 
     if (state == STATE_FW){
         spend_time+= (int) timeStep;
         setSpeed(100,100);
+        return 2;
         }
 
     else if (state == STATE_TURN){

@@ -3,15 +3,56 @@ import numpy as np
 
 
 class WebotsProcessor:
-    def __init__(self, folder,instance) -> None:
-        self.filename = folder + f"/webots_log_{instance}.txt"
-        self.world_file = folder + "/world.txt"
+    def __init__(self, folder,filename,threshold = None) -> None:
+   
+        self.world_file = folder + filename
+        self.folder = folder
         self.data = None
-        self._read_file()
+        self.threshold = threshold
+        self.grid = np.array([
+                [0, 1, 0, 1, 0],  # Row corresponding to y=1.0 to y=0.8
+                [1, 0, 0, 1, 0],  # Row corresponding to y=0.8 to y=0.6
+                [1, 0, 1, 0, 1],  # Row corresponding to y=0.6 to y=0.4
+                [0, 1, 1, 0, 1],  # Row corresponding to y=0.4 to y=0.2
+                [1, 0, 0, 1, 0]   # Row corresponding to y=0.2 to y=0.0
+            ])
+
+ 
+        if "webots" in str(filename):
+            self._read_file()
+
+        else:
+            self._read_exp_file()
+        
+        
+
+    def _read_exp_file(self):
+        self.data = pd.read_csv(self.world_file)
+        # Adding the 'has_none' column
+        self.data['print_bool'] = self.data.isnull().any(axis=1).__invert__()
+        self.data =self.data.rename(columns={'Timestamp':'time', 
+                                  'ROV Number': 'robot_id',
+                                  'X Meter':"pos_x",
+                                  "Y Meter":"pos_y",
+                                  "Energy":"measurement",
+                                  "Alpha":"beta_alpha",
+                                  "Beta":"beta_beta",
+                                  "Belief":"beta_belief",
+                                  "Swarm Send":"sends",
+                                  "Swarm Recv":"recvs",
+                                  "Collision Time":"ca_time",
+                                  "Sense Time":"sample_time"})
+
+        self.data = self.data[self.data['print_bool'] == 1]
+        
+        self.add_labels()
+        self.add_onboard_values()
+        self.i_data = self.interpolate_data()
+        return
 
     def _read_file(self):
         """Reads the file and parses the data, skipping any junk prints"""
-        with open(self.filename, 'r') as file:
+        with open(self.world_file, 'r') as file:
             lines = file.readlines()
         
         # Parse data lines with at least 10 commas
@@ -29,8 +70,13 @@ class WebotsProcessor:
         self.data = pd.DataFrame(data_list, columns=columns)
         self.i_data = self.interpolate_data()
         
+    def add_onboard_values(self):
+        self.data['beta_onboard'] = (self.data['label'] == 0).cumsum()
+        self.data['alpha_onboard'] = (self.data['label'] == 1).cumsum()
+        self.data['beta_onboard_mean'] = (self.data['alpha_onboard'] / (self.data['alpha_onboard']+self.data['beta_onboard']))
+
     def read_world_file(self):
-        with open(self.world_file, 'r') as file:
+        with open(self.folder + "world.txt", 'r') as file:
             lines = file.readlines()
         
         entries = []
@@ -63,12 +109,51 @@ class WebotsProcessor:
         """Returns the processed data"""
         return self.data
 
+    def get_state_times(self):
+        robot_ids = self.data['robot_id'].unique()
+        
+        def accumulate_values(df):
+            for col in ['sample_time', 'ca_time']:
+                # Compute the time difference for the given column
+                df[f'{col}_diff'] = df[col].diff()
+                # Identify reset points where the time difference is negative
+                reset_points = df[f'{col}_diff'] < 0
+                df['temp'] = 65000
+                # Adjust the differences by resetting on negative time jumps
+                df[f'{col}_diff'] = df[f'{col}_diff'] + df['temp'] * reset_points.astype(int)
+                # Calculate cumulative sum for adjusted times
+                df[col] = df[f'{col}_diff'].cumsum()
+                df[f'{col}_diff'] = df[col].diff()
+            return df
+
+        ca_time = []
+        sense_time=[]
+        ca_per_sample = []
+        for robot_id in np.sort(robot_ids):
+            robot_data = self.filter_by_robot_id(robot_id).copy()
+            
+
+            # Apply the accumulation function
+            robot_data = accumulate_values(robot_data)
+
+            # Add to result list or handle the data further
+            ca_time.append(robot_data['ca_time'].iloc[-1])
+            sense_time.append(robot_data['sample_time'].iloc[-1])
+            
+            ca_per_sample.append(np.array(robot_data.dropna()['ca_time_diff']))
+
+        
+        # Return processed data, or you could aggregate results if needed
+        return ca_time,sense_time,ca_per_sample
+
+
     def get_intersample_time(self):
         # Get unique robot IDs
         robot_ids = self.data['robot_id'].unique()
         times = []
         # Compute distances, X and Y distances, and directions for each robot
-        for robot_id in robot_ids:
+
+        for robot_id in np.sort(robot_ids):
             robot_data = self.filter_by_robot_id(robot_id).copy()
             # Compute X and Y distances
             robot_data['time_diff'] = robot_data['time'].diff()
@@ -81,20 +166,6 @@ class WebotsProcessor:
         """Adds a binary indicator column for d_f"""
         self.data['d_f_indicator'] = np.where(self.data['d_f'].astype(float).isin([0, 1]), 1, 0)
         
-    def get_state_times(self):
-        self._add_d_f_indicator()
-        robot_ids = self.data['robot_id'].unique()
-        ca_times = []
-        rw_times = []
-        for robot_id in robot_ids:
-            robot_data = self.filter_by_robot_id(robot_id).copy()
-            robot_data.at[robot_data.index[-1], 'd_f_indicator'] = 1
-
-            index = (robot_data['d_f_indicator'] == 1.0).argmax()
-            ca_times.append(robot_data['ca_time'].iloc[index])
-            rw_times.append(robot_data['rw_time'].iloc[index])
-        
-        return np.array(ca_times).mean() / 1000, np.array(rw_times).mean() / 1000
 
     def get_dec_time_acc(self):
         self._add_d_f_indicator()
@@ -102,7 +173,7 @@ class WebotsProcessor:
         robot_ids = self.data['robot_id'].unique()
         decision_times = []
         accuracies = []
-        for robot_id in robot_ids:
+        for robot_id in np.sort(robot_ids):
             robot_data = self.filter_by_robot_id(robot_id).copy()
             robot_data.at[robot_data.index[-1], 'd_f_indicator'] = 1
 
@@ -122,14 +193,17 @@ class WebotsProcessor:
         # Get unique robot IDs
         robot_ids = self.data['robot_id'].unique()
         # Interpolate data for each robot
-        for robot_id in robot_ids:
+        for robot_id in np.sort(robot_ids):
             robot_data = self.filter_by_robot_id(robot_id).copy()
             # Ensure data is sorted by time
+            
             robot_data = robot_data.sort_values(by='time')
             # Create a new DataFrame with a continuous time range (0 to 1200 seconds, in 1 second steps)
-            continuous_time = pd.DataFrame({'time': np.arange(0, 1201)})
+         
+            continuous_time = pd.DataFrame({'time': np.arange(0, 1201)}).astype(float)
             # Merge with the original data to get the continuous time index
-            robot_data = pd.merge(continuous_time.astype(float), robot_data.astype(float), on='time', how='left')
+            robot_data = pd.merge_asof(continuous_time.astype(float), robot_data.astype(float), left_on='time', right_on='time', direction='nearest')
+            #robot_data = pd.merge(continuous_time.astype(float), robot_data.astype(float), on='time', how='left')
             # Interpolate missing values
             robot_data = robot_data.interpolate(method='linear')
             # Fill remaining NaN values if any (e.g., if data doesn't start from 0)
@@ -152,7 +226,11 @@ class WebotsProcessor:
         average_means = self.i_data.groupby('time')['beta_onboard_mean'].mean().reset_index()
         return np.array(average_means['time']),np.array(average_means['beta_onboard_mean'])
     
+    def get_samples(self):
+        vib = self.data[self.data['label'] ==1]
+        nonvib= self.data[self.data['label']==0]
 
+        return vib['measurement'],nonvib['measurement']
 
     def compute_std_beliefs_over_time(self):
         """Computes the average means of beta beliefs over robots for each time step"""
@@ -166,7 +244,7 @@ class WebotsProcessor:
         pos = []
 
         # Compute distances, X and Y distances, and directions for each robot
-        for robot_id in robot_ids:
+        for robot_id in np.sort(robot_ids):
             robot_data = self.filter_by_robot_id(robot_id).copy()
 
             pos.append(robot_data[['time', 'robot_id', 'pos_x','pos_y']])
@@ -175,6 +253,52 @@ class WebotsProcessor:
         return sample_data['pos_x'],sample_data['pos_y']
 
 
+    def add_labels(self):
+        """
+        Labels points based on their position in the 5x5 grid. Add FP FN labels
+
+        :param df: DataFrame with 'x' and 'y' columns representing points in the grid.
+        :return: DataFrame with an additional 'label' column.
+        """
+        def get_label(x, y):
+            # Calculate grid indices based on the x, y coordinates
+            grid_x = min(int(x // 0.2), 4)  # Ensure max index is 4 (x=1 is the last column)
+            grid_y = min(4 - int(y // 0.2), 4)  # Ensure y=1 is the first row and y=0 is the last row
+
+            # Return the label based on the grid matrix
+            return self.grid[grid_y][grid_x]
+
+        # Apply the get_label function to each row in the DataFrame
+        self.data['true_label'] = self.data.apply(lambda row: get_label(row['pos_x'], row['pos_y']), axis=1)
+        self.data['label'] = self.data['measurement'].apply(lambda x: 1 if x > self.threshold else 0)
+
+        # Add a column for False Positives (FP)
+        self.data['FP'] = (self.data['label'] == 0) & (self.data['label'] != self.data['true_label'])
+
+        # Add a column for False Negatives (FN)
+        self.data['FN'] = (self.data['label'] == 1) & (self.data['label'] != self.data['true_label'])
+   
+        # Calculate the number of False Positives (FP)
+        fp_count = self.data['FP'].sum()
+
+        # Calculate the number of False Negatives (FN)
+        fn_count = self.data['FN'].sum()
+
+        # Total number of samples
+        total_count = self.data.shape[0]
+
+        # Calculate the percentages
+        fp_percentage = (fp_count / total_count) * 100
+        fn_percentage = (fn_count / total_count) * 100
+        tn_percentage = ((fp_count + fn_count)/ total_count) * 100
+
+        # Print the percentages
+        # print(f"Percentage of False Positives (FP)  : {fp_percentage:.2f}%")
+        # print(f"Percentage of False Negatives (FN)  : {fn_percentage:.2f}%")
+        # print(f"Percentage of Total Falses (FN/FP)  : {tn_percentage:.2f}%")
+        self.data['error'] = (self.data['label'] != self.data['true_label'])
+        return self.data
+    
 
     def compute_distances_and_directions(self,return_df = False):
         """Computes the distance, X and Y distances, and direction between consecutive samples for each robot"""
@@ -186,9 +310,10 @@ class WebotsProcessor:
 
         # Get unique robot IDs
         robot_ids = self.data['robot_id'].unique()
+      
 
         # Compute distances, X and Y distances, and directions for each robot
-        for robot_id in robot_ids:
+        for robot_id in np.sort(robot_ids):
             robot_data = self.filter_by_robot_id(robot_id).copy()
             
             # Compute X and Y distances
@@ -197,7 +322,7 @@ class WebotsProcessor:
             
             # Compute distance (Euclidean)
             robot_data['distance'] = np.sqrt(robot_data['x_distance']**2 + robot_data['y_distance']**2)
-            
+            robot_data = robot_data[robot_data['distance']!=0]
             # Compute direction (angle in degrees)
             robot_data['direction'] = np.degrees(np.arctan2(
                 robot_data['y_distance'], robot_data['x_distance']
@@ -217,7 +342,13 @@ class WebotsProcessor:
         x_distance_data = pd.concat(x_distances).reset_index(drop=True)
         y_distance_data = pd.concat(y_distances).reset_index(drop=True)
         direction_data = pd.concat(directions).reset_index(drop=True)
+        
+
         if return_df:
             return distance_data, x_distance_data, y_distance_data, direction_data
         else:
-            return distance_data['distance'], x_distance_data['x_distance'], y_distance_data['y_distance'], direction_data['direction']
+            return distance_data['distance'].dropna(), x_distance_data['x_distance'].dropna(), y_distance_data['y_distance'].dropna(), direction_data['direction'].dropna()
+
+
+
+

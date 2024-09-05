@@ -29,17 +29,15 @@ class WebotsEvaluation():
 
 
 
-    def job_setup(self,c_settings= {},s_settings = {},settings={},world_creation_seed = 1,grid_seed = 1,fill_ratio=0.48,gridsize = 5):
+    def job_setup(self,c_settings= {},s_settings = {},settings={},world_creation_seed = 1,grid_seed = 1,fill_ratio=0.48,gridsize = 5,grid_ = None):
 
-        # c_settings = {"gamma0":10000,"gamma":1000,"tau":3000,"thetaC":50,"swarmCount":200,"feedback":0}
-        # s_settings = {"right_dec":0,"fill_ratio":0.48,"offset_f":0.04,"check_interval":20,"autoexit":1}
-        
         run_dir = f"jobfiles/Run_{self.run}/"
         os.makedirs(os.path.dirname(f"{run_dir}Instance_{self.instance}/"), exist_ok=True)
+        print(os.getcwd())
         world = createWorld(self.instance,world_creation_seed,f"world_{self.instance}",self.robots)
         world.save_settings(run_dir,c_settings,s_settings)
         world.create_world()
-        world.saveGrid(run_dir,size = gridsize,fill_ratio=fill_ratio,seed = grid_seed)
+        world.saveGrid(run_dir,size = gridsize,fill_ratio=fill_ratio,seed = grid_seed,grid_ = grid_)
         setup =  f"{run_dir}Instance_{self.instance}/settings.txt"
    
         with open(setup, 'w') as file:
@@ -68,7 +66,7 @@ class WebotsEvaluation():
         destination_dir = os.path.join(output_folder, output_name)
         
         if os.path.exists(source_dir):
-            shutil.copytree(source_dir, destination_dir)
+            shutil.copytree(source_dir, destination_dir,dirs_exist_ok=True)
             print(f"Results moved to {destination_dir}")
         else:
             raise FileNotFoundError(f"Source directory not found at {source_dir}")

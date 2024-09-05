@@ -115,6 +115,8 @@ int main() {
           const std::string data_rov = data->getSFString();
           pos = data_rov.find_last_of(",");
           int str_len = (int) data_rov.length();
+
+  
           states[i] = std::stoi(data_rov.substr(pos+1,str_len-1)) ; 
         }
       }
@@ -151,8 +153,9 @@ int main() {
       if ((int(t) % print_time_interval != 0)) {
         show_info = true;
       }
+      if ((t < T_MAX) && (static_cast<int>(settings.values[5]) == 1) ){continue;}
 
-      if ((t > T_MAX) || uniform_decision ) {
+      if ((t > T_MAX) || uniform_decision  ) {
         supervisor->simulationSetMode(Supervisor::SIMULATION_MODE_PAUSE);
         // Pause simulation and exit
         double fitness = 0;

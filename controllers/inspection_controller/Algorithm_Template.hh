@@ -104,13 +104,19 @@ void Algorithm1::run() {
             switch (states) {
                 case STATE_RW:
                     try {
-                        if (((intersample_time - tau) > -(TIME_STEP + 1)) ) {
+                        if (((intersample_time - tau) > 0) ) {
                             pause(&pauseCount);
                             SampleTime += TIME_STEP;
+                            
                             break;
                         }
-                        robot.RandomWalk();
-                        if(robot.state == RugRobot::STATE_FW){intersample_time+=TIME_STEP;}
+
+                        if(robot.RandomWalk()==2){intersample_time+=TIME_STEP;}
+                        
+
+                        
+
+                        
                         recvSample();
 
                     } catch (const std::exception &e) {
@@ -129,6 +135,7 @@ void Algorithm1::run() {
                         check_decision();
                         message = calculateMessage(sample);
                         print_data(1);
+
                         sendSample(message);
                         states = STATE_RW;
                         intersample_time =0;
