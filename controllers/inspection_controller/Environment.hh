@@ -138,7 +138,10 @@ void Environment::readFile() {
  * @return A boolean value representing the color of the tile (1 for white, 0 for black).
  */
 
+// void Environment::setVibDistribution()
 
+
+// void Environment::setNonVibDistribution()
 
 
 int Environment::getSample(double x, double y, int method_read) {

@@ -98,7 +98,7 @@ public:
     void setRWTimeGenParams(double location, double scale);
     void setAngleDistParams(double lower_bound, double upper_bound);
     void setSpeedDistParams(double lower_bound, double upper_bound);
-
+    void setRandomizationSpeed();
 };
 
 
@@ -142,8 +142,7 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     setRWTimeGenParams(15000.0,0.0);
     setAngleDistParams(0,0);
     setSpeedDistParams(1,1);
-    setAngleDistParams(-0.15,0.15);
-    setSpeedDistParams(0.85,1.15);
+
 
     ca_angle = ca_angle_gen(generator);
     motor_dev = angle_dist(generator);
@@ -179,11 +178,18 @@ void RugRobot::setRWTimeGenParams(double location, double scale) {
 
 
 void RugRobot::setAngleDistParams(double lower_bound, double upper_bound) {
+    
     angle_dist = std::uniform_real_distribution<double>(lower_bound, upper_bound);
+    motor_dev = angle_dist(generator);
+    
+    std::cout<<"new angle distribution parameters: "<<motor_dev<<"\n";
 }
 
 void RugRobot::setSpeedDistParams(double lower_bound, double upper_bound) {
+    
     speed_dist = std::uniform_real_distribution<double>(lower_bound, upper_bound);
+    speed_dev = speed_dist(generator);
+    std::cout<<"new speed distribution parameters: "<<speed_dev<<"\n";
 }
 
 
@@ -208,17 +214,23 @@ bool RugRobot::collAvoid() {
     return false;
 }
 
+void RugRobot::setRandomizationSpeed() {
+
+
+}
+
 void RugRobot::setSpeed(double speedl, double speedr) {
     speedl = std::clamp(speedl, -100.0, 100.0);
     speedr = std::clamp(speedr, -100.0, 100.0);
 
+    
     leftMotor->setVelocity(speedl / 100 * (1 - motor_dev) * speed_dev * 10);
     rightMotor->setVelocity(speedr / 100 * (1 + motor_dev) * speed_dev * 10);
 }
 
 int RugRobot::turnAngle(double Angle) {
-    double Pgain = 5;
-    double Igain = 0.1;
+    double Pgain = 1.25;
+    double Igain = 0.15;
     double dt = timeStep / 1000.0;
     double e = Angle - refAngle;
     double gyro_val_z = gyro->getValues()[2] * 180 / M_PI;
@@ -265,10 +277,7 @@ std::vector<int> RugRobot::getMessages() {
 void RugRobot::generateRW(){
     rw_time =rw_time_gen(generator);
     rw_angle = rw_angle_gen(generator);
-    rw_time = std::clamp(rw_time,1000.0,100000.0);
-
-    setAngleDistParams(-0.1,0.1);
-    setSpeedDistParams(0.8,1.2);
+    rw_time = std::clamp(rw_time,1000.0,30000.0);
     state = STATE_PAUSE;
 
     
@@ -291,12 +300,13 @@ int RugRobot::RandomWalk(){
     if (state == STATE_CA){
         
         CAtime+=timeStep;
-       
+        
         if(turnAngle(ca_angle)==1){
             state = STATE_FW;
             ca_angle = ca_angle_gen(generator);
+            
         }
-
+        
     }
 
     if (state == STATE_FW){

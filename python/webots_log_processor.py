@@ -3,20 +3,22 @@ import numpy as np
 
 
 class WebotsProcessor:
-    def __init__(self, folder,filename,threshold = None) -> None:
+    def __init__(self, folder,filename,threshold = None, grid = np.array([])) -> None:
    
         self.world_file = folder + filename
         self.folder = folder
         self.data = None
         self.threshold = threshold
-        self.grid = np.array([
-                [0, 1, 0, 1, 0],  # Row corresponding to y=1.0 to y=0.8
-                [1, 0, 0, 1, 0],  # Row corresponding to y=0.8 to y=0.6
-                [1, 0, 1, 0, 1],  # Row corresponding to y=0.6 to y=0.4
-                [0, 1, 1, 0, 1],  # Row corresponding to y=0.4 to y=0.2
-                [1, 0, 0, 1, 0]   # Row corresponding to y=0.2 to y=0.0
-            ])
-
+        if grid.shape[0] == 0:
+            self.grid = np.array([
+                    [0, 1, 0, 1, 0],  # Row corresponding to y=1.0 to y=0.8
+                    [1, 0, 0, 1, 0],  # Row corresponding to y=0.8 to y=0.6
+                    [1, 0, 1, 0, 1],  # Row corresponding to y=0.6 to y=0.4
+                    [0, 1, 1, 0, 1],  # Row corresponding to y=0.4 to y=0.2
+                    [1, 0, 0, 1, 0]   # Row corresponding to y=0.2 to y=0.0
+                ])
+        else:
+            self.grid = grid
  
         if "webots" in str(filename):
             self._read_file()
@@ -227,9 +229,8 @@ class WebotsProcessor:
         return np.array(average_means['time']),np.array(average_means['beta_onboard_mean'])
     
     def get_samples(self):
-        vib = self.data[self.data['label'] ==1]
-        nonvib= self.data[self.data['label']==0]
-
+        vib = self.data[self.data['true_label'] ==1]
+        nonvib= self.data[self.data['true_label']==0]
         return vib['measurement'],nonvib['measurement']
 
     def compute_std_beliefs_over_time(self):
@@ -288,16 +289,16 @@ class WebotsProcessor:
         total_count = self.data.shape[0]
 
         # Calculate the percentages
-        fp_percentage = (fp_count / total_count) * 100
-        fn_percentage = (fn_count / total_count) * 100
-        tn_percentage = ((fp_count + fn_count)/ total_count) * 100
+        self.fp_percentage = (fp_count / total_count) * 100
+        self.fn_percentage = (fn_count / total_count) * 100
+        self.tn_percentage = ((fp_count + fn_count)/ total_count) * 100
 
         # Print the percentages
-        # print(f"Percentage of False Positives (FP)  : {fp_percentage:.2f}%")
-        # print(f"Percentage of False Negatives (FN)  : {fn_percentage:.2f}%")
-        # print(f"Percentage of Total Falses (FN/FP)  : {tn_percentage:.2f}%")
+        # print(f"Percentage of False Positives (FP)  : {self.fp_percentage:.2f}%")
+        # print(f"Percentage of False Negatives (FN)  : {self.fn_percentage:.2f}%")
+        # print(f"Percentage of Total Falses (FN/FP)  : {self.tn_percentage:.2f}%")
         self.data['error'] = (self.data['label'] != self.data['true_label'])
-        return self.data
+
     
 
     def compute_distances_and_directions(self,return_df = False):
@@ -314,7 +315,9 @@ class WebotsProcessor:
 
         # Compute distances, X and Y distances, and directions for each robot
         for robot_id in np.sort(robot_ids):
+            
             robot_data = self.filter_by_robot_id(robot_id).copy()
+            robot_data = robot_data.sort_values(by='time')
             
             # Compute X and Y distances
             robot_data['x_distance'] = robot_data['pos_x'].diff()

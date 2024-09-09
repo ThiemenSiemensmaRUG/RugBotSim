@@ -112,6 +112,8 @@ void Algorithm1::run() {
                         }
 
                         if(robot.RandomWalk()==2){intersample_time+=TIME_STEP;}
+                        if(robot.state ==3 ){intersample_time = 0;}
+                        if(robot.state ==6){intersample_time = 0;}
                         
 
                         
@@ -128,7 +130,7 @@ void Algorithm1::run() {
                 case STATE_OBS:
                     try {
                         pauseCount = 1000;
-                        SampleTime += TIME_STEP;
+                        
                         sample = environ.getSample(robot.getPos()[0], robot.getPos()[1], 0);
                         beta.update(sample);
                         beta.onboard_update(sample);
@@ -216,10 +218,13 @@ void Algorithm1::setSimulationSetup() {
         std::cout << value << " ";
     }
     std::cout << std::endl;
+    robot.generator.seed( ((int)robot.d_robot->getName()[1]) * 10 * settings.values[7]);
 
     robot.setRWTimeGenParams(settings.values[0], settings.values[1]);
     robot.setAngleDistParams(-.1,.1);
     robot.setSpeedDistParams(.95,1.05);
+    
+
     tau = settings.values[2];
     robot.CA_Threshold = settings.values[3];
     min_swarmCount = settings.values[4];
