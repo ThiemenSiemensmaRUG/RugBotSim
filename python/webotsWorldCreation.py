@@ -188,15 +188,16 @@ Robot {
         row_indices, col_indices = np.unravel_index(indices, (size,size))
         # Fill the grid at selected indices
         grid[row_indices, col_indices] = 1
-        if (grid_) != None:
+
+        if (grid_) is not None:
           grid = grid_
-          print(grid)
+          print("custom grid inserted\n")
 
         map_list = []
         for x, row in enumerate(grid):
           for y, value in enumerate(row):
               if value == 1:
-                  map_list.append((y, x))
+                  map_list.append((y,x))
 
 
         map = np.array(map_list)

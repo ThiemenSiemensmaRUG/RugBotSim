@@ -7,10 +7,9 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <random>
 
 char *wPath = getenv("WB_WORKING_DIR");
-
-
 
 /**
  * @brief Represents an environment with a grid of tiles.
@@ -22,26 +21,47 @@ class Environment {
     std::string filename;                         ///< The name of the file containing environment data.
     std::vector<std::pair<int, int>> d_grid;      ///< The grid of tile coordinates.
 
-
 public:
-
     int d_nrTiles = 5;       ///< The constant number of tiles.
+
     Environment(std::string file);
     ~Environment();
+
     /**
      * @brief Retrieves the color of the tile at the specified coordinates.
      * 
-     * This function takes x and y coordinates as input and returns a boolean value indicating the color of the tile.
+     * This function takes x and y coordinates as input and returns an integer value indicating the color of the tile.
      * The implementation details of determining the color are not provided in this comment.
      * 
      * @param x The x-coordinate of the tile.
      * @param y The y-coordinate of the tile.
-     * @param method_read The way to read the obesrvation, 0 for using world.txt, 1 for using abaqus data
-     * @return A boolean value representing the color of the tile.
+     * @param method_read The method to read the observation: 0 for using grid data, 1 for using distributions.
+     * @return An integer value representing the color of the tile (1 for white, 0 for black).
      */
-    int getSample(double x, double y,int method_read);
+    int getSample(double x, double y);
+
+    // Set the seed for the random number generator
+    void setSeed(unsigned int seed);
+
+    // Set distributions with location information
+    void setVibDistribution(double shape, double scale, double location);
+    void setNonVibDistribution(double shape, double scale, double location);
+    int method_read = 0;
+    double vibThresh = 1.45;
+    double lastSample = 0;
 
 private:
+    // Distributions with location information
+    std::gamma_distribution<double> d_vibDist; // Gamma distribution for vibration
+    double d_vibLoc; // Location parameter for vibration distribution
+
+    std::gamma_distribution<double> d_nonVibDist; // Gamma distribution for non-vibration
+    double d_nonVibLoc; // Location parameter for non-vibration distribution
+
+
+
+    std::mt19937 d_gen_environment; // Random number generator
+
     /**
      * @brief Reads data from a file and populates the environment's grid.
      * 
@@ -53,100 +73,60 @@ private:
     void readFile();
 };
 
-Environment::Environment(std::string file) {
-    // Set the filename and DEBUG flag
-    filename = file;
-    // Print the filename for debugging purposes
-
+Environment::Environment(std::string file) : filename(file) {
     // Read data from the file and populate the grid
     readFile();
 }
+
 void Environment::readFile() {
-    // Open the file for reading
-    
+    std::ifstream file;
     if (wPath != NULL) {
         char file_name[256];
-        std::cout<< "webots working dir enabled" << '\n';
+        std::cout << "Webots working dir enabled" << '\n';
         sprintf(file_name, "%s/world.txt", wPath);
-        std::ifstream file(file_name);
-        // Check if the file is open
-        if (!file.is_open())
-            throw std::ios_base::failure("The file cannot be read");
+        file.open(file_name);
+    } else {
+        file.open(filename);
+    }
 
-        // Read each line from the file
-        std::string line;
-        while (std::getline(file, line)) {
-            // Use a stringstream to parse the line
-            std::istringstream lineStream(line);
-            
-            // Variables to store the parsed values
-            int x, y;
-            char comma;
+    if (!file.is_open())
+        throw std::ios_base::failure("The file cannot be read");
 
-            // Attempt to read x, comma, and y from the line
-            if (lineStream >> x >> comma >> y) {
-                // Store the pair (x, y) in the grid
-                d_grid.push_back(std::make_pair(x, y));
-                std::cout << x << y << '\n';
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream lineStream(line);
+        int x, y;
+        char comma;
 
-            } else {
-                // Print a warning for unsupported file formatting
-                std::cout << "Unsupported file formatting in world file" << '\n';
-            }
+        if (lineStream >> x >> comma >> y) {
+            d_grid.push_back(std::make_pair(x, y));
+            std::cout << x << y << "\n";
+        } else {
+            std::cout << "Unsupported file formatting in world file" << '\n';
         }
-        }
-        else{
-            std::ifstream file(filename);
-            if (!file.is_open())
-            throw std::ios_base::failure("The file cannot be read");
-
-            // Read each line from the file
-            std::string line;
-            std::cout << "grid parameters" ;
-            while (std::getline(file, line)) {
-                // Use a stringstream to parse the line
-                std::istringstream lineStream(line);
-                
-                // Variables to store the parsed values
-                int x, y;
-                char comma;
-
-                // Attempt to read x, comma, and y from the line
-                if (lineStream >> x >> comma >> y) {
-                    // Store the pair (x, y) in the grid
-                    d_grid.push_back(std::make_pair(x, y));
-                    std::cout << x << y << ",";
-               
-                } else {
-                    // Print a warning for unsupported file formatting
-                    std::cout << "Unsupported file formatting in world file" << '\n';
-                }
-            }
-            std::cout << std::endl;
-        }
-    // File is automatically closed when 'file' goes out of scope
+    }
+    std::cout << std::endl;
+    file.close(); // Close the file
 }
 
-/**
- * @brief Determines the color of the tile at the specified coordinates.
- * 
- * This function checks if the given robot coordinates correspond to a colored tile
- * in the environment's grid and returns the color of the tile.
- * 
- * @param x The x-coordinate of the robot.
- * @param y The y-coordinate of the robot.
- * @return A boolean value representing the color of the tile (1 for white, 0 for black).
- */
+void Environment::setSeed(unsigned int seed) {
+    d_gen_environment.seed(seed);
+    std::cout<<"environmental seed: " <<seed<<'\n';
+}
 
-// void Environment::setVibDistribution()
+void Environment::setVibDistribution(double shape, double scale, double location) {
+    d_vibDist = std::gamma_distribution<double>(shape, scale);
+    d_vibLoc = location;
+}
+
+void Environment::setNonVibDistribution(double shape, double scale, double location) {
+    d_nonVibDist = std::gamma_distribution<double>(shape, scale);
+    d_nonVibLoc = location;
+}
 
 
-// void Environment::setNonVibDistribution()
-
-
-int Environment::getSample(double x, double y, int method_read) {
-    // Check if the robot coordinates correspond to a colored tile
-    if (method_read ==0){
+int Environment::getSample(double x, double y) {
+    if (method_read == 0) { // Use grid data
         for (std::pair<int, int> coloredTile : d_grid) {
             if (
                 (x >= 1.0 * coloredTile.first / d_nrTiles) &&
@@ -154,33 +134,41 @@ int Environment::getSample(double x, double y, int method_read) {
                 (y >= 1.0 * coloredTile.second / d_nrTiles) &&
                 (y <= (1.0 * coloredTile.second + 1) / d_nrTiles)
             ) {
-
-                // Print debug information if DEBUG is enabled
+                lastSample = 1;
                 return 1; // WHITE TILE
             }
         }
-
-        // Print debug information if DEBUG is enabled
-
+        lastSample = 0;
         return 0; // BLACK TILE
     }
-    if (method_read ==1){
-        return 0;
+
+    if (method_read == 1) { // Use distributions
+        for (std::pair<int, int> coloredTile : d_grid) {
+            
+            if (
+                (x >= 1.0 * coloredTile.first / d_nrTiles) &&
+                (x <= (1.0 * coloredTile.first + 1) / d_nrTiles) &&
+                (y >= 1.0 * coloredTile.second / d_nrTiles) &&
+                (y <= (1.0 * coloredTile.second + 1) / d_nrTiles)
+            ) {
+                // Sample from vibration distribution and apply location shift
+                lastSample = d_vibDist(d_gen_environment) + d_vibLoc;
+                if (lastSample > vibThresh) {return 1;}
+                else {return 0;}
+            }
+        }
+        // Sample from non-vibration distribution and apply location shift
+        lastSample = d_nonVibDist(d_gen_environment) + d_nonVibLoc;
+        if (lastSample > vibThresh) {return 1;}
+        else {return 0;}
     }
-    else {return 0;}//exception cases
+
+    return 0; // Exception case
 }
-
-
-
-
 
 // Destructor definition
 Environment::~Environment() {
-    // Since no dynamic memory allocation is used, this destructor does not need to perform any actions.
-    // The default destructor generated by the compiler will handle the cleanup of the string and vector.
+    // Default destructor generated by the compiler handles cleanup
 }
-
-
-
 
 #endif

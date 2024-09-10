@@ -3,7 +3,7 @@ import numpy as np
 
 
 class WebotsProcessor:
-    def __init__(self, folder,filename,threshold = None, grid = np.array([])) -> None:
+    def __init__(self, folder,filename,threshold = None, grid = np.array([]),size = 5) -> None:
    
         self.world_file = folder + filename
         self.folder = folder
@@ -21,6 +21,7 @@ class WebotsProcessor:
             self.grid = grid
  
         if "webots" in str(filename):
+            self.read_world_file(5)
             self._read_file()
 
         else:
@@ -59,17 +60,22 @@ class WebotsProcessor:
         
         # Parse data lines with at least 10 commas
         data_lines = [line for line in lines if line.count(',') >= 10]
+
         data_list = [list(map(float, line.split(','))) for line in data_lines]
-        
+
         # Assuming the column names based on the provided data structure
         columns = [
-            'print_bool', 'time', 'robot_id', 'sample', 'message', 'beta_belief', 
+            'print_bool', 'time', 'robot_id', 'measurement', 'message', 'beta_belief', 
             'beta_alpha', 'beta_beta', 'sends', 'recvs', 'beta_mean', 
             'beta_onboard_mean', 'pos_x', 'pos_y', 'rw_time', 'ca_time', 
             'sample_time', 'decision_time', 'd_f'
         ]
         
         self.data = pd.DataFrame(data_list, columns=columns)
+
+        self.data['pos_y'] = abs(1-self.data['pos_y']).copy()
+
+        self.add_labels()
         self.i_data = self.interpolate_data()
         
     def add_onboard_values(self):
@@ -77,7 +83,7 @@ class WebotsProcessor:
         self.data['alpha_onboard'] = (self.data['label'] == 1).cumsum()
         self.data['beta_onboard_mean'] = (self.data['alpha_onboard'] / (self.data['alpha_onboard']+self.data['beta_onboard']))
 
-    def read_world_file(self):
+    def read_world_file(self,size=5):
         with open(self.folder + "world.txt", 'r') as file:
             lines = file.readlines()
         
@@ -87,13 +93,14 @@ class WebotsProcessor:
                 row, col = map(int, line.split(','))
                 entries.append((row, col))
         # Initialize a 5x5 matrix filled with zeros
-        matrix = np.ones((5, 5), dtype=int)
+        matrix = np.zeros((size, size), dtype=int)
 
         # Fill the matrix with the given entries
         for (row, col) in entries:
-            matrix[row, col] = 0
-        
-        return matrix, matrix.reshape(1,25)
+            matrix[row, col] = 1
+        matrix = matrix.transpose()
+        self.grid = matrix
+        return matrix, matrix.reshape(1,size*size)
 
     def get_summary(self):
         """Returns a summary of the DataFrame"""
@@ -144,7 +151,6 @@ class WebotsProcessor:
             
             ca_per_sample.append(np.array(robot_data.dropna()['ca_time_diff']))
 
-        
         # Return processed data, or you could aggregate results if needed
         return ca_time,sense_time,ca_per_sample
 
@@ -162,7 +168,7 @@ class WebotsProcessor:
             times.append(robot_data[['time', 'robot_id', 'time_diff']].iloc[:-1])
         all_times =pd.concat(times).reset_index(drop=True).dropna()
  
-        return all_times['time_diff']
+        return np.array(all_times['time_diff'])
 
     def _add_d_f_indicator(self):
         """Adds a binary indicator column for d_f"""
@@ -261,10 +267,13 @@ class WebotsProcessor:
         :param df: DataFrame with 'x' and 'y' columns representing points in the grid.
         :return: DataFrame with an additional 'label' column.
         """
+      
         def get_label(x, y):
+            size = self.grid.shape[0]
+            index = size-1
             # Calculate grid indices based on the x, y coordinates
-            grid_x = min(int(x // 0.2), 4)  # Ensure max index is 4 (x=1 is the last column)
-            grid_y = min(4 - int(y // 0.2), 4)  # Ensure y=1 is the first row and y=0 is the last row
+            grid_x = min(int(x // (1/(size))), index)  # Ensure max index is 4 (x=1 is the last column)
+            grid_y = min(index - int(y // (1/(size))), index)  # Ensure y=1 is the first row and y=0 is the last row
 
             # Return the label based on the grid matrix
             return self.grid[grid_y][grid_x]
@@ -274,10 +283,10 @@ class WebotsProcessor:
         self.data['label'] = self.data['measurement'].apply(lambda x: 1 if x > self.threshold else 0)
 
         # Add a column for False Positives (FP)
-        self.data['FP'] = (self.data['label'] == 0) & (self.data['label'] != self.data['true_label'])
+        self.data['FP'] = (self.data['label'] == 1) & (self.data['label'] != self.data['true_label'])
 
         # Add a column for False Negatives (FN)
-        self.data['FN'] = (self.data['label'] == 1) & (self.data['label'] != self.data['true_label'])
+        self.data['FN'] = (self.data['label'] == 0) & (self.data['label'] != self.data['true_label'])
    
         # Calculate the number of False Positives (FP)
         fp_count = self.data['FP'].sum()
@@ -318,6 +327,7 @@ class WebotsProcessor:
             
             robot_data = self.filter_by_robot_id(robot_id).copy()
             robot_data = robot_data.sort_values(by='time')
+
             
             # Compute X and Y distances
             robot_data['x_distance'] = robot_data['pos_x'].diff()
@@ -346,11 +356,12 @@ class WebotsProcessor:
         y_distance_data = pd.concat(y_distances).reset_index(drop=True)
         direction_data = pd.concat(directions).reset_index(drop=True)
         
+        
 
         if return_df:
             return distance_data, x_distance_data, y_distance_data, direction_data
         else:
-            return distance_data['distance'].dropna(), x_distance_data['x_distance'].dropna(), y_distance_data['y_distance'].dropna(), direction_data['direction'].dropna()
+            return distance_data['distance'].dropna(), x_distance_data['x_distance'].dropna(), y_distance_data['y_distance'].dropna(), direction_data['direction'].dropna() , distance_data[['time','distance']]
 
 
 

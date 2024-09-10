@@ -10,6 +10,9 @@
 #include <filesystem>
 #include "filtering.hh"
 #include "RugBot.hh"
+
+#include <random>
+#include <algorithm>
 #include "radio.hh"
 #include "controller_settings.hh"
 #include "BetaDistribution.hh"
@@ -20,7 +23,7 @@ typedef std::vector<double> Array;
 
 
 
-
+#define TIME_MAX 1200
 
 
 class Algorithm1 {
@@ -42,6 +45,8 @@ public:
     AlgoStates states = STATE_RW;
 
 
+
+
     int tau = 1000;
     int time = 0;
     int intersample_time =0;
@@ -55,6 +60,7 @@ public:
     int SampleTime = 0;
     int decisionTime = 0;
     double p_c = 0.95;
+
  
     // Time step for the simulation
     enum { TIME_STEP = 20 };
@@ -98,9 +104,6 @@ void Algorithm1::run() {
 
     while(robot.d_robot->step(robot.d_robot->getBasicTimeStep()) != -1) {
         time = (int) robot.d_robot->getTime();
-        
-        //
-        
             switch (states) {
                 case STATE_RW:
                     try {
@@ -110,15 +113,11 @@ void Algorithm1::run() {
                             
                             break;
                         }
-
-                        if(robot.RandomWalk()==2){intersample_time+=TIME_STEP;}
-                        if(robot.state ==3 ){intersample_time = 0;}
-                        if(robot.state ==6){intersample_time = 0;}
-                        
-
-                        
-
-                        
+                        robot.RandomWalk();
+                        if(robot.state == 0){intersample_time+=TIME_STEP;}
+                        if(robot.state == 3){intersample_time = 0;}
+                        if(robot.state == 6){intersample_time = 0;}
+                        if(robot.state == 7){intersample_time = 0;}
                         recvSample();
 
                     } catch (const std::exception &e) {
@@ -130,15 +129,15 @@ void Algorithm1::run() {
                 case STATE_OBS:
                     try {
                         pauseCount = 1000;
-                        
-                        sample = environ.getSample(robot.getPos()[0], robot.getPos()[1], 0);
+                        sample = environ.getSample(robot.getPos()[0], robot.getPos()[1]);
                         beta.update(sample);
                         beta.onboard_update(sample);
                         check_decision();
                         message = calculateMessage(sample);
                         print_data(1);
-
                         sendSample(message);
+                        robot.battery_drain = (1 - robot.d_robot->getTime() /(TIME_MAX*7 ));//simulate a voltage drop
+                        robot.setSpeedDistParams(3.1,0.095,0.8);//simulate random variations in speed due to surface, direction, friction etc.
                         states = STATE_RW;
                         intersample_time =0;
                     } catch (const std::exception &e) {
@@ -181,7 +180,7 @@ if(robot.d_robot->getTime() > 5) {
         std::to_string(print_bool) + "," +
         std::to_string((double) robot.d_robot->getTime()) + "," +
         std::string(robot.d_robot->getName().substr(1, 1)) + "," +
-        std::to_string(sample) + "," +
+        std::to_string(environ.lastSample) + "," +
         std::to_string(message) + "," +
         std::to_string(beta.getBelief()) + "," +
         std::to_string(beta.alpha) + "," +
@@ -213,17 +212,27 @@ void Algorithm1::setSimulationSetup() {
     settings.readSettings();
     
     // Print settings to show the values read
-    std::cout << "Settings values: ";
+    std::cout << "Settings values for robot: "<<robot.d_robot->getName() << "---------------"<<"\n";
     for (int value : settings.values) {
         std::cout << value << " ";
     }
     std::cout << std::endl;
-    robot.generator.seed( ((int)robot.d_robot->getName()[1]) * 10 * settings.values[7]);
+
+    robot.setSeeds(settings.values[7] + 1);
 
     robot.setRWTimeGenParams(settings.values[0], settings.values[1]);
-    robot.setAngleDistParams(-.1,.1);
-    robot.setSpeedDistParams(.95,1.05);
-    
+    robot.setAngleDistParams(-0.1,0.1);
+    robot.setSpeedDistParams(3.1,0.095,0.8);
+
+    environ.setSeed((settings.values[7]+1) * robot.SeedRov * 123);
+    environ.d_nrTiles = settings.values[9];
+
+    environ.setNonVibDistribution(2.40787,0.3168,0.15968);
+    environ.setVibDistribution(3.55283,0.7371,0.12958);
+
+    environ.method_read = settings.values[8];
+    environ.vibThresh = 1.4;
+
 
     tau = settings.values[2];
     robot.CA_Threshold = settings.values[3];
@@ -236,6 +245,7 @@ void Algorithm1::setSimulationSetup() {
     std::cout << "min_swarmCount: " << min_swarmCount << std::endl;
     std::cout << "feedback: " << feedback << std::endl;
     std::cout << "eta: " << eta << std::endl;
+    std::cout << "End of settings values for robot: "<<robot.d_robot->getName() << "---------------"<<"\n";
 }
 
 

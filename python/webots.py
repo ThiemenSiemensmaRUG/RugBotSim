@@ -3,6 +3,8 @@ import subprocess
 import time
 from webotsWorldCreation import createWorld
 import shutil
+import numpy
+
 class WebotsEvaluation():
 
     def __init__(self,run,instance,robots):

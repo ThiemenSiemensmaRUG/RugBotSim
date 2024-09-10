@@ -31,6 +31,8 @@ public:
     Emitter *emitter;
     Receiver *receiver;
 
+    int SeedRov = 0;
+
     double timeStep;
     double rw_time;
     double rw_angle;
@@ -52,6 +54,8 @@ public:
 
     double speed_dev = 1;
     double motor_dev = 0;
+    double battery_drain = 1;//1 = 100%
+
 
     double refAngle = 0;
     double angleIntegrator = 0;
@@ -75,7 +79,8 @@ public:
     std::default_random_engine generator;
 
     std::uniform_real_distribution<double> angle_dist;
-    std::uniform_real_distribution<double> speed_dist;
+    std::gamma_distribution<double> speed_dist;
+
     std::cauchy_distribution<double> rw_time_gen;
     std::uniform_real_distribution<double> rw_angle_gen;
     std::uniform_real_distribution<double> ca_angle_gen;
@@ -97,8 +102,9 @@ public:
     std::vector<double> getPos();
     void setRWTimeGenParams(double location, double scale);
     void setAngleDistParams(double lower_bound, double upper_bound);
-    void setSpeedDistParams(double lower_bound, double upper_bound);
+    void setSpeedDistParams(double shape, double scale, double location);
     void setRandomizationSpeed();
+    void setSeeds(int seed);
 };
 
 
@@ -131,17 +137,17 @@ RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     gyro->enable(timeStep); 
 
     std::string name = d_robot->getName();
-    int SeedRov = ((int) name[1]) * 10;
+    SeedRov = ((int) name[1]) * 10;
     srand(SeedRov);
     generator.seed(SeedRov);
     
     rw_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
     ca_angle_gen =  std::uniform_real_distribution<double>(-180.0, 180.0);
-    std::cout << "RugRobot " << name[1] << " with Seed " << SeedRov <<","  << rw_angle_gen(generator)<<'\n';
+    
     
     setRWTimeGenParams(15000.0,0.0);
     setAngleDistParams(0,0);
-    setSpeedDistParams(1,1);
+    setSpeedDistParams(3.48249,0.72997,1);
 
 
     ca_angle = ca_angle_gen(generator);
@@ -170,6 +176,15 @@ RugRobot::~RugRobot() {
     // If any other resources were allocated dynamically, clean them up here
 }
 
+void RugRobot::setSeeds(int seed){
+    std::string name = d_robot->getName();
+    SeedRov = ((int) name[1]) * 1234;
+    generator.seed(SeedRov*1234 * seed);
+    
+    srand(SeedRov*12345 * seed);
+    std::cout << "RugRobot " << name[1] << " with Seed " << SeedRov*1234 * seed <<","  << rw_angle_gen(generator)<<'\n';
+}
+
 void RugRobot::setRWTimeGenParams(double location, double scale) {
     rw_time_gen = std::cauchy_distribution<double>(location, scale);
     std::cout << "new random walk paramters loc, scale "<<location <<","<<scale<<'\n'; 
@@ -185,11 +200,13 @@ void RugRobot::setAngleDistParams(double lower_bound, double upper_bound) {
     std::cout<<"new angle distribution parameters: "<<motor_dev<<"\n";
 }
 
-void RugRobot::setSpeedDistParams(double lower_bound, double upper_bound) {
+void RugRobot::setSpeedDistParams(double shape, double scale, double location) {
     
-    speed_dist = std::uniform_real_distribution<double>(lower_bound, upper_bound);
-    speed_dev = speed_dist(generator);
-    std::cout<<"new speed distribution parameters: "<<speed_dev<<"\n";
+    speed_dist = std::gamma_distribution<double>(shape,scale);
+    speed_dev = (speed_dist(generator) + location) ;
+    speed_dev = std::clamp(speed_dev,.7,1.5);
+    
+    //std::cout<<"new speed distribution parameters: "<<speed_dev<<"\n";
 }
 
 
@@ -224,12 +241,12 @@ void RugRobot::setSpeed(double speedl, double speedr) {
     speedr = std::clamp(speedr, -100.0, 100.0);
 
     
-    leftMotor->setVelocity(speedl / 100 * (1 - motor_dev) * speed_dev * 10);
-    rightMotor->setVelocity(speedr / 100 * (1 + motor_dev) * speed_dev * 10);
+    leftMotor->setVelocity(speedl / 100 * (1 - motor_dev) * speed_dev * battery_drain * 10);
+    rightMotor->setVelocity(speedr / 100 * (1 + motor_dev) * speed_dev * battery_drain * 10);
 }
 
 int RugRobot::turnAngle(double Angle) {
-    double Pgain = 1.25;
+    double Pgain = 2.5;
     double Igain = 0.15;
     double dt = timeStep / 1000.0;
     double e = Angle - refAngle;
