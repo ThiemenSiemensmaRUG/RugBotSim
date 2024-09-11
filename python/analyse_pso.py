@@ -73,7 +73,6 @@ def create_ones_array(array):
     return np.ones(array_length)
 
 def normalize_vector(vector, max_val, min_val):
-
     # Ensure max_val and min_val are numpy arrays
     max_val = np.array(max_val)
     min_val = np.array(min_val)
@@ -182,7 +181,7 @@ class analyse():
         return  dimensions,std
 
 ## processing the long output file
-x=analyse("jobfiles/pso_6.csv")
+x=analyse("jobfiles/pso_7.csv")
 iterations,fitness_vals,mean_personal_best,std_personal_best,global_best=x.get_results()
 plt.figure()
 plt.plot(range(0,x.max_iter),mean_personal_best,label="$\\mu (\mathcal{P}_i)$")
@@ -198,7 +197,7 @@ plt.ylabel("Fitness Value")
 plt.grid()
 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=4)
 plt.tight_layout()
-plt.savefig('convergence.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
+#plt.savefig('convergence.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
 
 bounds = np.array([[0,20000],[0,20000],[1000,6000],[50,150],[0,500]])
 
@@ -218,5 +217,5 @@ plt.ylabel("$\mu (\mathbf{p}_i)$")
 plt.grid()
 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=5)
 plt.tight_layout()
-plt.savefig('dimensions.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
+#plt.savefig('dimensions.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
 plt.show()

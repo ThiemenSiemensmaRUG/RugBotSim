@@ -177,12 +177,13 @@ RugRobot::~RugRobot() {
 }
 
 void RugRobot::setSeeds(int seed){
+    std::cout << "input seed = "<< seed<<'\n';
     std::string name = d_robot->getName();
-    SeedRov = ((int) name[1]) * 1234;
-    generator.seed(SeedRov*1234 * seed);
+    SeedRov = ((int) name[1] +1) * 1234;
+    generator.seed(SeedRov * seed);
     
-    srand(SeedRov*12345 * seed);
-    std::cout << "RugRobot " << name[1] << " with Seed " << SeedRov*1234 * seed <<","  << rw_angle_gen(generator)<<'\n';
+    srand(SeedRov * seed);
+    std::cout << "RugRobot " << name[1] << " with Seed " << SeedRov * seed <<","  << rw_angle_gen(generator)<<'\n';
 }
 
 void RugRobot::setRWTimeGenParams(double location, double scale) {

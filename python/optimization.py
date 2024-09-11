@@ -13,7 +13,7 @@ def cost_function(x,particle=0,iteration=0,reevaluation=0):
     job = WebotsEvaluation(run = run_dir,instance = particle * reevaluation,robots=5)
     world_creation_seed = (particle+1) * (iteration + 1) * reevaluation
     grid_seed = reevaluation * (iteration +1)
-    c_settings = {"gamma0":x[0],"gamma":x[1],"tau":x[2],"thetaC":x[3],"swarmCount":x[4],"feedback":0,"seed":world_creation_seed,"use_distribution":1,"size":5}
+    c_settings = {"gamma0":x[0],"gamma":x[1],"tau":x[2],"thetaC":x[3],"swarmCount":x[4],"feedback":0,"eta":1250,"seed":world_creation_seed,"use_distribution":1,"size":5}
     s_settings = {"right_dec":0,"fill_ratio":0.48,"offset_f":0.04,"check_interval":20,"autoexit":1,"run_full":0}
     settings = {"particle":particle,"iteration":iteration,"reevaluation":reevaluation,"word_creation_seed":world_creation_seed,"grid_seed":grid_seed}
     job.job_setup(c_settings=c_settings,s_settings=s_settings,settings=settings,world_creation_seed=world_creation_seed,grid_seed=grid_seed,fill_ratio=0.48)
@@ -36,8 +36,8 @@ def cost_function(x,particle=0,iteration=0,reevaluation=0):
 
 
 bounds = np.array([[0,20000],[0,20000],[1000,6000],[50,150],[0,500]])
-number_of_particles = 5 #25
-number_of_iterations = 5#50
+number_of_particles = 3 #25
+number_of_iterations = 2#50
 number_of_reevaluations = 5#10
 number_of_init_evaluations = 5#10
 percentage_reevaluation = 0.2
