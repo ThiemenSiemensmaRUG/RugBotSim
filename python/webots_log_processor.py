@@ -138,9 +138,10 @@ class WebotsProcessor:
         ca_time = []
         sense_time=[]
         ca_per_sample = []
+        rw_time = []
         for robot_id in np.sort(robot_ids):
             robot_data = self.filter_by_robot_id(robot_id).copy()
-            
+            robot_data = robot_data.sort_values(by='time')
 
             # Apply the accumulation function
             robot_data = accumulate_values(robot_data)
@@ -148,11 +149,12 @@ class WebotsProcessor:
             # Add to result list or handle the data further
             ca_time.append(robot_data['ca_time'].iloc[-1])
             sense_time.append(robot_data['sample_time'].iloc[-1])
-            
+            rw_temp = robot_data['time'].iloc[-1] * 1000 - robot_data['sample_time'].iloc[-1] - robot_data['ca_time'].iloc[-1]
+            rw_time.append(rw_temp)
             ca_per_sample.append(np.array(robot_data.dropna()['ca_time_diff']))
 
         # Return processed data, or you could aggregate results if needed
-        return ca_time,sense_time,ca_per_sample
+        return ca_time,sense_time,ca_per_sample,rw_time
 
 
     def get_intersample_time(self):

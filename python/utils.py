@@ -3,7 +3,7 @@ import scipy.stats as stats
 import matplotlib.pyplot as plt
 
 # Set figure size in inches for optimal DPI
-scaling = .5
+scaling = 0.5 #1 correspond to full column width
 plt.rcParams['figure.figsize'] = [6.4 * scaling, 4.8 * scaling]  # Standard figure size, can be adjusted as needed
 plt.rcParams['figure.dpi'] = 300  # High resolution (300 DPI)
 
@@ -119,3 +119,44 @@ def plot_fit(data):
     plt.plot(x, pdf, 'k', linewidth=2)
     plt.title(f'Fit Results: mu = {mu:.2f}, sigma = {sigma:.2f}')
     plt.show()
+
+
+def vec_corr_coef(vec1,vec2):
+    mu_1 = np.mean(vec1)
+    mu_2 = np.mean(vec2)
+    norm1 = vec1 - mu_1
+    norm2 = vec2 - mu_2
+    top = np.dot(norm1,norm2)
+    bottom = np.sqrt(np.dot(sum(norm1**2),sum(norm2**2)))
+    return np.divide(top,bottom)
+
+def matrix_corr_coef_spatial(mat1,mat2):
+    mat2 = mat2.transpose().copy()
+    rows = mat1.shape[0]
+    columns = mat2.shape[1]
+    corr_matrix = np.zeros(shape=(rows,columns))
+    for i in range(rows):
+        for j in range(columns):
+            corr_matrix[i,j] = vec_corr_coef(mat1[i,:],mat2[:,j])
+    return corr_matrix
+
+def flatten_corr_coef_spatial(mat1,mat2):
+    mat1 = mat1.copy().flatten()
+    mat2 = mat2.copy().flatten()
+    return vec_corr_coef(mat1,mat2)
+
+
+def check_and_flatten(input_array):
+    if isinstance(input_array, np.ndarray):  # Check if it's a numpy array
+        if input_array.ndim == 2:  # Check if it's a matrix (2D array)
+            return input_array.flatten()  # Flatten the matrix
+    return input_array  # Return the original input if not a matrix
+
+def cosine_similarity(mat1,mat2):
+    vec1 = check_and_flatten(mat1)
+    vec2 = check_and_flatten(mat2)
+    top = np.dot(vec1,vec2)
+    bottom = np.linalg.norm(vec1) * np.linalg.norm(vec2)
+
+    return top/bottom
+

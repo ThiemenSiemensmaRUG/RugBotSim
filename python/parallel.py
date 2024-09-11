@@ -15,7 +15,6 @@ def launch_instance(x,reevaluation = 0,run_dir=0,feedback =0,fill_ratio = 0.48,n
     
     c_settings = {"gamma0":x[0],"gamma":x[1],"tau":x[2],"thetaC":x[3],"swarmCount":x[4],"feedback":feedback,'eta':700,"seed":instance,"use_distribution":1,"size":gridsize}
     s_settings = {"right_dec":right_dec,"fill_ratio":fill_ratio,"offset_f":0.04,"check_interval":10,"autoexit":1,"run_full":1}
-
     settings = {"reevaluation":reevaluation,"word_creation_seed":world_creation_seed,"grid_seed":grid_seed + 300}
     job.job_setup(c_settings=c_settings,s_settings=s_settings,settings=settings,world_creation_seed=world_creation_seed,grid_seed=grid_seed,fill_ratio=0.48,gridsize=gridsize,grid_ = grid)
     job.run_webots_instance(port=1234+instance)
