@@ -13,10 +13,10 @@ def launch_instance(x,reevaluation = 0,run_dir=0,feedback =0,fill_ratio = 0.48,n
     world_creation_seed = instance
     grid_seed = instance
     
-    c_settings = {"gamma0":x[0],"gamma":x[1],"tau":x[2],"thetaC":x[3],"swarmCount":x[4],"feedback":feedback,'eta':1250,"seed":instance,"use_distribution":0,"size":gridsize,"Usp":2000,"P(FP)":80,"P(FN)":100}
+    c_settings = {"gamma0":x[0],"gamma":x[1],"tau":x[2],"thetaC":x[3],"swarmCount":x[4],"feedback":feedback,'eta':1250,"seed":instance+10,"sample_strategy":1,"size":gridsize,"Usp":2000,"P(FP)":0,"P(FN)":0}
     s_settings = {"right_dec":right_dec,"fill_ratio":fill_ratio,"offset_f":0.04,"check_interval":10,"autoexit":1,"run_full":1}
     settings = {"reevaluation":reevaluation,"word_creation_seed":world_creation_seed,"grid_seed":grid_seed + 300}
-    job.job_setup(c_settings=c_settings,s_settings=s_settings,settings=settings,world_creation_seed=world_creation_seed,grid_seed=grid_seed,fill_ratio=0.48,gridsize=gridsize,grid_ = grid)
+    job.job_setup(c_settings=c_settings,s_settings=s_settings,settings=settings,world_creation_seed=world_creation_seed,grid_seed=grid_seed,fill_ratio=fill_ratio,gridsize=gridsize,grid_ = grid)
     job.run_webots_instance(port=1234+instance)
     fitness = job.get_fitness()
     job.move_results("/home/thiemenrug/Desktop/",f"parallel_{run_dir}/Instance_{instance}")
@@ -52,7 +52,9 @@ grid_=np.array([
 
 
 
-launch_instance(x_,1,13,2,0.48,5)
+launch_instance(x_,1,1,0,0.36,5)
+launch_instance(x_,1,2,0,0.48,5)
+launch_instance(x_,1,3,0,0.52,5)
 #launch_batch(3,3,x_,10,0,0.48,5,grid=grid_,size=5)
 
 

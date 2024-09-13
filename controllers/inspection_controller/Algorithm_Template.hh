@@ -234,6 +234,9 @@ void Algorithm1::setSimulationSetup() {
     environ.setNonVibDistribution(2.40787,0.3168,0.15968);
     environ.setVibDistribution(3.55283,0.7371,0.12958);
 
+    environ.setFPdist(settings.values[11]);
+    environ.setFNdist(settings.values[12]);
+
     environ.method_read = settings.values[8];
     environ.vibThresh = 1.4;
 

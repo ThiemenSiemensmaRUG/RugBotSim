@@ -46,9 +46,12 @@ public:
     // Set distributions with location information
     void setVibDistribution(double shape, double scale, double location);
     void setNonVibDistribution(double shape, double scale, double location);
+    void setFPdist(int fp_prob);
+    void setFNdist(int fn_prob);
     int method_read = 0;
     double vibThresh = 1.45;
     double lastSample = 0;
+
 
 private:
     // Distributions with location information
@@ -57,6 +60,12 @@ private:
 
     std::gamma_distribution<double> d_nonVibDist; // Gamma distribution for non-vibration
     double d_nonVibLoc; // Location parameter for non-vibration distribution
+
+    std::bernoulli_distribution bernoulli_FP;
+
+    std::bernoulli_distribution bernoulli_FN;
+
+    
 
 
 
@@ -77,6 +86,21 @@ Environment::Environment(std::string file) : filename(file) {
     // Read data from the file and populate the grid
     readFile();
 }
+
+void Environment::setFPdist(int fp_prob){
+    bernoulli_FP.param(std::bernoulli_distribution::param_type(
+        (double (fp_prob) / 100)
+    ));
+    std::cout << "Prob(FP) = " << bernoulli_FP.p() <<"\n";    
+}
+
+void Environment::setFNdist(int fn_prob){
+    bernoulli_FN.param(std::bernoulli_distribution::param_type(
+        (double (fn_prob) / 100)
+    ));
+    std::cout << "Prob(FN) = " << bernoulli_FN.p() <<"\n";  
+}
+
 
 void Environment::readFile() {
     std::ifstream file;
@@ -135,12 +159,39 @@ int Environment::getSample(double x, double y) {
                 (y <= (1.0 * coloredTile.second + 1) / d_nrTiles)
             ) {
                 lastSample = 1;
-                
+
                 return 1; // WHITE TILE
             }
         }
         lastSample = 0;
         return 0; // BLACK TILE
+    }
+
+    if (method_read == 2) { // Use grid data and FP / FN
+        for (std::pair<int, int> coloredTile : d_grid) {
+            if (
+                (x >= 1.0 * coloredTile.first / d_nrTiles) &&
+                (x <= (1.0 * coloredTile.first + 1) / d_nrTiles) &&
+                (y >= 1.0 * coloredTile.second / d_nrTiles) &&
+                (y <= (1.0 * coloredTile.second + 1) / d_nrTiles)
+            ) {
+                // Sample false negative (FN) with probability `fn_prob`
+                if (bernoulli_FN(d_gen_environment)) {
+                    lastSample = 0; // False negative: white classified as black
+                    return 0; // BLACK TILE due to FN
+                } else {
+                    lastSample = 1; // True positive: white classified as white
+                    return 1; // WHITE TILE
+                }
+            }
+        }
+        if (bernoulli_FP(d_gen_environment)) {
+            lastSample = 1; // False positive: black classified as white
+            return 1; // WHITE TILE due to FP
+        } else {
+            lastSample = 0; // True negative: black classified as black
+            return 0; // BLACK TILE
+        }
     }
 
     if (method_read == 1) { // Use distributions

@@ -19,15 +19,16 @@ temp = np.zeros(100)
 
 linestylz  = ['dashed','dotted','dashdot','--','-.']
 instance = 1
-run = 12
-plt.figure()
-for run in range(11,14):
-    outputdir =  f"/home/thiemenrug/Desktop/parallel_{run}/Instance_{instance}/"
 
-    p = WebotsProcessor(outputdir,f"/webots_log_{instance}.txt",0.5)
+plt.figure()
+for run in range(1,4):
+    outputdir =  f"/home/thiemenrug/Desktop/parallel_{run}/Instance_{instance}/"
+    
+    p = WebotsProcessor(outputdir,f"/webots_log_{instance}.txt",1.4)
+    print(p.fp_percentage,p.fn_percentage)
     t,belief = p.compute_average_belief_over_time()
     
-    plt.plot(t,belief,linestyle = linestylz[run-12],label = run)
+    plt.plot(t,belief,linestyle = linestylz[run-5],label = run)
 plt.legend()
 plt.show()
 

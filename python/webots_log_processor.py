@@ -292,16 +292,17 @@ class WebotsProcessor:
    
         # Calculate the number of False Positives (FP)
         fp_count = self.data['FP'].sum()
-
+        tp_count = ((self.data['true_label'] == 0) ).sum()
         # Calculate the number of False Negatives (FN)
         fn_count = self.data['FN'].sum()
+        tn_count = ((self.data['true_label'] == 1) ).sum()
 
         # Total number of samples
         total_count = self.data.shape[0]
 
         # Calculate the percentages
-        self.fp_percentage = (fp_count / total_count) * 100
-        self.fn_percentage = (fn_count / total_count) * 100
+        self.fp_percentage = (fp_count / tp_count) * 100
+        self.fn_percentage = (fn_count / tn_count) * 100
         self.tn_percentage = ((fp_count + fn_count)/ total_count) * 100
 
         # Print the percentages
