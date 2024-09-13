@@ -60,7 +60,7 @@ public:
     int SampleTime = 0;
     int decisionTime = 0;
     double p_c = 0.95;
-
+    double Us_exponent = 2.0;
  
     // Time step for the simulation
     enum { TIME_STEP = 20 };
@@ -88,7 +88,7 @@ private:
     Environment environ;
 
     //random generator for softfeedback and softfeedback parameters
-    std::random_device sf_rd;
+    std::default_random_engine sf_rd;
     std::bernoulli_distribution soft_feedback;
     double delta = 0;
     double eta = 1250;
@@ -220,12 +220,16 @@ void Algorithm1::setSimulationSetup() {
 
     robot.setSeeds(settings.values[7] + 1);
 
+    std::string name = robot.d_robot->getName();
+    int seed =((int) name[1] +1) * 1357 * (settings.values[7]+1);
+    sf_rd.seed(seed);
     robot.setRWTimeGenParams(settings.values[0], settings.values[1]);
     robot.setAngleDistParams(-0.1,0.1);
     robot.setSpeedDistParams(3.1,0.095,0.8);
 
     environ.setSeed((settings.values[7]+1) * robot.SeedRov * 123);
     environ.d_nrTiles = settings.values[9];
+    Us_exponent = ((double) settings.values[10]) / 1000;
 
     environ.setNonVibDistribution(2.40787,0.3168,0.15968);
     environ.setVibDistribution(3.55283,0.7371,0.12958);
@@ -301,12 +305,12 @@ int Algorithm1::calculateMessage(int sample){
     }
 
     if (feedback == SOFT){
-        // std::cout << "---------message---------"<<std::endl;
-        // std::cout<<beta.alpha << ","<<beta.beta<<std::endl;
-        delta = exp(-1.0*eta * beta.getVariance()) * (0.5-beta.getBelief()) * (0.5-beta.getBelief());
+        // The above sometimes works even betteras the lower one, gives computational difference due to floating point operations.
+        //delta = exp(-1.0*eta * beta.getVariance()) * (0.5-beta.getBelief()) * (0.5-beta.getBelief());
 
-        // std::cout<<"nu = "<<eta<<", p = "<<beta.getBelief()<<", var = "<<beta.getVariance()<<", O = "<<sample<<", delta = "<<delta<<std::endl;
-        // std::cout<<"probability = "<<delta * (1.0 - beta.getBelief()) + (1-delta) * sample <<std::endl;
+
+       
+        delta = exp(-1.0 * eta * beta.getVariance()) * std::pow(std::abs(0.5 - beta.getBelief()), Us_exponent);
         soft_feedback.param(std::bernoulli_distribution::param_type( delta * (1.0 - beta.getBelief()) + (1-delta) * sample ));
         return soft_feedback(sf_rd);
     }

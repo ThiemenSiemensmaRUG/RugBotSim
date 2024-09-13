@@ -15,7 +15,7 @@ def cost_function(x,particle=0,iteration=0,reevaluation=0):
     grid_seed = reevaluation * (iteration +1)
     robot_seed = grid_seed
 
-    c_settings = {"gamma0":x[0],"gamma":x[1],"tau":x[2],"thetaC":x[3],"swarmCount":x[4],"feedback":0,"eta":1250,"seed":robot_seed,"use_distribution":1,"size":5}
+    c_settings = {"gamma0":x[0],"gamma":x[1],"tau":x[2],"thetaC":x[3],"swarmCount":x[4],"feedback":0,"eta":1250,"seed":robot_seed,"use_distribution":1,"size":5,"Usp":2000,"P(FP)":80,"P(FN)":100}
     s_settings = {"right_dec":0,"fill_ratio":0.48,"offset_f":0.04,"check_interval":20,"autoexit":1,"run_full":0}
     settings = {"particle":particle,"iteration":iteration,"reevaluation":reevaluation,"word_creation_seed":world_creation_seed,"grid_seed":grid_seed}
     job.job_setup(c_settings=c_settings,s_settings=s_settings,settings=settings,world_creation_seed=world_creation_seed,grid_seed=grid_seed,fill_ratio=0.48)

@@ -135,6 +135,7 @@ int Environment::getSample(double x, double y) {
                 (y <= (1.0 * coloredTile.second + 1) / d_nrTiles)
             ) {
                 lastSample = 1;
+                
                 return 1; // WHITE TILE
             }
         }
