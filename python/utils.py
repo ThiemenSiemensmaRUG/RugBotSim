@@ -1,7 +1,8 @@
 import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
-
+from scipy import ndimage
+import pandas as pd
 # Set figure size in inches for optimal DPI
 scaling = 0.5 #1 correspond to full column width
 plt.rcParams['figure.figsize'] = [6.4 * scaling, 4.8 * scaling]  # Standard figure size, can be adjusted as needed
@@ -70,6 +71,17 @@ def calculate_morans_I(matrix):
     
     return morans_I
 
+def entropy(M):
+    labeled_matrix, num_features = ndimage.label(M)
+    H_c_max = 0
+    N_black = 48
+    for i in range(N_black):
+        H_c_max -= (1 / N_black)*np.log2((1/N_black))
+    H_c = 0
+    for j in range(1,num_features+1):
+        C_i = np.sum(labeled_matrix == j)
+        H_c += -1 * (C_i / N_black) * np.log2(C_i / N_black)
+    return (H_c_max - H_c) / H_c_max
 
 def mean_(arr):
     return arr.mean(axis=0)
@@ -160,3 +172,81 @@ def cosine_similarity(mat1,mat2):
 
     return top/bottom
 
+def calculate_fill_ratio(M):
+    total_elements = M.size  # Total number of elements in the matrix
+    ones_count = np.count_nonzero(M)  # Count the number of 1s
+    fill_ratio = ones_count / total_elements  # Calculate the fill ratio
+    return fill_ratio
+
+def plot_matrix(M):
+    plt.imshow(M, cmap='Greys', interpolation='nearest')  # Plot matrix with grayscale
+    plt.colorbar()  # Optional: Show color scale bar
+    plt.title(f"Matrix Plot ({M.shape[0]}x{M.shape[1]})")
+    plt.show()
+
+
+
+
+
+def diagonal_matrix():
+    M = np.zeros(shape = (10,10))
+    M[:4,:4] = 1
+    M[-4:,-4:]=1
+    M[3:7,3:7] = 1
+    M[3,6] =0
+    M[6,3] = 0
+    M[2,4] = 1
+    M[4,2] = 1
+    M[-3,-5]=1
+    M[-5,-3] = 1
+    return M
+
+def stripe_matrix():
+    M = np.zeros(shape = (10,10))
+    M[:5,:] = 1
+    M[4,:2] = 0
+    return M
+
+def block_diagonal_matrix():
+    M = np.zeros(shape = (10,10))
+    M[:6,:6] = 1
+    M[7:,7:] = 1
+    M[6,6] = 1
+    M[6,7]=1
+    M[7,6]=1
+    return M
+
+def organized_alternating_matrix():
+    M = np.zeros(shape = (10,10))
+    for i in range(10):
+        for j in range(10):
+            if (i + j) % 2 == 0:  # Alternating pattern
+                M[i, j] = 1
+    M[0,0] = 0
+    M[-1,-1] = 0
+    return M
+
+
+def random_matrix():
+    M = np.zeros(shape = (10,10))
+
+    total_elements = 100
+    elements_to_fill = int(0.48 * total_elements)
+    np.random.seed(1)
+    # Randomly choose indices to set to 1
+    fill_indices = np.random.choice(total_elements, elements_to_fill, replace=False)
+    M[np.unravel_index(fill_indices, (10,10))] = 1
+
+    return M
+
+
+
+def concat_experiments(exps):
+
+    for exp in exps[1:]:
+    
+        max_id = exps[0].data['robot_id'].max() +1
+        exp.data['robot_id'] = exp.data['robot_id'] + max_id 
+        exps[0].data = pd.concat([exps[0].data,exp.data])
+
+    return exps[0]

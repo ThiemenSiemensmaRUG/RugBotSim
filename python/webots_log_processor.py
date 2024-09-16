@@ -21,7 +21,7 @@ class WebotsProcessor:
             self.grid = grid
  
         if "webots" in str(filename):
-            self.read_world_file(5)
+            self.read_world_file(size)
             self._read_file()
 
         else:
@@ -227,7 +227,10 @@ class WebotsProcessor:
     def compute_average_belief_over_time(self):
         """Computes the average means of beta beliefs over robots for each time step"""
         # Group by time and compute the mean of beta beliefs for each time step across all robots
+        self.interpolate_data()
         average_means = self.i_data.groupby('time')['beta_belief'].mean().reset_index()
+        
+
         return np.array(average_means['time']),np.array(average_means['beta_belief'])
     
     def compute_average_estimate_f_over_time(self):

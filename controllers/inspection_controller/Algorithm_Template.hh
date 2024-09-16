@@ -115,7 +115,7 @@ void Algorithm1::run() {
                         }
                         robot.RandomWalk();
                         if(robot.state == 0){intersample_time+=TIME_STEP;}
-                        if(robot.state == 3){intersample_time = 0;}
+                        //if(robot.state == 3){intersample_time = 0;}
                         if(robot.state == 6){intersample_time = 0;}
                         if(robot.state == 7){intersample_time = 0;}
                         recvSample();

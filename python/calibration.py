@@ -166,7 +166,7 @@ def concat_experiments(exps):
         max_id = exps[0].data['robot_id'].max() +1
         exp.data['robot_id'] = exp.data['robot_id'] + max_id 
         exps[0].data = pd.concat([exps[0].data,exp.data])
-
+    print(max_id)
     return exps[0]
 
 def calibrate(x_):
@@ -201,9 +201,9 @@ def calibrate(x_):
 ###main code for getting calibration values
 vib_threshold = 1.40
 
-calexp0 = WebotsProcessor("measurements/",'CAL_2.csv',vib_threshold)
-calexp1 = WebotsProcessor("measurements/",'CAL_3.csv',vib_threshold)
-calexp2 = WebotsProcessor("measurements/",'CAL_4.csv',vib_threshold)
+calexp0 = WebotsProcessor("measurements/",'CAL_CA_1.csv',vib_threshold)
+calexp1 = WebotsProcessor("measurements/",'CAL_CA_1.csv',vib_threshold)
+calexp2 = WebotsProcessor("measurements/",'CAL_CA_1.csv',vib_threshold)
 
 vib_threshold = 1.40
 
@@ -285,6 +285,6 @@ print("State time similarity = ",similarity_state_times)
 
 
 
-# plt.show()
+plt.show()
 
 
