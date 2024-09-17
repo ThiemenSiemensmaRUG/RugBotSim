@@ -115,6 +115,7 @@ void Algorithm1::run() {
                         }
                         robot.RandomWalk();
                         if(robot.state == 0){intersample_time+=TIME_STEP;}
+                        if(robot.state == 3){intersample_time+=TIME_STEP;}
                         //if(robot.state == 3){intersample_time = 0;}
                         if(robot.state == 6){intersample_time = 0;}
                         if(robot.state == 7){intersample_time = 0;}
@@ -231,14 +232,14 @@ void Algorithm1::setSimulationSetup() {
     environ.d_nrTiles = settings.values[9];
     Us_exponent = ((double) settings.values[10]) / 1000;
 
-    environ.setNonVibDistribution(2.40787,0.3168,0.15968);
-    environ.setVibDistribution(3.55283,0.7371,0.12958);
+    environ.setNonVibDistribution(2.52194,0.28754,0.13731 );
+    environ.setVibDistribution(5.33497,0.5132,-0.2001);
 
     environ.setFPdist(settings.values[11]);
     environ.setFNdist(settings.values[12]);
 
     environ.method_read = settings.values[8];
-    environ.vibThresh = 1.4;
+    environ.vibThresh = 1.33; // corresponding to around 14% error margin
 
 
     tau = settings.values[2];

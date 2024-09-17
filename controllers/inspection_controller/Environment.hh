@@ -49,7 +49,7 @@ public:
     void setFPdist(int fp_prob);
     void setFNdist(int fn_prob);
     int method_read = 0;
-    double vibThresh = 1.45;
+    double vibThresh = 1.33;
     double lastSample = 0;
 
 

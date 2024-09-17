@@ -17,6 +17,7 @@ class WebotsProcessor:
                     [0, 1, 1, 0, 1],  # Row corresponding to y=0.4 to y=0.2
                     [1, 0, 0, 1, 0]   # Row corresponding to y=0.2 to y=0.0
                 ])
+
         else:
             self.grid = grid
  

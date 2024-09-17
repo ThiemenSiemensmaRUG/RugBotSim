@@ -7,11 +7,11 @@ from utils import *
 
 
 
-run =10
+run = 3
 
 outputfolder = f"/home/thiemenrug/Desktop/parallel_{run}/"
 
-Umin_exp = [WebotsProcessor(f"{outputfolder}Instance_{i}/",f"webots_log_{i}.txt",.5) for i in range(100)]
+Umin_exp = [WebotsProcessor(f"{outputfolder}Instance_{i}/",f"webots_log_{i}.txt",1.33) for i in range(100)]
 
 
 
@@ -41,6 +41,5 @@ for i in range(100):
     t,p_= p.compute_average_belief_over_time()
     beliefs[i,:] = p_
 
-print(np.mean(acc))
 plt.plot(t,mean_(beliefs))
 plt.show()

@@ -205,7 +205,7 @@ void RugRobot::setSpeedDistParams(double shape, double scale, double location) {
     
     speed_dist = std::gamma_distribution<double>(shape,scale);
     speed_dev = (speed_dist(generator) + location) ;
-    speed_dev = std::clamp(speed_dev,.7,1.5);
+    speed_dev = std::clamp(speed_dev,.9,1.5);
     
     //std::cout<<"new speed distribution parameters: "<<speed_dev<<"\n";
 }
