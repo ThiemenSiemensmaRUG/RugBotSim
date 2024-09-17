@@ -37,7 +37,7 @@ def rosenbrock(x,particle=0,iteration=0,reevaluation=0):
 
 def cost_function(x,particle=0,iteration=0,reevaluation=0):
     job = WebotsEvaluation(run = run_dir,instance = particle * reevaluation,robots=5)
-    world_creation_seed = (particle+1) * (iteration + 1) * reevaluation
+    world_creation_seed = reevaluation * (iteration + 1) 
     grid_seed = reevaluation * (iteration +1)
     robot_seed = grid_seed
 
@@ -68,7 +68,7 @@ def cost_function(x,particle=0,iteration=0,reevaluation=0):
 
 bounds = np.array([[0,20000],[0,20000],[1000,6000],[50,150],[0,500]])
 number_of_particles =25
-number_of_iterations = 50
+number_of_iterations =50
 number_of_reevaluations =10
 number_of_init_evaluations = 10
 percentage_reevaluation = 0.2
@@ -80,9 +80,9 @@ pso = PSO(1,0,[1,0.4],0.75,0.75,bounds,0,cost_function,number_of_iterations,numb
 pso.pso_threaded(number_of_threads)
 pso.webots_data.to_csv(f"jobfiles/pso_{run_dir}.csv")
 
+# run_dir = 2
 
-run_dir =2
-
-pso = PSO(2,0,[1,0.4],0.75,0.75,bounds,0,cost_function,number_of_iterations,number_of_particles,number_of_reevaluations,percentage_reevaluation,number_of_init_evaluations)
-pso.pso_threaded(number_of_threads)
-pso.webots_data.to_csv(f"jobfiles/pso_{run_dir}.csv")
+# bounds = np.array([[0,20000],[0,20000],[1000,6000],[50,150],[0,500],[500,2000],[1000,4000]])
+# pso = PSO(1,0,[1,0.4],0.75,0.75,bounds,0,cost_function_soft_feedback,number_of_iterations,number_of_particles,number_of_reevaluations,percentage_reevaluation,number_of_init_evaluations)
+# pso.pso_threaded(number_of_threads)
+# pso.webots_data.to_csv(f"jobfiles/pso_{run_dir}.csv")

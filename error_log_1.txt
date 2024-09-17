@@ -1,0 +1,16 @@
+Processed: Particle 2, Iteration 0, Reevaluation 1001, port1237
+Processed: Particle 3, Iteration 0, Reevaluation 1001, port1238
+Processed: Particle 1, Iteration 0, Reevaluation 1001, port1236
+Processed: Particle 1, Iteration 0, Reevaluation 1002, port1237
+Processed: Particle 2, Iteration 0, Reevaluation 1002, port1238
+Processed: Particle 3, Iteration 0, Reevaluation 1002, port1239
+Processed: Particle 1, Iteration 0, Reevaluation 2, port1237
+Processed: Particle 1, Iteration 0, Reevaluation 3, port1238
+Processed: Particle 2, Iteration 1, Reevaluation 1001, port1237
+Processed: Particle 3, Iteration 1, Reevaluation 1001, port1238
+Processed: Particle 1, Iteration 1, Reevaluation 1001, port1236
+Processed: Particle 3, Iteration 1, Reevaluation 1002, port1239
+Processed: Particle 2, Iteration 1, Reevaluation 1002, port1238
+Processed: Particle 1, Iteration 1, Reevaluation 1002, port1237
+Processed: Particle 3, Iteration 1, Reevaluation 2, port1239
+Processed: Particle 3, Iteration 1, Reevaluation 3, port1240
