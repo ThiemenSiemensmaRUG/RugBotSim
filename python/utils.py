@@ -8,6 +8,9 @@ scaling = 0.5 #1 correspond to full column width
 plt.rcParams['figure.figsize'] = [6.4 * scaling, 4.8 * scaling]  # Standard figure size, can be adjusted as needed
 plt.rcParams['figure.dpi'] = 300  # High resolution (300 DPI)
 
+markers_ = ['.', ',', 'o', 'v', '^', '<', '>', '1', '2', '3', '4', 's', 'p', '*', 'h', 'H', '+', 'x', 'D', 'd', '|', '_']
+linestyles_ = ['-', '--', '-.', ':']
+
 # Font settings
 plt.rcParams['font.family'] = 'serif'  # Use a serif font like Times New Roman
 plt.rcParams['font.size'] = 10  # Adjust according to journal guidelines, typically 10-12pt
@@ -248,5 +251,11 @@ def concat_experiments(exps):
         max_id = exps[0].data['robot_id'].max() +1
         exp.data['robot_id'] = exp.data['robot_id'] + max_id 
         exps[0].data = pd.concat([exps[0].data,exp.data])
+
+    for exp in exps[1:]:
+    
+        max_id = exps[0].i_data['robot_id'].max() +1
+        exp.i_data['robot_id'] = exp.i_data['robot_id'] + max_id 
+        exps[0].i_data = pd.concat([exps[0].i_data,exp.i_data])
 
     return exps[0]

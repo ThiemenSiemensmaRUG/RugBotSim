@@ -1,0 +1,9 @@
+run 30-46 calibration us for grid seed 100
+
+run 20-28 - parallel results for different grid seeds as f=0.48
+
+run 50- 66 parallel results for different grid seeds 100-700 for f=.48 and .52
+
+run 70 - 101 parallel calibration of us for grid seed 400
+
+run 110-157 parallel over grids and f, over multiple robots

@@ -6,14 +6,21 @@ import concurrent.futures
 def evaluate_particle_initial(particle, iteration,r, seed, sigma, objective_func):
     if r ==1001:
         particle.current_values = []
-    particle.re_eval_value = objective_func(particle.position, particle=particle.number, iteration=iteration, reevaluation=r)
+
+    value = objective_func(particle.position, particle=particle.number, iteration=iteration, reevaluation=r)
+    if float(value) ==100.0:
+        return particle
+    particle.re_eval_value = value
     particle.current_value = add_noise(particle.re_eval_value,seed,iteration+1,particle.number,r,sigma)
     particle.current_values.append(particle.current_value)
     return particle
 
 # Top-level function to reevaluate a particle
 def reevaluate_particle(particle, iteration, r, seed, sigma, objective_func):
-    particle.re_eval_value = objective_func(particle.position, particle=particle.number, iteration=iteration, reevaluation=r)
+    value =objective_func(particle.position, particle=particle.number, iteration=iteration, reevaluation=r)
+    if float(value) ==100.0:
+        return particle
+    particle.re_eval_value = value
     particle.current_value = add_noise(particle.re_eval_value,seed,iteration+1,particle.number,r,sigma)
     particle.current_values.append(particle.current_value)
     return particle
@@ -25,6 +32,8 @@ def add_noise(value,seed, iteration,number,evaluation,sigma):
     return value 
 
 def fitness(values):
+    if len(values) == 0:
+        return 100
     fitness = np.mean(values) + np.std(values)
     return fitness
 
@@ -79,8 +88,8 @@ class PSO:
                 particle.best_value = abs(particle.current_value)
             
             if (abs(particle.current_value) < self.global_best_value):
-                self.global_best_position = particle.best_position.copy()
-                self.global_best_value = (particle.best_value)
+                self.global_best_position = particle.position.copy()
+                self.global_best_value = abs(particle.current_value)
             
 
         for particle in self.particles:
