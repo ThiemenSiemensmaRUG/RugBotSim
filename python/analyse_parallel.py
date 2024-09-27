@@ -30,7 +30,7 @@ def plot_calibration_us():
     k=70
     for i in range(8):
         for j in range(4):
-            x = get_folder_results(k,100)
+            x = get_folder_results(k,batch_size)
             time,acc = x.get_dec_time_acc()
             resulting_acc[i,j] = acc
             resulting_time[i,j] = time
@@ -96,7 +96,7 @@ def plot_fill_ratio_result():
     run = 110
     for i in range(len(fill_ratios)):
         for j in range(len(methods)):
-            x = get_folder_results(run,1)
+            x = get_folder_results(run,batch_size)
             time,acc = x.get_dec_time_acc()
             if fill_ratios[i] >.5:
                 acc= 1-acc
@@ -117,7 +117,7 @@ def plot_multi_robot():
     for fill in range(len(fill_ratios)):
         for n_r in range(len(n_robots)):
             for feedback in range(len(methods)):
-                x = get_folder_results(run,100)
+                x = get_folder_results(run,batch_size)
                 time,acc = x.get_dec_time_acc()
                 if fill >.5:
                     acc= 1-acc
@@ -173,7 +173,7 @@ def plot_multi_robot():
 
 
 
+if __name__ == "__main__":
 
-
-
-plot_multi_robot()
+    batch_size = 1
+    plot_multi_robot()

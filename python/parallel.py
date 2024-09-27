@@ -82,50 +82,60 @@ x = [7860, 10725 , 3778  , 55,381]
 # # """------------------------------------------------"""
 
 
+# """Below code runs over different grids (Moran Index)"""
+run_directory = 180 #Start dir
+for pattern in [M1,M2,M3,M4,M5]:
 
-
-"""Code below runs the parallel launches for comparision of Umin, Uplus and Us over different fll-ratios"""
-eta = 1500
-Usp = 1000
-for grid_start_seed in [400]:
-    for fill_ratio in [0.44,0.48,0.52,0.56]:#different grid sizes
+    for n_robots in [5]:
 
         for feedback in [0,1,2]:#Umin, Uplus and Us
-            launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=5,size=5,desc=f"f{fill_ratio},feedbac strategy{feedback}")   
-            run_directory+=1
-
-
-# """------------------------------------------------"""
-
-
-
-
-
-# """Below code runs over multiple robots 2*6*3*100 = 3600 simulations"""
-
-for fill_ratio in [0.48,.52]:
-    for n_robots in [10,9,8,7,6,5]:
-        for feedback in [0,1,2]:#Umin, Uplus and Us
-            launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=n_robots,size=5,desc=f"f{fill_ratio},feedbac strategy{feedback}")   
+            launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=n_robots,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {n_robots}, feedback {feedback}",)   
             run_directory+=1
 
     
-   
+
 # """------------------------------------------------"""
 
 
-# """Below code runs over different grids (Moran Index)"""
+# run_directory = 200 #start dir
 
-# for pattern in [M1,M2,M3,M4,M5]:
-
-#     for n_robots in [10,9,8,7,6,5]:
+# """Code below runs the parallel launches for comparision of Umin, Uplus and Us over different fll-ratios"""
+# eta = 1500
+# Usp = 2000
+# for grid_start_seed in [400]:
+#     for fill_ratio in [0.44,0.48,0.52,0.56]:#different grid sizes
 
 #         for feedback in [0,1,2]:#Umin, Uplus and Us
-#             launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=n_robots,grid = pattern,size=10,desc=f"Moran Index with n_robots {n_robots}, feedback {feedback}",)   
+#             launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=5,size=5,desc=f"f{fill_ratio},feedbac strategy{feedback}")   
+#             run_directory+=1
+
+
+# # """------------------------------------------------"""
+
+
+
+
+# run_directory = 250 # start dir
+# # """Below code runs over multiple robots 2*6*3*100 = 3600 simulations"""
+
+# for fill_ratio in [0.48,.52]:
+#     for n_robots in [10,9,8,7,6,5]:
+#         for feedback in [0,1,2]:#Umin, Uplus and Us
+#             launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=n_robots,size=5,desc=f"f{fill_ratio},feedbac strategy{feedback}")   
 #             run_directory+=1
 
     
+   
+# # """------------------------------------------------"""
 
-# """------------------------------------------------"""
 
 
+# # Below code runs over different level of falls positives and falls negatives
+# run_directory = 300
+# for pattern in [M1,M2,M3,M4,M5]:
+#     for feedback in [0,1,2]:#Umin, Uplus and Us
+#         for n_robots in [5]:
+#             for P_fp in [0,.1,.2,.3,.4,.5]:
+#                 for P_fn in [0,.1,.2,.3,.4,.5]:
+#                     launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=n_robots,grid=pattern,size=pattern.shape[0],desc=f"f{fill_ratio},feedbac strategy{feedback}")   
+#                     run_directory+=1
