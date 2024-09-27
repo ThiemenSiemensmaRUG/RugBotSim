@@ -5,14 +5,17 @@ from webots_log_processor import WebotsProcessor
 from utils import *
 
 
-def get_folder_results(run,len=100):
+def get_folder_results(run,len=100,size=5):
     outputfolder = f"/home/thiemenrug/Desktop/parallel_{run}/"
     result_ = []
+    
     for i in range(len):
         try:
-            result_.append(WebotsProcessor(outputfolder + f"Instance_{i}/",f"/webots_log_{i}.txt",0.5))
+ 
+            result_.append(WebotsProcessor(outputfolder + f"Instance_{i}/",f"/webots_log_{i}.txt",0.5,size=size))
         except:
             print(f"Failure for folder {run} instance {i}")
+
     results = concat_experiments(result_)
     return results
 
@@ -171,9 +174,25 @@ def plot_multi_robot():
     return
 
 
+def plot_robustness_analysis():
 
+    
+    matrices = ["M1","M2"]
+    methods = ["$u^-$","$u^+$","$u^s$"]
+    run = 180
+    resulting_acc = np.zeros(shape=(2,3))
+    resulting_time = np.zeros(shape = (2,3))
+    for m in range(len(matrices)):
+        for feedback in range(len(methods)):
+                x = get_folder_results(run,batch_size,size=10)
+                time,acc = x.get_dec_time_acc()
+
+                resulting_acc[m,feedback] = acc
+                resulting_time[m,feedback] = time
+                run+=1
+    print(resulting_acc,"\n",resulting_time)
 
 if __name__ == "__main__":
 
-    batch_size = 1
-    plot_multi_robot()
+    batch_size = 100
+    plot_robustness_analysis()

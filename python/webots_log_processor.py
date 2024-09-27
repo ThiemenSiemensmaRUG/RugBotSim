@@ -22,7 +22,9 @@ class WebotsProcessor:
             self.grid = grid
  
         if "webots" in str(filename):
+      
             self.read_world_file(size)
+
             self._read_file()
 
         else:
