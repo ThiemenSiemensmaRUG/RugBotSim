@@ -39,7 +39,7 @@ def plot_calibration_us():
     for i in range(len(usps)):
         plt.plot(etas,resulting_acc[:,i],label =str(round(usps[i]/1000)),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
     plt.xlabel("$\\eta$")
-    plt.ylabel("Accuracy $p$")
+    plt.ylabel("Accuracy")
     plt.legend(loc='center right', bbox_to_anchor=(1.3,.5), ncol=1,title = "$\kappa$")
     plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/CalibrationUs_Accuracy.pdf")
     plt.figure()
@@ -96,18 +96,77 @@ def plot_fill_ratio_result():
     run = 110
     for i in range(len(fill_ratios)):
         for j in range(len(methods)):
-            x = get_folder_results(run,100)
+            x = get_folder_results(run,1)
             time,acc = x.get_dec_time_acc()
             if fill_ratios[i] >.5:
                 acc= 1-acc
             resulting_acc[i,j] = acc
             resulting_time[i,j] = time
             run+=1
+    print(run)
     print(resulting_time,"\n",resulting_acc)
     return
 
 def plot_multi_robot():
+    fill_ratios = [.48,.52]
+    n_robots = [10,9,8,7,6,5]
+    methods = ["$u^-$","$u^+$","$u^s$"]
+    run = 122
+    resulting_acc = np.zeros(shape=(2,6,3))
+    resulting_time = np.zeros(shape = (2,6,3))
+    for fill in range(len(fill_ratios)):
+        for n_r in range(len(n_robots)):
+            for feedback in range(len(methods)):
+                x = get_folder_results(run,100)
+                time,acc = x.get_dec_time_acc()
+                if fill >.5:
+                    acc= 1-acc
+                resulting_acc[fill,n_r,feedback] = acc
+                resulting_time[fill,n_r,feedback] = time
+                run+=1
+    
+    #select 0 or 1st index for 48 and 52 percent respectively
+    time = resulting_time[0,:,:].transpose()
 
+    acc = resulting_acc[0,:,:].transpose()
+        
+    # Plot for ACC
+
+    plt.figure()
+    plt.imshow(np.flip(time,axis=1), cmap='Greys', aspect='auto',vmin = 300, vmax = 1200)
+    plt.colorbar(label='Time [s]')
+    plt.xticks(ticks=np.arange(len(n_robots)), labels=[str(round(u)) for u in reversed(n_robots)])
+    plt.yticks(ticks=np.arange(len(methods)), labels=[str((u)) for u in methods])
+    plt.xlabel("$N_r$")
+    plt.ylabel("Feedback")
+
+
+    plt.figure()
+    plt.imshow(np.flip(acc,axis=1), cmap='Greys', aspect='auto',vmin = 0.5, vmax = 1)
+    plt.colorbar(label='Accuracy')
+    plt.xticks(ticks=np.arange(len(n_robots)), labels=[str(round(u)) for u in reversed(n_robots)])
+    plt.yticks(ticks=np.arange(len(methods)), labels=[str((u)) for u in methods])
+    plt.xlabel("$N_r$")
+    plt.ylabel("Feedback")
+
+
+
+    plt.figure()
+    for i in range(len(methods)):
+        plt.plot(range(6),np.flip(acc[i,:],axis=0),label = str((methods[i])),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
+    plt.xticks(ticks=np.arange(len(n_robots)), labels=[str(round(u)) for u in reversed(n_robots)])
+    plt.legend(loc='center right', bbox_to_anchor=(1.3,0.5), ncol=1)
+    plt.xlabel("$N_r$")
+    plt.ylabel("Accuracy")
+
+    plt.figure()
+    for i in range(len(methods)):
+        plt.plot(range(6),np.flip(time[i,:],axis=0),label = str((methods[i])),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
+    plt.xticks(ticks=np.arange(len(n_robots)), labels=[str(round(u)) for u in reversed(n_robots)])
+    plt.legend(loc='center right', bbox_to_anchor=(1.3,0.5), ncol=1)
+    plt.xlabel("$N_r$")
+    plt.ylabel("Time")
+    plt.show()
 
     return
 
@@ -117,4 +176,4 @@ def plot_multi_robot():
 
 
 
-plot_fill_ratio_result()
+plot_multi_robot()
