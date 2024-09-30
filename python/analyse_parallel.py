@@ -96,7 +96,7 @@ def plot_fill_ratio_result():
     methods = ["$u^-$","$u^+$","$u^s$"]
     resulting_acc = np.zeros(shape=(4,3))
     resulting_time = np.zeros(shape = (4,3))
-    run = 110
+    run = 200
     for i in range(len(fill_ratios)):
         for j in range(len(methods)):
             x = get_folder_results(run,batch_size)
@@ -108,13 +108,59 @@ def plot_fill_ratio_result():
             run+=1
     print(run)
     print(resulting_time,"\n",resulting_acc)
+    time = resulting_time
+
+    acc = resulting_acc
+        
+    # Plot for ACC
+
+    plt.figure()
+    plt.imshow((time).transpose(), cmap='Greys', aspect='auto',vmin = 300, vmax = 1200)
+    plt.colorbar(label='Time [s]')
+    plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
+    plt.yticks(ticks=np.arange(len(methods)), labels=[str((u)) for u in methods])
+    plt.xlabel("$f$")
+    plt.ylabel("Feedback")
+
+
+    plt.figure()
+    plt.imshow((acc).transpose(), cmap='Greys', aspect='auto',vmin = 0.5, vmax = 1)
+    plt.colorbar(label='Accuracy')
+    plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
+    plt.yticks(ticks=np.arange(len(methods)), labels=[str((u)) for u in methods])
+    plt.xlabel("$f$")
+    plt.ylabel("Feedback")
+
+
+
+    plt.figure()
+    for i in range(len(methods)):
+        plt.plot(range(4),acc[:,i],label = str((methods[i])),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
+    plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
+    plt.legend(loc='center right', bbox_to_anchor=(1.3,0.5), ncol=1)
+    plt.xlabel("$f$")
+    plt.ylabel("Accuracy")
+
+    plt.figure()
+    for i in range(len(methods)):
+        plt.plot(range(4),time[:,i],label = str((methods[i])),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
+    plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
+    plt.legend(loc='center right', bbox_to_anchor=(1.3,0.5), ncol=1)
+    plt.xlabel("$f$")
+    plt.ylabel("Time")
+    plt.show()
+
+
+
+
+
     return
 
 def plot_multi_robot():
     fill_ratios = [.48,.52]
     n_robots = [10,9,8,7,6,5]
     methods = ["$u^-$","$u^+$","$u^s$"]
-    run = 122
+    run = 250
     resulting_acc = np.zeros(shape=(2,6,3))
     resulting_time = np.zeros(shape = (2,6,3))
     for fill in range(len(fill_ratios)):
@@ -175,24 +221,53 @@ def plot_multi_robot():
 
 
 def plot_robustness_analysis():
-
-    
-    matrices = ["M1","M2"]
+    M1 = diagonal_matrix()
+    M2 = stripe_matrix()
+    M3 = block_diagonal_matrix()
+    M4 = organized_alternating_matrix()
+    M5 = random_matrix()
+    Ms = [M1,M2,M3,M4,M5]
+    matrices = ["M1","M2","M3","M4","M5"]
     methods = ["$u^-$","$u^+$","$u^s$"]
     run = 180
-    resulting_acc = np.zeros(shape=(2,3))
-    resulting_time = np.zeros(shape = (2,3))
+    resulting_acc = np.zeros(shape=(5,3))
+    resulting_time = np.zeros(shape = (5,3))
+    entropies = []
+    MIs = []
     for m in range(len(matrices)):
+        entropies.append(entropy(Ms[m]))
+        MIs.append(calculate_morans_I(Ms[m]))
         for feedback in range(len(methods)):
                 x = get_folder_results(run,batch_size,size=10)
                 time,acc = x.get_dec_time_acc()
-
                 resulting_acc[m,feedback] = acc
                 resulting_time[m,feedback] = time
                 run+=1
     print(resulting_acc,"\n",resulting_time)
 
+
+    temp_acc = np.zeros(shape=(3,5,3))
+    temp_time = np.zeros(shape=(3,5,3))
+    for s in range(len(methods)):
+        acc = resulting_acc[:,s]
+        time = resulting_time[:,s]
+        for m in range(len(matrices)):
+            temp_acc[s,m,0] = acc[m]
+            temp_acc[s,m,1] = entropies[m]
+            temp_acc[s,m,2] = MIs[m]
+            temp_time[s,m,0] = time[m]
+            temp_time[s,m,1] = entropies[m]
+            temp_time[s,m,2] = MIs[m]
+
+    plt.figure()
+    
+    print(temp_acc)
+        
+
+
+
+
 if __name__ == "__main__":
 
-    batch_size = 100
+    batch_size = 1
     plot_robustness_analysis()
