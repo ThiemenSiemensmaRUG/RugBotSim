@@ -8,9 +8,9 @@
 #include <cmath>
 #include <utility>
 #include <filesystem>
-#include "filtering.hh"
-#include "RugBot.hh"
 
+#include "RugBot.hh"
+#include "Environment.hh"
 #include "radio.hh"
 #include "controller_settings.hh"
 
@@ -47,16 +47,16 @@ public:
 private:
     ControllerSettings settings;
     RugRobot robot;
-
+    Environment environ;
     Radio_Rover radio;
     std::vector<int> pos;
-
+    int sample_ = 0;
 
 };
 
 void Algorithm1::run() {
     //std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
-    pos = roundToNearest10(robot.getPos());
+   
     robot.setCustomData("");
     settings.readSettings();
 
@@ -73,6 +73,7 @@ void Algorithm1::run() {
                 break;
 
             case STATE_OBS:
+                sample_ = environ.getSample(robot.getPos()[0], robot.getPos()[1]);
                 states = STATE_RW;                  
                 break;
 
