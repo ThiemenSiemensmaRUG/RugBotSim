@@ -15,10 +15,10 @@ linestyles_ = ['-', '--', '-.', ':']
 plt.rcParams['font.family'] = 'serif'  # Use a serif font like Times New Roman
 plt.rcParams['font.size'] = 10  # Adjust according to journal guidelines, typically 10-12pt
 plt.rcParams['axes.labelsize'] = 10  # Label size
-plt.rcParams['axes.titlesize'] = 12  # Title size, typically slightly larger than labels
-plt.rcParams['xtick.labelsize'] = 8  # X-axis tick label size
-plt.rcParams['ytick.labelsize'] = 8  # Y-axis tick label size
-plt.rcParams['legend.fontsize'] = 8  # Legend font size
+plt.rcParams['axes.titlesize'] = 10  # Title size, typically slightly larger than labels
+plt.rcParams['xtick.labelsize'] = 10  # X-axis tick label size
+plt.rcParams['ytick.labelsize'] = 10  # Y-axis tick label size
+plt.rcParams['legend.fontsize'] = 10  # Legend font size
 
 # Line and marker styles
 plt.rcParams['lines.linewidth'] = 1.5  # Line width for better visibility

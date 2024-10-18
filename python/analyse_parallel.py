@@ -269,5 +269,5 @@ def plot_robustness_analysis():
 
 if __name__ == "__main__":
 
-    batch_size = 1
+    batch_size = 100
     plot_robustness_analysis()

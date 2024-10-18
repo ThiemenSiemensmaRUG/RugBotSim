@@ -196,8 +196,8 @@ plt.xlabel("Iterations")
 plt.ylabel("Fitness Value")
 plt.grid()
 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=4)
-plt.tight_layout()
-#plt.savefig('convergence.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
+plt.tight_layout(pad=0.05)
+plt.savefig('convergence.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
 
 bounds = np.array([[0,20000],[0,20000],[1000,6000],[50,150],[0,500]])
 
@@ -213,9 +213,9 @@ for i in range(5):
     plt.fill_between(range(0,means.shape[0]),means[:,i] - stds[:,i] ,means[:,i] + stds[:,i],color = colors[i],alpha=.2)
 
 plt.xlabel("Iterations")
-plt.ylabel("$\mu (\mathbf{p}_i)$")
+plt.ylabel("$\mu (\mathbf{p}_{ij})$")
 plt.grid()
 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=5)
-plt.tight_layout()
-#plt.savefig('dimensions.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
+plt.tight_layout(pad=0.05)
+plt.savefig('dimensions.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
 plt.show()
