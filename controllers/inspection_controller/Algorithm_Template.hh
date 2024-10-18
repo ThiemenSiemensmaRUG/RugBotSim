@@ -67,7 +67,6 @@ void Algorithm1::run() {
             case STATE_RW:
 
                 if(robot.RandomWalk()==1){
- 
                     states = STATE_OBS;
                 }
 
