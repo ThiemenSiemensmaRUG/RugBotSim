@@ -22,7 +22,7 @@ def calc_conf(val,dec,alpha,beta):
 
 a = 0
 b = 10
-np.random.seed(5)
+
 
 # Number of incoming samples
 num_samples = 500
