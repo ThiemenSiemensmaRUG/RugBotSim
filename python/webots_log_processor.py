@@ -310,11 +310,13 @@ class WebotsProcessor:
         self.fp_percentage = (fp_count / tp_count) * 100
         self.fn_percentage = (fn_count / tn_count) * 100
         self.tn_percentage = ((fp_count + fn_count)/ total_count) * 100
-
+        
         # Print the percentages
-        # print(f"Percentage of False Positives (FP)  : {self.fp_percentage:.2f}%")
-        # print(f"Percentage of False Negatives (FN)  : {self.fn_percentage:.2f}%")
-        # print(f"Percentage of Total Falses (FN/FP)  : {self.tn_percentage:.2f}%")
+        print(f"Total Positive observations         : {tn_count:.0f}")
+        print(f"Total Negative observations         : {tp_count:.0f}")
+        print(f"Percentage of False Positives (FP)  : {self.fp_percentage:.2f}%")
+        print(f"Percentage of False Negatives (FN)  : {self.fn_percentage:.2f}%")
+        print(f"Percentage of Total Falses (FN/FP)  : {self.tn_percentage:.2f}%")
         self.data['error'] = (self.data['label'] != self.data['true_label'])
 
     
@@ -375,3 +377,6 @@ class WebotsProcessor:
 
 
 
+
+
+x = WebotsProcessor("measurements/","TEST_1.csv",1.33)

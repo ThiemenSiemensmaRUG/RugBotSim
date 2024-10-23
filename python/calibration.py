@@ -193,7 +193,7 @@ def sample_distribution(x_,label = None):
     plt.figure()
     hist,_,_,_ =plt.hist2d(x_.data['pos_x'],x_.data['pos_y'],bins = (15,15))
     plt.colorbar()
-    plt.clim(vmin = 5,vmax =30)
+    plt.clim(vmin = 5,vmax =10)
     plt.xticks([0,1])
     plt.yticks([0,1])
     plt.xlabel("X position [m]")
@@ -221,9 +221,11 @@ def calibrate(x_,vibthreshold):
     for i in np.linspace(.5,4,200):
         x_.threshold = i
         x_.add_labels()
+        print(i)
+
         fn_error = x_.fn_percentage / (x_.fn_percentage + x_.fp_percentage)
         fp_error = x_.fp_percentage / (x_.fn_percentage + x_.fp_percentage)
-    
+        
         errors_fn.append(fn_error)
         errors_fp.append(fp_error)
         vibs.append(i)
@@ -240,6 +242,16 @@ def calibrate(x_,vibthreshold):
     plt.legend(loc = 'upper right')
     plt.tight_layout()
 
+
+
+
+x = WebotsProcessor("measurements/","UMIN1.csv",1.33)
+plot_measurements(x)
+calibrate(x,1.33)
+x.threshold = 1.33
+x.add_labels()
+print(x.fp_percentage,x.fn_percentage)
+plt.show()
 
 ###main code for getting calibration values
 vib_threshold = 1.33
@@ -263,14 +275,15 @@ calsim2 = WebotsProcessor("measurements/SM_2/",'webots_log_2.txt',vib_threshold)
 sims = [calsim0,calsim1,calsim2]
 exps = [calexp0,calexp1,calexp2]
 
+
 simulations = concat_experiments(sims)
 experiments = concat_experiments(exps)
 print(len(simulations.data))
 print(len(experiments.data))
 
-# calibrate(simulations,vib_threshold)
-# calibrate(experiments,vib_threshold)
-# plt.show()
+calibrate(simulations,vib_threshold)
+calibrate(experiments,vib_threshold)
+plt.show()
 
 
 
