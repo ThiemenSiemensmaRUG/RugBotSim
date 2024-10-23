@@ -38,7 +38,7 @@ public:
     // Time step for the simulation
     enum { TIME_STEP = 20 };
 
-    Algorithm1() : settings(),robot(TIME_STEP),radio(robot.d_robot,TIME_STEP) {};
+    Algorithm1() : settings(),robot(TIME_STEP),environ("world.txt"),radio(robot.d_robot,TIME_STEP) {};
 
     void run();
     void recvSample();

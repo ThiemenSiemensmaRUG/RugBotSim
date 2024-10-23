@@ -24,8 +24,9 @@ class Environment {
 public:
     int d_nrTiles = 5;       ///< The constant number of tiles.
 
-    Environment();
+    Environment(std::string file);
     ~Environment();
+
 
     /**
      * @brief Retrieves the color of the tile at the specified coordinates.
@@ -67,7 +68,7 @@ private:
     void readFile();
 };
 
-Environment::Environment() {
+Environment::Environment(std::string file) : filename(file) {
     // Read data from the file and populate the grid
     readFile();
 }
