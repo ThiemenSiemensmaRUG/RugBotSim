@@ -55,7 +55,7 @@ private:
 };
 
 void Algorithm1::run() {
-    //std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
+    std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
    
     robot.setCustomData("");
     settings.readSettings();
@@ -74,6 +74,7 @@ void Algorithm1::run() {
 
             case STATE_OBS:
                 sample_ = environ.getSample(robot.getPos()[0], robot.getPos()[1]);
+                std::cout<<sample_<<"\n";
                 states = STATE_RW;                  
                 break;
 

@@ -76,11 +76,15 @@ Environment::Environment(std::string file) : filename(file) {
 
 
 void Environment::readFile() {
+    std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
+    
     std::ifstream file;
     if (wPath != NULL) {
         char file_name[256];
         std::cout << "Webots working dir enabled" << '\n';
+        std::cout << filename << '\n';
         sprintf(file_name, "%s/world.txt", wPath);
+        std::cout << file_name << '\n';
         file.open(file_name);
     } else {
         file.open(filename);

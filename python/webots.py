@@ -26,6 +26,7 @@ class WebotsEvaluation():
 
         world = createWorld(self.instance,self.instance,f"world_{self.instance}",self.robots)
         world.save_settings(run_dir,c_settings,s_settings)
+        world.saveGrid(run_dir=run_dir)
         world.create_world()
         setup =  f"{run_dir}Instance_{self.instance}/settings.txt"
 
@@ -45,7 +46,7 @@ learningrates =[1]
 for i in range(1):
 
     x = WebotsEvaluation()
-    x.instance = 4
+    x.instance = 1
     x.robots = 6
     c_settings = {}
     s_settings = {}

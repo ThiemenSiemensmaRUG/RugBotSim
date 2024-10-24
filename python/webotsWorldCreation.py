@@ -32,11 +32,46 @@ class createWorld():
         self.name = name
         self.n_robots = n_robots
 
+    def saveGrid(self,run_dir=None,size=5,fill_ratio=0.48,seed = 1,grid_ = None):
+          np.random.seed(seed)
+          print(f"grid seed = {seed}")
+          grid = np.zeros((size,size), dtype=int)
+          total_cells = size*size
+          filled_cells = int(fill_ratio * total_cells)
 
+          # Get random indices to fill
+          indices = np.random.choice(total_cells, filled_cells, replace=False)
+          # Convert indices to row, column format
+          
+          row_indices, col_indices = np.unravel_index(indices, (size,size))
+          # Fill the grid at selected indices
+          grid[row_indices, col_indices] = 1
+
+          if (grid_) is not None:
+            grid = grid_
+            print("custom grid inserted\n")
+
+          map_list = []
+          for x, row in enumerate(grid):
+            for y, value in enumerate(row):
+                if value == 1:
+                    map_list.append((y,x))
+
+
+          map = np.array(map_list)
+          
+          filename =f"{run_dir}Instance_{self.instance}/world.txt"
+
+          np.savetxt(filename, map.astype(int), delimiter=',', fmt='%d', footer="-1")
+          
     def create_header(self):
         self.file.write("""#VRML_SIM R2023b utf8
 
 EXTERNPROTO "../protos/RovableV2.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/apartment_structure/protos/Wall.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Plastic.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 
 WorldInfo {
   CFM 0.1
@@ -177,3 +212,4 @@ Robot {
         self.create_header()
         self.create_robots_in_world()
         self.file.close()
+        
