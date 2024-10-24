@@ -245,7 +245,10 @@ def calibrate(x_,vibthreshold):
 
 
 
-x = WebotsProcessor("measurements/","UMIN1.csv",1.33)
+x1 = WebotsProcessor("measurements/","UMIN1.csv",1.33)
+x2 = WebotsProcessor("measurements/","UMIN2.csv",1.33)
+x3 = WebotsProcessor("measurements/","UMIN3.csv",1.33)
+x = concat_experiments([x1,x2,x3])
 plot_measurements(x)
 calibrate(x,1.33)
 x.threshold = 1.33
