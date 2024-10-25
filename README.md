@@ -8,7 +8,7 @@ This repository simulates the RugBot robot used for surface inspection tasks at 
 
 ### Distributed Robotic Systems Lab, Groningen
 
-The Distributed Robotic Systems Lab at Groningen focuses on developing advanced robotic systems for distributed tasks. Led by PI Bahar Haghighat, the lab explores innovative approaches in robotic simulation and control, with applications in various fields including autonomous inspection and robotic swarm coordination.
+The Distributed Robotic Systems Lab at Groningen focuses on developing advanced robotic systems for distributed tasks. 
 
 ## Repository Details
 
