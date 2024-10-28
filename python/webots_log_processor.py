@@ -49,12 +49,24 @@ class WebotsProcessor:
                                   "Collision Time":"ca_time",
                                   "Sense Time":"sample_time"})
 
-        self.data = self.data[self.data['print_bool'] == 1]
-        
+        self.data = self.data[self.data['print_bool'] == 1].reset_index()
+        self._add_d_f_indicator()
+        robot_ids = self.data['robot_id'].unique()
+        indices = []
+        for robot_id in np.sort(robot_ids):
+            robot_data = self.filter_by_robot_id(robot_id).copy()
+            robot_data.at[robot_data.index[-1], 'd_f_indicator'] = 1
+            index = (robot_data['d_f_indicator'] == 1.0).argmax()
+            time = robot_data['time'].iloc[index]
+            indices.append(time)
+        last_time = max(np.array(indices))
+        self.data = self.data[self.data['time']<=last_time].reset_index()
         self.add_labels()
         self.add_onboard_values()
-        self.i_data = self.interpolate_data()
+        self.i_data = self.interpolate_data(1001)
         return
+
+    
 
     def _read_file(self):
         """Reads the file and parses the data, skipping any junk prints"""
@@ -116,6 +128,9 @@ class WebotsProcessor:
     def compute_mean_beliefs(self):
         """Computes the mean of beta beliefs for each robot"""
         return self.data.groupby('robot_id')['beta_belief'].mean()
+    
+
+
     
     def get_data(self):
         """Returns the processed data"""
@@ -189,17 +204,17 @@ class WebotsProcessor:
         for robot_id in np.sort(robot_ids):
             robot_data = self.filter_by_robot_id(robot_id).copy()
             robot_data.at[robot_data.index[-1], 'd_f_indicator'] = 1
-
+            
             index = (robot_data['d_f_indicator'] == 1.0).argmax()
             decision_times.append(robot_data['time'].iloc[index])
             accuracies.append(robot_data['beta_belief'].iloc[index])
-        
+      
         return np.array(decision_times).mean(), np.array(accuracies).mean()
 
 
 
-    def interpolate_data(self):
-
+    def interpolate_data(self,t_max = 1201):
+       
         """Interpolates the data per robot per second, ensuring time range is from 0 to 1200 seconds"""
         # Initialize a list to hold interpolated data for each robot
         interpolated_data = []
@@ -213,7 +228,7 @@ class WebotsProcessor:
             robot_data = robot_data.sort_values(by='time')
             # Create a new DataFrame with a continuous time range (0 to 1200 seconds, in 1 second steps)
          
-            continuous_time = pd.DataFrame({'time': np.arange(0, 1201)}).astype(float)
+            continuous_time = pd.DataFrame({'time': np.arange(0, t_max)}).astype(float)
             # Merge with the original data to get the continuous time index
             robot_data = pd.merge_asof(continuous_time.astype(float), robot_data.astype(float), left_on='time', right_on='time', direction='nearest')
             #robot_data = pd.merge(continuous_time.astype(float), robot_data.astype(float), on='time', how='left')
@@ -311,12 +326,12 @@ class WebotsProcessor:
         self.fn_percentage = (fn_count / tn_count) * 100
         self.tn_percentage = ((fp_count + fn_count)/ total_count) * 100
         
-        # Print the percentages
-        print(f"Total Positive observations         : {tn_count:.0f}")
-        print(f"Total Negative observations         : {tp_count:.0f}")
-        print(f"Percentage of False Positives (FP)  : {self.fp_percentage:.2f}%")
-        print(f"Percentage of False Negatives (FN)  : {self.fn_percentage:.2f}%")
-        print(f"Percentage of Total Falses (FN/FP)  : {self.tn_percentage:.2f}%")
+        # # Print the percentages
+        # print(f"Total Positive observations         : {tn_count:.0f}")
+        # print(f"Total Negative observations         : {tp_count:.0f}")
+        # print(f"Percentage of False Positives (FP)  : {self.fp_percentage:.2f}%")
+        # print(f"Percentage of False Negatives (FN)  : {self.fn_percentage:.2f}%")
+        # print(f"Percentage of Total Falses (FN/FP)  : {self.tn_percentage:.2f}%")
         self.data['error'] = (self.data['label'] != self.data['true_label'])
 
     
@@ -378,5 +393,3 @@ class WebotsProcessor:
 
 
 
-
-x = WebotsProcessor("measurements/","TEST_1.csv",1.33)

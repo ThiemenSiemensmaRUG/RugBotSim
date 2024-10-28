@@ -51,7 +51,7 @@ double calculateFitness(int final_decision, int correct_decision, double fill_ra
 
 SupervisorSettings settings{};
 int pos = 0;
-int T_MAX = 1200;
+int T_MAX = 1000;
 int print_time_interval = settings.values[3];
 bool uniform_decision = false;
 

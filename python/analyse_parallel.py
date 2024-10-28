@@ -8,14 +8,11 @@ from utils import *
 def get_folder_results(run,len=100,size=5):
     outputfolder = f"/home/thiemenrug/Desktop/parallel_{run}/"
     result_ = []
-    
     for i in range(len):
         try:
- 
             result_.append(WebotsProcessor(outputfolder + f"Instance_{i}/",f"/webots_log_{i}.txt",0.5,size=size))
         except:
             print(f"Failure for folder {run} instance {i}")
-
     results = concat_experiments(result_)
     return results
 
@@ -30,7 +27,7 @@ def plot_calibration_us():
     usps = [1000,2000,3000,4000]
     resulting_acc = np.zeros(shape=(8,4))
     resulting_time = np.zeros(shape = (8,4))
-    k=70
+    k=10
     for i in range(8):
         for j in range(4):
             x = get_folder_results(k,batch_size)
@@ -96,7 +93,7 @@ def plot_fill_ratio_result():
     methods = ["$u^-$","$u^+$","$u^s$"]
     resulting_acc = np.zeros(shape=(4,3))
     resulting_time = np.zeros(shape = (4,3))
-    run = 200
+    run = 50
     for i in range(len(fill_ratios)):
         for j in range(len(methods)):
             x = get_folder_results(run,batch_size)
@@ -160,7 +157,7 @@ def plot_multi_robot():
     fill_ratios = [.48,.52]
     n_robots = [10,9,8,7,6,5]
     methods = ["$u^-$","$u^+$","$u^s$"]
-    run = 250
+    run = 100
     resulting_acc = np.zeros(shape=(2,6,3))
     resulting_time = np.zeros(shape = (2,6,3))
     for fill in range(len(fill_ratios)):
@@ -229,7 +226,7 @@ def plot_robustness_analysis():
     Ms = [M1,M2,M3,M4,M5]
     matrices = ["M1","M2","M3","M4","M5"]
     methods = ["$u^-$","$u^+$","$u^s$"]
-    run = 180
+    run = 150
     resulting_acc = np.zeros(shape=(5,3))
     resulting_time = np.zeros(shape = (5,3))
     entropies = []
@@ -270,4 +267,4 @@ def plot_robustness_analysis():
 if __name__ == "__main__":
 
     batch_size = 100
-    plot_robustness_analysis()
+    plot_fill_ratio_result()

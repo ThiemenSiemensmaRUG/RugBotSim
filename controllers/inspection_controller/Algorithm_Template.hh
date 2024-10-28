@@ -292,7 +292,8 @@ void Algorithm1::sendSample(int sample){
 }
 
 void Algorithm1::check_decision(){
-    if ((recvs > min_swarmCount) && (d_f ==-1)){
+    //was differente before, only on recvs instead of recvs and sends
+    if (((recvs+sends) > min_swarmCount) && (d_f ==-1)){
         if (beta.getBelief() > p_c){d_f = 0; decisionTime = time;}
         if (beta.getBelief() < (1- p_c)) {d_f =1; decisionTime = time;}
     }
