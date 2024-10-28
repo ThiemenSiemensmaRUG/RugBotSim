@@ -3,10 +3,11 @@ import numpy as np
 
 
 class WebotsProcessor:
-    def __init__(self, folder,filename,threshold = None, grid = np.array([]),size = 5) -> None:
+    def __init__(self, folder,filename,threshold = None, grid = np.array([]),size = 5,time=1201) -> None:
    
         self.world_file = folder + filename
         self.folder = folder
+        self.t_max = time
         self.data = None
         self.threshold = threshold
         if grid.shape[0] == 0:
@@ -63,7 +64,7 @@ class WebotsProcessor:
         self.data = self.data[self.data['time']<=last_time].reset_index()
         self.add_labels()
         self.add_onboard_values()
-        self.i_data = self.interpolate_data(1001)
+        self.i_data = self.interpolate_data()
         return
 
     
@@ -199,6 +200,7 @@ class WebotsProcessor:
         self._add_d_f_indicator()
 
         robot_ids = self.data['robot_id'].unique()
+        print(robot_ids.__len__())
         decision_times = []
         accuracies = []
         for robot_id in np.sort(robot_ids):
@@ -211,9 +213,25 @@ class WebotsProcessor:
       
         return np.array(decision_times).mean(), np.array(accuracies).mean()
 
+    def get_dec_time_acc_robots(self):
+        self._add_d_f_indicator()
+
+        robot_ids = self.data['robot_id'].unique()
+        print(robot_ids.__len__())
+        decision_times = []
+        accuracies = []
+        for robot_id in np.sort(robot_ids):
+            robot_data = self.filter_by_robot_id(robot_id).copy()
+            robot_data.at[robot_data.index[-1], 'd_f_indicator'] = 1
+            
+            index = (robot_data['d_f_indicator'] == 1.0).argmax()
+            decision_times.append(robot_data['time'].iloc[index])
+            accuracies.append(robot_data['beta_belief'].iloc[index])
+      
+        return np.array(decision_times), np.array(accuracies)
 
 
-    def interpolate_data(self,t_max = 1201):
+    def interpolate_data(self):
        
         """Interpolates the data per robot per second, ensuring time range is from 0 to 1200 seconds"""
         # Initialize a list to hold interpolated data for each robot
@@ -228,7 +246,7 @@ class WebotsProcessor:
             robot_data = robot_data.sort_values(by='time')
             # Create a new DataFrame with a continuous time range (0 to 1200 seconds, in 1 second steps)
          
-            continuous_time = pd.DataFrame({'time': np.arange(0, t_max)}).astype(float)
+            continuous_time = pd.DataFrame({'time': np.arange(0, self.t_max)}).astype(float)
             # Merge with the original data to get the continuous time index
             robot_data = pd.merge_asof(continuous_time.astype(float), robot_data.astype(float), left_on='time', right_on='time', direction='nearest')
             #robot_data = pd.merge(continuous_time.astype(float), robot_data.astype(float), on='time', how='left')
