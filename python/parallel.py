@@ -67,7 +67,7 @@ x = [7860, 10725 , 3778  , 55,381]
 
 run_directory = 0 #Start dir
 for feedback in [0,1,2]:
-    launch_batch(batch_size=10,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid = CAL_GRID,size=5,desc=f"Calibration Us")   
+    launch_batch(batch_size=5,workers=1,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid = CAL_GRID,size=5,desc=f"Calibration Us")   
     run_directory+=1
 
 
