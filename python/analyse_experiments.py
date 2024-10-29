@@ -77,7 +77,7 @@ plt.ylabel("Belief")
 plt.legend(loc='upper right', bbox_to_anchor=(1.0,1.2), ncol=3)
 plt.tight_layout(pad=0.05)
 
-
+plt.savefig("/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/exp_exp_belief.pdf")
 
 bplot_acc_sim = []
 bplot_time_sim = []
@@ -106,7 +106,7 @@ plt.xlabel("Time [s]")
 plt.ylabel("Belief")
 plt.legend(loc='upper right', bbox_to_anchor=(1.0,1.2), ncol=3)
 plt.tight_layout(pad=0.05)
-
+plt.savefig("/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/exp_sim_belief.pdf")
 
 plt.figure()
 plt.ylim([-0.1,1.1])
@@ -134,7 +134,7 @@ for i, (sim_data, real_data) in enumerate(zip(bplot_acc_sim, bplot_acc)):
 plt.xticks([1, 2.5, 4], ['$u^-$', '$u^+$', '$u^s$'])
 plt.legend([box["boxes"][0], box["boxes"][1]], ['Sim', 'Real'], loc='upper right', bbox_to_anchor=(0.85,1.2), ncol=2)
 plt.tight_layout(pad=0.05)
-
+plt.savefig("/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/bb_acc_exp.pdf")
 plt.figure()
 plt.ylim([400,1200])
 plt.ylabel("Time [s]")
@@ -159,4 +159,5 @@ for i, (sim_data, real_data) in enumerate(zip(bplot_time_sim, bplot_time)):
 plt.xticks([1, 2.5, 4], ['$u^-$', '$u^+$', '$u^s$'])
 plt.legend([box["boxes"][0], box["boxes"][1]], ['Sim', 'Real'], loc='upper right', bbox_to_anchor=(0.85,1.2), ncol=2)
 plt.tight_layout(pad=0.05)
+plt.savefig("/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/bb_time_exp.pdf")
 plt.show()
