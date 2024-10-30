@@ -1,10 +1,26 @@
 #!/bin/bash
 
+# Displaying initial information
+echo "This script will set up your development environment by installing the following:"
+echo "- Visual Studio Code"
+echo "- Google Chrome"
+echo "- GitHub Desktop"
+echo "- DisplayLink driver (if available)"
+echo "- Webots (if available)"
+echo "- Python and necessary packages"
+echo "- VS Code extensions for Python and C/C++"
+echo "- TeX Live for LaTeX support"
+echo ""
+echo "Please ensure you have the following files ready in your Downloads folder:"
+echo "- DisplayLink Synaptics APT Repository .deb file (from https://www.synaptics.com/products/displaylink-graphics/downloads/ubuntu)"
+echo "- Webots 2023b .deb file (from https://cyberbotics.com/#download)"
+echo ""
+read -p "Do you want to continue with the setup? (y/n): " CONTINUE
 
-
-# Setting executable permissions for setup.sh...
-# chmod +x path/setup.sh
-
+if [[ "$CONTINUE" != "y" && "$CONTINUE" != "Y" ]]; then
+    echo "Setup aborted. Exiting."
+    exit 0
+fi
 
 # Update package list
 echo "Updating package list..."
@@ -40,6 +56,7 @@ if [ -f "$DISPLAYLINK_DEB" ]; then
 else
     echo "DisplayLink .deb file not found in Downloads. Please download it from:"
     echo "https://www.synaptics.com/products/displaylink-graphics/downloads/ubuntu"
+    echo "After downloading, place the file in the Downloads folder and rerun this script."
     exit 1
 fi
 
@@ -52,6 +69,7 @@ if [ -f "$WEBOTS_DEB" ]; then
 else
     echo "Webots .deb file not found in Downloads. Please download it from:"
     echo "https://cyberbotics.com/#download"
+    echo "After downloading, place the file in the Downloads folder and rerun this script."
     exit 1
 fi
 

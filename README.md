@@ -8,7 +8,7 @@ This repository simulates the RugBot robot used for surface inspection tasks at 
 
 ### Distributed Robotic Systems Lab, Groningen
 
-The Distributed Robotic Systems Lab at Groningen focuses on developing advanced robotic systems for distributed tasks. Led by PI Bahar Haghighat, the lab explores innovative approaches in robotic simulation and control, with applications in various fields including autonomous inspection and robotic swarm coordination.
+The Distributed Robotic Systems Lab at Groningen focuses on developing advanced robotic systems for distributed tasks. This repository contains the simulated version of the robot used in various experiments.
 
 ## Repository Details
 
@@ -40,20 +40,18 @@ To set up the RugBot simulation environment, run the `setup.sh` script located i
    ./setup.sh
    ```
 
-The script will perform the following actions:
+The script will perform the following actions (optional is not required for functionality):
 - Update the package list for your system.
 - Install Visual Studio Code.
-- Download and install Google Chrome.
-- Set up and install GitHub Desktop.
-- Install the DisplayLink driver (if available).
+- Download and install Google Chrome (optional).
+- Set up and install GitHub Desktop (optional).
+- Install the DisplayLink driver (optional).
 - Install Webots for robotic simulation.
 - Install Python and the necessary packages (numpy, pandas, scipy, matplotlib, pyserial).
 - Configure Visual Studio Code with essential extensions for Python and C/C++ development.
 - Install LaTeX for rendering plots in Python.
 
 After the script completes, you will be prompted to restart your machine to apply all changes.
-
-
 
 ## Usage
 
