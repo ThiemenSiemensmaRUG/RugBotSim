@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export WEBOTS_HOME=/usr/local/webots
 RUN=$1
 INSTANCE_ID=$2
 NUM_ROBOTS=$3

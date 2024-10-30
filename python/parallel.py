@@ -3,6 +3,17 @@ from webots import WebotsEvaluation
 from concurrent.futures import ThreadPoolExecutor,ProcessPoolExecutor
 import concurrent.futures
 from utils import *
+import os
+import shutil
+
+def remove_dir(directory):
+    # Method to delete the run directory    
+    if os.path.exists(directory):
+        shutil.rmtree(directory)
+        
+    else:
+        raise FileNotFoundError(f"Source directory not found at {directory}")
+
 
 
 
@@ -24,7 +35,7 @@ def launch_instance(x,reevaluation = 0,run_dir=0,feedback =0,fill_ratio = 0.48,n
     job.job_setup(c_settings=c_settings,s_settings=s_settings,settings=settings,world_creation_seed=world_creation_seed,grid_seed=grid_seed,fill_ratio=fill_ratio,gridsize=gridsize,grid_ = grid)
     job.run_webots_instance(port=1234+instance)
     fitness = job.get_fitness()
-    job.move_results("/home/thiemenrug/Desktop/",f"parallel_{run_dir}/Instance_{instance}")
+    job.move_results("/home/thiemenrug/Documents/_temp/",f"parallel_{run_dir}/Instance_{instance}")
     job.remove_run_dir()
     del x
     return fitness
@@ -34,7 +45,7 @@ def launch_batch(batch_size,workers,x_,run_dir,feedback,fill_ratio,robots,grid=N
     with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as process_executor:  
         futures = [process_executor.submit(launch_instance, x_,i,run_dir,feedback,fill_ratio,robots,grid,size,desc) for i in range(batch_size)]
         [future.result() for future in futures]
-
+    remove_dir(f"jobfiles/Run_{run_dir}")
 
 
 M1 = diagonal_matrix()
@@ -64,6 +75,9 @@ number_of_thread = 4
 eta = 1500
 Usp = 2000
 x = [7860, 10725 , 3778  , 55,381]
+
+
+launch_batch(2,2,x,1,0,0.48,4)
 
 # run_directory = 0 #Start dir
 # for feedback in [0,1,2]:

@@ -81,6 +81,7 @@ class WebotsEvaluation():
         
         if os.path.exists(source_dir):
             shutil.rmtree(source_dir)
+            
         else:
             raise FileNotFoundError(f"Source directory not found at {source_dir}")
 

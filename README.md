@@ -1,6 +1,6 @@
 # RugBot
 
-Swarm of miniature robots. Simulated version of RugBot in WeBots.
+Swarm of miniature robots. Simulated version of RugBot in Webots.
 
 ## Overview
 
@@ -21,54 +21,38 @@ The `main` branch is dedicated to developing core functionalities for the RugBot
 
 ## Installation
 
+To set up your environment for RugBot simulation, this repository includes a `setup.sh` script located at the root of the repository. The script will automate the installation of necessary dependencies, including Webots, GitHub Desktop, Google Chrome, and Python packages, and configure VS Code with essential extensions.
 
-### Installing Webots 2023b
+### Running the `setup.sh` Script
 
-1. **Download Webots:**
-   - Visit the Webots download page: [Webots Download](https://cyberbotics.com/download).
-   - Download the Webots 2023b for Ubuntu Linux as a `.tar.bz2` archive.
 
-2. **Extract Webots:**
-   - Open a terminal.
-   - Navigate to the directory where the downloaded `.tar.bz2` file is located.
-   - Use the following command to extract:
+### Running the `setup.sh` Script
 
-     ```bash
-     tar -xvjf webots-2023b-rev1-x86-64.tar.bz2
-     ```
+To set up the RugBot simulation environment, run the `setup.sh` script located in the root directory of the repository. This script automates the installation of all necessary dependencies and tools required for the simulation. 
 
-   Replace `webots-2023b-rev1-x86-64.tar.bz2` with the actual filename.
+#### Steps to Execute the Script
 
-3. **Install Dependencies:**
-   - Check for any missing dependencies as per Webots documentation or runtime error messages.
+1. Open a terminal and navigate to the root directory of the RugBot repository.
+2. Make the script executable (if not already done).
+3. Execute the script.
+   ```bash
+   chmod +x setup.sh
+   ./setup.sh
+   ```
 
-4. **Launch Webots:**
-   - Navigate to the extracted directory.
-   - Start Webots using:
+The script will perform the following actions:
+- Update the package list for your system.
+- Install Visual Studio Code.
+- Download and install Google Chrome.
+- Set up and install GitHub Desktop.
+- Install the DisplayLink driver (if available).
+- Install Webots for robotic simulation.
+- Install Python and the necessary packages (numpy, pandas, scipy, matplotlib, pyserial).
+- Configure Visual Studio Code with essential extensions for Python and C/C++ development.
+- Install LaTeX for rendering plots in Python.
 
-     ```bash
-     ./webots
-     ```
+After the script completes, you will be prompted to restart your machine to apply all changes.
 
-### Setting Up GitHub Desktop
-
-1. **Download GitHub Desktop:**
-   - Visit the GitHub Desktop website: [GitHub Desktop](https://desktop.github.com/).
-   - Download the `.deb` package for Ubuntu.
-
-2. **Install GitHub Desktop:**
-   - Open a terminal.
-   - Navigate to the directory where the downloaded `.deb` file is located.
-   - Install GitHub Desktop using:
-
-     ```bash
-     sudo dpkg -i github-desktop-*.deb
-     ```
-
-   Replace `github-desktop-*.deb` with the actual filename.
-
-3. **Launch GitHub Desktop:**
-   - Open GitHub Desktop from the Applications menu or by typing `github-desktop` in the terminal.
 
 
 ## Usage
