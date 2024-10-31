@@ -6,7 +6,7 @@ from utils import *
 
 
 def get_folder_results(run,len=100,size=5):
-    outputfolder = f"/home/thiemenrug/Desktop/parallel_{run}/"
+    outputfolder = f"/home/thiemenrug/Documents/OutputDir/JournalSI/data/{run}/"
     result_ = []
     for i in range(len):
         try:
@@ -22,7 +22,6 @@ def get_folder_results(run,len=100,size=5):
 
 ### plot results for calibration Us
 def plot_calibration_us():
-    
     etas = [750,1000,1250,1500,1750,2000,2250,2500]
     usps = [1000,2000,3000,4000]
     resulting_acc = np.zeros(shape=(8,4))
@@ -30,7 +29,11 @@ def plot_calibration_us():
     k=10
     for i in range(8):
         for j in range(4):
-            x = get_folder_results(k,batch_size)
+            run_ = f"/Calibration_Us/parallel_{k}"
+            x = get_folder_results(run_,batch_size)
+            if x.valid == False:
+                k+=1
+                continue
             time,acc = x.get_dec_time_acc()
             resulting_acc[i,j] = acc
             resulting_time[i,j] = time
@@ -41,14 +44,14 @@ def plot_calibration_us():
     plt.xlabel("$\\eta$")
     plt.ylabel("Accuracy")
     plt.legend(loc='center right', bbox_to_anchor=(1.3,.5), ncol=1,title = "$\kappa$")
-    plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/CalibrationUs_Accuracy.pdf")
+    plt.savefig(f"/home/thiemenrug/Documents/OutputDir/JournalSI/figures/CalibrationUs_Accuracy.pdf")
     plt.figure()
     for i in range(len(usps)):
         plt.plot(etas,resulting_time[:,i],label = str(round(usps[i]/1000)),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
     plt.xlabel("$\\eta$")
     plt.ylabel("Time $[s]$")
     plt.legend(loc='center right', bbox_to_anchor=(1.3,0.5), ncol=1,title = "$\kappa$")
-    plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/CalibrationUs_Time.pdf")
+    plt.savefig(f"/home/thiemenrug/Documents/OutputDir/JournalSI/figures/CalibrationUs_Time.pdf")
     
     
     plt.figure()
@@ -65,7 +68,7 @@ def plot_calibration_us():
             plt.text(j, i, f'{resulting_acc[i, j]:.2f}', ha='center', va='center', color='red')
 
    
-    plt.savefig("/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/CalibrationUs_Accuracy_Heatmap.pdf")
+    plt.savefig("/home/thiemenrug/Documents/OutputDir/JournalSI/figures/CalibrationUs_Accuracy_Heatmap.pdf")
 
     # Plot for Time
     plt.figure()
@@ -82,7 +85,7 @@ def plot_calibration_us():
             plt.text(j, i, f'{resulting_time[i, j]:.0f}', ha='center', va='center', color='red')
 
 
-    plt.savefig("/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/CalibrationUs_Time_Heatmap.pdf")
+    plt.savefig("/home/thiemenrug/Documents/OutputDir/JournalSI/figures/CalibrationUs_Time_Heatmap.pdf")
 
     
     
@@ -96,55 +99,39 @@ def plot_fill_ratio_result():
     run = 50
     for i in range(len(fill_ratios)):
         for j in range(len(methods)):
-            x = get_folder_results(run,batch_size)
+            run_ =  f"/fill_ratio/parallel_{run}"
+            x = get_folder_results(run_,batch_size)
+            if x.valid == False:
+                continue
             time,acc = x.get_dec_time_acc()
             if fill_ratios[i] >.5:
                 acc= 1-acc
             resulting_acc[i,j] = acc
             resulting_time[i,j] = time
             run+=1
-    print(run)
     print(resulting_time,"\n",resulting_acc)
     time = resulting_time
 
     acc = resulting_acc
-        
-    # Plot for ACC
-
-    plt.figure()
-    plt.imshow((time).transpose(), cmap='Greys', aspect='auto',vmin = 300, vmax = 1200)
-    plt.colorbar(label='Time [s]')
-    plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
-    plt.yticks(ticks=np.arange(len(methods)), labels=[str((u)) for u in methods])
-    plt.xlabel("$f$")
-    plt.ylabel("Feedback")
-
-
-    plt.figure()
-    plt.imshow((acc).transpose(), cmap='Greys', aspect='auto',vmin = 0.5, vmax = 1)
-    plt.colorbar(label='Accuracy')
-    plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
-    plt.yticks(ticks=np.arange(len(methods)), labels=[str((u)) for u in methods])
-    plt.xlabel("$f$")
-    plt.ylabel("Feedback")
-
-
 
     plt.figure()
     for i in range(len(methods)):
         plt.plot(range(4),acc[:,i],label = str((methods[i])),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
     plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
-    plt.legend(loc='center right', bbox_to_anchor=(1.3,0.5), ncol=1)
+    plt.legend(loc='upper center', bbox_to_anchor=(0.45,1.25), ncol=4)
     plt.xlabel("$f$")
     plt.ylabel("Accuracy")
-
+    plt.tight_layout(pad = 0.05)
+    plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/result_fill_ratio_acc.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
     plt.figure()
     for i in range(len(methods)):
         plt.plot(range(4),time[:,i],label = str((methods[i])),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
     plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
-    plt.legend(loc='center right', bbox_to_anchor=(1.3,0.5), ncol=1)
+    plt.legend(loc='upper center', bbox_to_anchor=(0.45,1.25), ncol=4)
     plt.xlabel("$f$")
     plt.ylabel("Time")
+    plt.tight_layout(pad = 0.05)
+    plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/result_fill_ratio_time.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
     plt.show()
 
 
@@ -163,7 +150,11 @@ def plot_multi_robot():
     for fill in range(len(fill_ratios)):
         for n_r in range(len(n_robots)):
             for feedback in range(len(methods)):
-                x = get_folder_results(run,batch_size)
+                run_ = f"/multi_robot/parallel_{run}"
+                x = get_folder_results(run_,batch_size)
+                if x.valid == False:
+                    run+=1
+                    continue
                 time,acc = x.get_dec_time_acc()
                 if fill >.5:
                     acc= 1-acc
@@ -236,6 +227,9 @@ def plot_robustness_analysis():
         MIs.append(calculate_morans_I(Ms[m]))
         for feedback in range(len(methods)):
                 x = get_folder_results(run,batch_size,size=10)
+                if x.valid == False:
+                    run+=1
+                    continue
                 time,acc = x.get_dec_time_acc()
                 resulting_acc[m,feedback] = acc
                 resulting_time[m,feedback] = time

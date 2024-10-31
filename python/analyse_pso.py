@@ -3,23 +3,16 @@ import numpy as np
 import pandas as pd
 import random,time
 import ast
+from utils import *
 # Update matplotlib rc parameters for Springer Nature single-column format
 plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "serif",  # Use a serif font
-    "font.size": 10,  # Font size typically 10pt for Springer Nature papers
     "axes.labelsize": 10,  # Label font size
     "axes.titlesize": 10,  # Title font size
-    "legend.fontsize": 9,  # Legend font size
-    "xtick.labelsize": 11,  # X-axis tick font size
-    "ytick.labelsize": 11,  # Y-axis tick font size
+    "legend.fontsize": 7.5,  # Legend font size
+    "xtick.labelsize": 10,  # X-axis tick font size
+    "ytick.labelsize": 10,  # Y-axis tick font size
     "lines.linewidth": 1.0,  # Line width
-    "lines.markersize": 4,  # Marker size (adjusted for better visibility)
-    "figure.figsize": (3.85, 2.75),  # Figure size in inches for a single column
-    "figure.subplot.left": 0.1,  # Adjust subplot parameters as needed
-    "figure.subplot.right": 0.95,
-    "figure.subplot.bottom": 0.15,
-    "figure.subplot.top": 0.85,
+    "lines.markersize": 3,  # Marker size (adjusted for better visibility)
 })
 line_styles = [
     "-",      # Solid line
@@ -37,6 +30,8 @@ colors = []
 random.seed(time.time())
 for i in range(10):
     colors.append('#%06X' % random.randint(0, 0xFFFFFF))
+#change to base colors
+colors= ['b','g','r','c','m','y']
 
 line_markers = [
     ".",    # Point marker
@@ -184,20 +179,16 @@ class analyse():
 x=analyse("jobfiles/pso_3.csv")
 iterations,fitness_vals,mean_personal_best,std_personal_best,global_best=x.get_results()
 plt.figure()
-plt.plot(range(0,x.max_iter),mean_personal_best,label="$\\mu (\mathcal{P}_i)$")
-
-plt.plot(range(x.max_iter),np.mean(fitness_vals,axis=1),color = 'red',linestyle = line_styles[1],label="$\\mu (\mathcal{C}_i)$",marker = line_markers[3])
-
-
-
-plt.fill_between(range(0,x.max_iter),mean_personal_best - std_personal_best, mean_personal_best + std_personal_best,label = "$\\sigma (\mathcal{P}_i)$",alpha = .4)
-plt.plot(range(0,x.max_iter),global_best,label = '$\mathcal{G}_b$',linestyle = line_styles[2],marker = line_markers[0])
+plt.plot(range(0,x.max_iter),mean_personal_best,label="$\\mu (\mathcal{P}_i)$",color = 'dimgrey')
+plt.plot(range(x.max_iter),np.mean(fitness_vals,axis=1),color = 'black',linestyle = line_styles[1],label="$\\mu (\mathcal{C}_i)$",marker = line_markers[3])
+plt.fill_between(range(0,x.max_iter),mean_personal_best - std_personal_best, mean_personal_best + std_personal_best,label = "$\\sigma (\mathcal{P}_i)$",color = 'lightgrey',alpha = .4)
+plt.plot(range(0,x.max_iter),global_best,label = '$\mathcal{G}_b$',linestyle = line_styles[2],marker = line_markers[0],color = 'black')
 plt.xlabel("Iterations")
 plt.ylabel("Fitness Value")
 plt.grid()
-plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=4)
+plt.legend(loc='upper center', bbox_to_anchor=(0.45, 1.25), ncol=5)
 plt.tight_layout(pad=0.05)
-plt.savefig('convergence.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
+plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/convergence.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
 
 bounds = np.array([[0,20000],[0,20000],[1000,6000],[50,150],[0,500]])
 
@@ -208,14 +199,15 @@ means,stds = x.get_dimensions(bounds=bounds)
 
 
 plt.figure()
+
 for i in range(5):
-    plt.plot(range(0,means.shape[0]),means[:,i],marker = line_markers[i],linestyle = line_styles[i],label = columns[i],color = colors[i])
+    plt.plot(range(0,means.shape[0]),means[:,i],linestyle = line_styles[i],label = columns[i],color = colors[i])
     plt.fill_between(range(0,means.shape[0]),means[:,i] - stds[:,i] ,means[:,i] + stds[:,i],color = colors[i],alpha=.2)
 
 plt.xlabel("Iterations")
 plt.ylabel("$\mu (\mathbf{p}_{ij})$")
 plt.grid()
-plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=5)
+plt.legend(loc='upper center', bbox_to_anchor=(0.45, 1.25), ncol=5)
 plt.tight_layout(pad=0.05)
-plt.savefig('dimensions.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
+plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/dimensions.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
 plt.show()

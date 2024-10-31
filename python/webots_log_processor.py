@@ -9,6 +9,7 @@ class WebotsProcessor:
         self.folder = folder
         self.t_max = time
         self.data = None
+        self.valid = True
         self.threshold = threshold
         if grid.shape[0] == 0:
             self.grid = np.array([
@@ -75,6 +76,10 @@ class WebotsProcessor:
             lines = file.readlines()
         
         # Parse data lines with at least 10 commas
+        crash_lines = [line for line in lines if "crash" in line]
+        if len(crash_lines) > 0:
+            print(f"Instance {self.world_file} crashed")
+            self.valid = False
         data_lines = [line for line in lines if line.count(',') >= 10]
 
         data_list = [list(map(float, line.split(','))) for line in data_lines]
@@ -200,7 +205,7 @@ class WebotsProcessor:
         self._add_d_f_indicator()
 
         robot_ids = self.data['robot_id'].unique()
-        print(robot_ids.__len__())
+     
         decision_times = []
         accuracies = []
         for robot_id in np.sort(robot_ids):
@@ -217,7 +222,7 @@ class WebotsProcessor:
         self._add_d_f_indicator()
 
         robot_ids = self.data['robot_id'].unique()
-        print(robot_ids.__len__())
+   
         decision_times = []
         accuracies = []
         for robot_id in np.sort(robot_ids):
