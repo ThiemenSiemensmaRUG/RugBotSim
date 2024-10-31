@@ -25,10 +25,7 @@ To set up your environment for RugBot simulation, this repository includes a `se
 
 ### Running the `setup.sh` Script
 
-
-### Running the `setup.sh` Script
-
-To set up the RugBot simulation environment, run the `setup.sh` script located in the root directory of the repository. This script automates the installation of all necessary dependencies and tools required for the simulation. 
+To set up the RugBot simulation environment, run the `setup.sh` script located in the root directory of the repository. This script automates the installation of all necessary dependencies and tools required for the simulation. Start with a clean Ubuntu 22.04.1 LTS installation.
 
 #### Steps to Execute the Script
 
