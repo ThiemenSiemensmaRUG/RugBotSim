@@ -181,6 +181,7 @@ class WebotsProcessor:
         return ca_time,sense_time,ca_per_sample,rw_time
 
 
+
     def get_intersample_time(self):
         # Get unique robot IDs
         robot_ids = self.data['robot_id'].unique()
@@ -201,11 +202,9 @@ class WebotsProcessor:
         self.data['d_f_indicator'] = np.where(self.data['d_f'].astype(float).isin([0, 1]), 1, 0)
         
 
-    def get_dec_time_acc(self):
+    def get_dec_time_acc(self,return_std = False):
         self._add_d_f_indicator()
-
         robot_ids = self.data['robot_id'].unique()
-     
         decision_times = []
         accuracies = []
         for robot_id in np.sort(robot_ids):
@@ -215,7 +214,8 @@ class WebotsProcessor:
             index = (robot_data['d_f_indicator'] == 1.0).argmax()
             decision_times.append(robot_data['time'].iloc[index])
             accuracies.append(robot_data['beta_belief'].iloc[index])
-      
+        if return_std:
+            return np.array(decision_times).mean(), np.array(accuracies).mean(),np.array(decision_times).std(),np.array(accuracies).std()
         return np.array(decision_times).mean(), np.array(accuracies).mean()
 
     def get_dec_time_acc_robots(self):

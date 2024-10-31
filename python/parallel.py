@@ -69,7 +69,7 @@ sample_strategy = 1
 grid_start_seed = 400
 run_full=0
 batch_size = 100
-number_of_thread = 4
+number_of_thread = 3
 
 
 eta = 1500
@@ -77,22 +77,15 @@ Usp = 2000
 x = [7860, 10725 , 3778  , 55,381]
 
 
-launch_batch(2,2,x,1,0,0.48,4)
-
-# run_directory = 0 #Start dir
-# for feedback in [0,1,2]:
-#     launch_batch(batch_size=5,workers=1,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid = CAL_GRID,size=5,desc=f"Calibration Us")   
-#     run_directory+=1
 
 
 
-
-# run_directory = 10 #Start dir for calibration us
-# grid_start_seed = 400
-# for eta in [750,1000,1250,1500,1750,2000,2250,2500]:
-#     for Usp in [1000,2000,3000,4000]:
-#         launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=2,fill_ratio=0.48,robots=5,size=5,desc=f"Calibration Us")   
-#         run_directory+=1
+run_directory = 10 #Start dir for calibration us
+grid_start_seed = 400
+for eta in [750,1000,1250,1500,1750,2000,2250,2500]:
+    for Usp in [1000,2000,3000,4000]:
+        launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=2,fill_ratio=0.48,robots=5,size=5,desc=f"Calibration Us")   
+        run_directory+=1
 
 # """Code below runs the parallel launches for comparision of Umin, Uplus and Us over different fll-ratios"""
 
@@ -112,10 +105,10 @@ for fill_ratio in [0.44,0.48,0.52,0.56]: #different grid sizes
 run_directory = 100 # start dir
 # # """Below code runs over multiple robots 2*6*3*100 = 3600 simulations"""
 grid_start_seed = 400
-for fill_ratio in [0.48,.52]:
+for fill_ratio in [0.48]:
     for n_robots in [10,9,8,7,6,5]:
         for feedback in [0,1,2]:#Umin, Uplus and Us
-            launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=n_robots,size=5,desc=f"f{fill_ratio},feedbac strategy{feedback}")   
+            launch_batch(batch_size=batch_size,workers=1,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=n_robots,size=5,desc=f"f{fill_ratio},feedbac strategy{feedback}")   
             run_directory+=1
 
 
@@ -126,9 +119,24 @@ for pattern in [M1,M2,M3,M4,M5]:
         launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
         run_directory+=1
 
+x =  [7500,15000,2000,50,320]
+
+run_directory = 170 #Start dir
+grid_start_seed = 400
+for pattern in [M1,M2,M3,M4,M5]:
+    for feedback in [0,1,2]:#Umin, Uplus and Us
+        launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
+        run_directory+=1
 
 
+x =  [7860, 10725 , 1000  , 55,381]
 
+run_directory = 190 #Start dir
+grid_start_seed = 400
+for pattern in [M1,M2,M3,M4,M5]:
+    for feedback in [0,1,2]:#Umin, Uplus and Us
+        launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
+        run_directory+=1
     
    
 # # """------------------------------------------------"""

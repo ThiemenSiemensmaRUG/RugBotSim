@@ -3,6 +3,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from utils import *
 
+plt.rcParams.update({
+    "axes.labelsize": 10,  # Label font size
+    "axes.titlesize": 10,  # Title font size
+    "legend.fontsize": 7.5,  # Legend font size
+    "xtick.labelsize": 10,  # X-axis tick font size
+    "ytick.labelsize": 10,  # Y-axis tick font size
+    "lines.linewidth": 1.0,  # Line width
+    "lines.markersize": 3,  # Marker size (adjusted for better visibility)
+})
+
+
 def get_batch_results(folder,files):
     exps = []
 
@@ -30,9 +41,9 @@ def compare(folder):
     pass
 
 
-folder = "/home/thiemenrug/Documents/SI_Journal/Real/"
-
-simfolder = "/home/thiemenrug/Documents/SI_Journal/Real/"
+folder = "/home/thiemenrug/Documents/OutputDir/JournalSI/data/Real/"
+figfolder = "/home/thiemenrug/Documents/OutputDir/JournalSI/figures/"
+simfolder = "/home/thiemenrug/Documents/OutputDir/JournalSI/data/Real/"
 Uminsim = [f"Umin_sim/webots_log_{i}.txt" for i in range(10)]
 Uplussim = [f"UPlus_sim/webots_log_{i}.txt" for i in range(10)]
 Ussim = [f"Us_sim/webots_log_{i}.txt" for i in range(10)]
@@ -77,7 +88,7 @@ plt.ylabel("Belief")
 plt.legend(loc='upper right', bbox_to_anchor=(1.0,1.2), ncol=3)
 plt.tight_layout(pad=0.05)
 
-plt.savefig("/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/exp_exp_belief.pdf")
+plt.savefig(figfolder + "/exp_exp_belief.pdf")
 
 bplot_acc_sim = []
 bplot_time_sim = []
@@ -106,7 +117,7 @@ plt.xlabel("Time [s]")
 plt.ylabel("Belief")
 plt.legend(loc='upper right', bbox_to_anchor=(1.0,1.2), ncol=3)
 plt.tight_layout(pad=0.05)
-plt.savefig("/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/exp_sim_belief.pdf")
+plt.savefig(figfolder + "exp_sim_belief.pdf")
 
 plt.figure()
 plt.ylim([-0.1,1.1])
@@ -126,15 +137,15 @@ for i, patch in enumerate(box['boxes']):
 for i, (sim_data, real_data) in enumerate(zip(bplot_acc_sim, bplot_acc)):
     x_sim = np.random.normal(poss[2*i], 0.05, size=len(sim_data))
     x_real = np.random.normal(poss[2*i + 1], 0.05, size=len(real_data))
-    plt.scatter(x_sim, sim_data, color='blue', alpha=0.5, label="Sim" if i == 0 else "", zorder=3)
-    plt.scatter(x_real, real_data, color='red', alpha=0.5, label="Real" if i == 0 else "", zorder=3)
+    plt.scatter(x_sim, sim_data, color='red', alpha=0.5, label="Sim" if i == 0 else "", zorder=3,s=1)
+    plt.scatter(x_real, real_data, color='red', alpha=0.5, label="Real" if i == 0 else "", zorder=3,s=1)
 
 
 
 plt.xticks([1, 2.5, 4], ['$u^-$', '$u^+$', '$u^s$'])
 plt.legend([box["boxes"][0], box["boxes"][1]], ['Sim', 'Real'], loc='upper right', bbox_to_anchor=(0.85,1.2), ncol=2)
 plt.tight_layout(pad=0.05)
-plt.savefig("/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/bb_acc_exp.pdf")
+plt.savefig( figfolder  + "/bb_acc_exp.pdf")
 plt.figure()
 plt.ylim([400,1200])
 plt.ylabel("Time [s]")
@@ -152,12 +163,12 @@ for i, patch in enumerate(box['boxes']):
 for i, (sim_data, real_data) in enumerate(zip(bplot_time_sim, bplot_time)):
     x_sim = np.random.normal(poss[2*i], 0.05, size=len(sim_data))
     x_real = np.random.normal(poss[2*i + 1], 0.05, size=len(real_data))
-    plt.scatter(x_sim, sim_data, color='blue', alpha=0.5, label="Sim" if i == 0 else "", zorder=3)
-    plt.scatter(x_real, real_data, color='red', alpha=0.5, label="Real" if i == 0 else "", zorder=3)
+    plt.scatter(x_sim, sim_data, color='red', alpha=0.5, label="Sim" if i == 0 else "", zorder=3,s=1)
+    plt.scatter(x_real, real_data, color='red', alpha=0.5, label="Real" if i == 0 else "", zorder=3,s=1)
 
 
 plt.xticks([1, 2.5, 4], ['$u^-$', '$u^+$', '$u^s$'])
 plt.legend([box["boxes"][0], box["boxes"][1]], ['Sim', 'Real'], loc='upper right', bbox_to_anchor=(0.85,1.2), ncol=2)
 plt.tight_layout(pad=0.05)
-plt.savefig("/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/bb_time_exp.pdf")
+plt.savefig(figfolder + "/bb_time_exp.pdf")
 plt.show()

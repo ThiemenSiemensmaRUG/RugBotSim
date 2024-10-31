@@ -51,7 +51,7 @@ double calculateFitness(int final_decision, int correct_decision, double fill_ra
 
 SupervisorSettings settings{};
 int pos = 0;
-int T_MAX = 1000;
+int T_MAX = 1200;
 int print_time_interval = settings.values[3];
 bool uniform_decision = false;
 
@@ -129,22 +129,29 @@ int main() {
 
       }
 
-      // Check and adjust the position of robots based on proximity
-      for (Node* rov1 : robots) {
-        const double *values = rov1->getField("translation")->getSFVec3f();
-        for (Node* rov : robots) {
-          if (rov != rov1) {
-            const double *values_other = rov->getField("translation")->getSFVec3f();
-            double dist = std::sqrt(std::pow(values_other[0] - values[0], 2) + std::pow(values_other[2] - values[2], 2));
-            
-            if (dist < 0.03) {
-              const double RANDOM[3] = {dis(gen), 0.0125, dis(gen)};
-              rov->getField("translation")->setSFVec3f(RANDOM);
-              rov->resetPhysics();
-            }
+    try {
+          // Check and adjust the position of robots based on proximity
+          for (Node* rov1 : robots) {
+              const double *values = rov1->getField("translation")->getSFVec3f();
+              for (Node* rov : robots) {
+                  if (rov != rov1) {
+                      const double *values_other = rov->getField("translation")->getSFVec3f();
+                      double dist = std::sqrt(std::pow(values_other[0] - values[0], 2) + std::pow(values_other[2] - values[2], 2));
+                      
+                      if (dist < 0.03) {
+                          const double RANDOM[3] = {dis(gen), 0.0125, dis(gen)};
+                          rov->getField("translation")->setSFVec3f(RANDOM);
+                          rov->resetPhysics();
+                      }
+                  }
+              }
           }
-        }
+      } catch (const std::exception &e) {
+          std::cerr << "An error occurred: " << e.what() << std::endl;
+      } catch (...) {
+          std::cerr << "An unknown error occurred." << std::endl;
       }
+
 
       if ((int(t) % print_time_interval != 0)) {
         show_info = true;
