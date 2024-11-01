@@ -68,15 +68,13 @@ P_fn = 0
 sample_strategy = 1
 grid_start_seed = 400
 run_full=0
-batch_size = 100
+batch_size = 101
 number_of_thread = 3
 
 
 eta = 1500
 Usp = 2000
 x = [7860, 10725 , 3778  , 55,381]
-
-
 
 
 
@@ -112,41 +110,26 @@ for fill_ratio in [0.48]:
             run_directory+=1
 
 
+
+
+x_empirical =  [7500,15000,2000,50,320]
+
 run_directory = 150 #Start dir
 grid_start_seed = 400
-for pattern in [M1,M2,M3,M4,M5]:
-    for feedback in [0,1,2]:#Umin, Uplus and Us
-        launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
-        run_directory+=1
+for pos in [x,x_empirical]:
+    for pattern in [M1,M2,M3,M4,M5]:
+        for feedback in [0,1,2]:#Umin, Uplus and Us
+            launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
+            run_directory+=1
 
-x =  [7500,15000,2000,50,320]
-
-run_directory = 170 #Start dir
+run_directory = 200 #Start dir
 grid_start_seed = 400
-for pattern in [M1,M2,M3,M4,M5]:
-    for feedback in [0,1,2]:#Umin, Uplus and Us
-        launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
-        run_directory+=1
 
 
-x =  [7860, 10725 , 1000  , 55,381]
-
-run_directory = 190 #Start dir
+run_directory = 150 #Start dir
 grid_start_seed = 400
-for pattern in [M1,M2,M3,M4,M5]:
-    for feedback in [0,1,2]:#Umin, Uplus and Us
-        launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
-        run_directory+=1
-    
-   
-# # """------------------------------------------------"""
-
-# # # Below code runs over different level of falls positives and falls negatives
-# run_directory = 600
-# for pattern in [M3,M4,M5]:
-#     for feedback in [0,1,2]:#Umin, Uplus and Us
-#         for n_robots in [5]:
-#             for P_fp in [0,10,20,30,40,50]:
-#                 for P_fn in [0,10,20,30,40,50]:
-#                     launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"fMoran Index with n_robots {n_robots}, feedback {feedback} and FP {P_fp}, FN {P_fn}")   
-#                     run_directory+=1
+for pos in [x,x_empirical]:
+    for pattern in [M1,M2,M3,M4,M5]:
+        for feedback in [0,1,2]:#Umin, Uplus and Us
+            launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
+            run_directory+=1

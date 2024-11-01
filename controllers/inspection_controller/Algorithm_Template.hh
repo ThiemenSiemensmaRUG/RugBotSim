@@ -61,7 +61,7 @@ public:
     int decisionTime = 0;
     double p_c = 0.95;
     double Us_exponent = 2.0;
-    customData = new std::string();
+
     // Time step for the simulation
     enum { TIME_STEP = 20 };
 
@@ -93,13 +93,14 @@ private:
     std::bernoulli_distribution soft_feedback;
     double delta = 0;
     double eta = 1250;
+    std::string* customData = nullptr; // Pointer to custom data
 
 };
 
 void Algorithm1::run() {
     std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
 
-    robot.setCustomData("");
+    robot.setCustomData("start");
 
     setSimulationSetup();
 
@@ -176,37 +177,44 @@ void Algorithm1::run() {
 }
 
 
-void Algorithm1::print_data(int print_bool) {//0 for not printing and only in custom data, 1 for also printing.
-if(robot.d_robot->getTime() > 5) {
-    std::string customData = 
-        std::to_string(print_bool) + "," +
-        std::to_string((double) robot.d_robot->getTime()) + "," +
-        std::string(robot.d_robot->getName().substr(1, 1)) + "," +
-        std::to_string(environ.lastSample) + "," +
-        std::to_string(message) + "," +
-        std::to_string(beta.getBelief()) + "," +
-        std::to_string(beta.alpha) + "," +
-        std::to_string(beta.beta) + "," +
-        std::to_string(sends) + "," +
-        std::to_string(recvs) + "," +
-        std::to_string(beta.getMean()) + "," +
-        std::to_string(beta.getOnboardMean()) + "," +
-        std::to_string(robot.getPos()[0]) + "," +
-        std::to_string(robot.getPos()[1]) + "," +
-        std::to_string(robot.RWtime) + "," +
-        std::to_string(robot.CAtime) + "," +
-        std::to_string(SampleTime) + "," +
-        std::to_string(decisionTime) + "," +
-        std::to_string(d_f);
+void Algorithm1::print_data(int print_bool) {
+    if(robot.d_robot->getTime() > 5) {
+        // Use a pointer to `std::string` and assign to it
+        if (!customData) {
+            customData = new std::string();
+        }
+        customData->assign(
+            std::to_string(print_bool) + "," +
+            std::to_string((double) robot.d_robot->getTime()) + "," +
+            std::string(robot.d_robot->getName().substr(1, 1)) + "," +
+            std::to_string(environ.lastSample) + "," +
+            std::to_string(message) + "," +
+            std::to_string(beta.getBelief()) + "," +
+            std::to_string(beta.alpha) + "," +
+            std::to_string(beta.beta) + "," +
+            std::to_string(sends) + "," +
+            std::to_string(recvs) + "," +
+            std::to_string(beta.getMean()) + "," +
+            std::to_string(beta.getOnboardMean()) + "," +
+            std::to_string(robot.getPos()[0]) + "," +
+            std::to_string(robot.getPos()[1]) + "," +
+            std::to_string(robot.RWtime) + "," +
+            std::to_string(robot.CAtime) + "," +
+            std::to_string(SampleTime) + "," +
+            std::to_string(decisionTime) + "," +
+            std::to_string(d_f)
+        );
 
-    // Set the custom data
-    robot.setCustomData(customData);
-    if (print_bool){
-        std::cout << customData << std::endl;}
+        // Set the custom data
+        robot.setCustomData(*customData);
+        
+        if (print_bool) {
+            std::cout << *customData << std::endl;
+        }
+    }
 }
 
 
-}
 
 void Algorithm1::setSimulationSetup() {
     // Settings in the simulation based on input file

@@ -70,7 +70,7 @@ int main() {
     int start_itt = 0;
 
     // Loop to gather robot nodes from the world
-    while (start_itt <= 10) {
+    while (start_itt <= 15) {
       std::string temp = rov_r + std::to_string(start_itt);
       
       // Check if the robot node exists
@@ -91,6 +91,7 @@ int main() {
       customData.push_back(robot->getField("customData"));
     }
 
+
     std::vector<int> states(robots.size(), -1);
 
     // Seed the random number generator
@@ -102,6 +103,7 @@ int main() {
     bool show_info = false;
     for (Node* robot : robots) {
       std::cout << "init pose " << robot->getDef() << "=" << *robot->getField("translation")->getSFVec3f() << '\n';
+      std::cout<< robot->getField("customData")->getSFString()<<"\n";
     }
     // Main simulation loop
     while (supervisor->step(TIME_STEP) != -1) {
@@ -110,13 +112,19 @@ int main() {
       if ((static_cast<int>(t) % print_time_interval == 0) && show_info && (t > 50.0)) {
         std::cout<<"showing info"<<std::endl;
         show_info = false;
-        for (long unsigned int i = 0; i < robots.size(); i++) {
-         
-          Field* data = customData[i];
-          const std::string data_rov = data->getSFString();
-          pos = data_rov.find_last_of(",");
-          int str_len = (int) data_rov.length();
-          states[i] = std::stoi(data_rov.substr(pos + 1, str_len - 1));
+        try {
+            for (long unsigned int i = 0; i < robots.size(); i++) {
+                Field* data = customData[i];
+                const std::string data_rov = data->getSFString();
+                // Find the last comma in the string
+                pos = data_rov.find_last_of(",");
+                // Calculate the length of the substring
+                int str_len = static_cast<int>(data_rov.length());
+                // Convert the substring to an integer and store it in states
+                states[i] = std::stoi(data_rov.substr(pos + 1, str_len - 1));
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "An error occurred while parsing data: " << e.what() << std::endl;
         }
       }
       for (long unsigned int i = 0; i < robots.size(); i++) {
