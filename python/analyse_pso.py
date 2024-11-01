@@ -184,7 +184,9 @@ plt.plot(range(x.max_iter),np.mean(fitness_vals,axis=1),color = 'black',linestyl
 plt.fill_between(range(0,x.max_iter),mean_personal_best - std_personal_best, mean_personal_best + std_personal_best,label = "$\\sigma (\mathcal{P}_i)$",color = 'lightgrey',alpha = .4)
 plt.plot(range(0,x.max_iter),global_best,label = '$\mathcal{G}_b$',linestyle = line_styles[2],marker = line_markers[0],color = 'black')
 plt.xlabel("Iterations")
+plt.yticks([5.0,10.0,15.0])
 plt.ylabel("Fitness Value")
+
 plt.grid()
 plt.legend(loc='upper center', bbox_to_anchor=(0.45, 1.25), ncol=5)
 plt.tight_layout(pad=0.05)
@@ -205,7 +207,7 @@ for i in range(5):
     plt.fill_between(range(0,means.shape[0]),means[:,i] - stds[:,i] ,means[:,i] + stds[:,i],color = colors[i],alpha=.2)
 
 plt.xlabel("Iterations")
-plt.ylabel("$\mu (\mathbf{p}_{ij})$")
+plt.ylabel("$\mu (\hat \mathbf{p}_{ij})$")
 plt.grid()
 plt.legend(loc='upper center', bbox_to_anchor=(0.45, 1.25), ncol=5)
 plt.tight_layout(pad=0.05)

@@ -111,11 +111,12 @@ int main() {
         std::cout<<"showing info"<<std::endl;
         show_info = false;
         for (long unsigned int i = 0; i < robots.size(); i++) {
+         
           Field* data = customData[i];
           const std::string data_rov = data->getSFString();
           pos = data_rov.find_last_of(",");
           int str_len = (int) data_rov.length();
-          states[i] = std::stoi(data_rov.substr(pos+1,str_len-1)) ; 
+          states[i] = std::stoi(data_rov.substr(pos + 1, str_len - 1));
         }
       }
       for (long unsigned int i = 0; i < robots.size(); i++) {

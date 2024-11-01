@@ -80,24 +80,24 @@ x = [7860, 10725 , 3778  , 55,381]
 
 
 
-run_directory = 10 #Start dir for calibration us
-grid_start_seed = 400
-for eta in [750,1000,1250,1500,1750,2000,2250,2500]:
-    for Usp in [1000,2000,3000,4000]:
-        launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=2,fill_ratio=0.48,robots=5,size=5,desc=f"Calibration Us")   
-        run_directory+=1
+# run_directory = 10 #Start dir for calibration us
+# grid_start_seed = 400
+# for eta in [750,1000,1250,1500,1750,2000,2250,2500]:
+#     for Usp in [1000,2000,3000,4000]:
+#         launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=2,fill_ratio=0.48,robots=5,size=5,desc=f"Calibration Us")   
+#         run_directory+=1
 
-# """Code below runs the parallel launches for comparision of Umin, Uplus and Us over different fll-ratios"""
+# # """Code below runs the parallel launches for comparision of Umin, Uplus and Us over different fll-ratios"""
 
-eta = 1500
-Usp = 2000
-run_directory = 50 #start dir
-grid_start_seed = 400
-for fill_ratio in [0.44,0.48,0.52,0.56]: #different grid sizes
+# eta = 1500
+# Usp = 2000
+# run_directory = 50 #start dir
+# grid_start_seed = 400
+# for fill_ratio in [0.44,0.48,0.52,0.56]: #different grid sizes
 
-    for feedback in [0,1,2]:#Umin, Uplus and Us
-        launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=5,size=5,desc=f"f{fill_ratio},feedbac strategy{feedback}")   
-        run_directory+=1
+#     for feedback in [0,1,2]:#Umin, Uplus and Us
+#         launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=5,size=5,desc=f"f{fill_ratio},feedbac strategy{feedback}")   
+#         run_directory+=1
 
 
 # # # """------------------------------------------------"""

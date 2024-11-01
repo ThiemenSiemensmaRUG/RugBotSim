@@ -61,13 +61,14 @@ public:
     int decisionTime = 0;
     double p_c = 0.95;
     double Us_exponent = 2.0;
- 
+    customData = new std::string();
     // Time step for the simulation
     enum { TIME_STEP = 20 };
 
     Algorithm1() : settings(),robot(TIME_STEP), beta(1,1),radio(robot.d_robot,TIME_STEP),environ("world.txt") {};
 
     ~Algorithm1() {
+        delete customData;
         // Destructor body can be left empty if no special cleanup is needed.
         // If your members have their own destructors, they will be called automatically.
     }
@@ -200,7 +201,6 @@ if(robot.d_robot->getTime() > 5) {
 
     // Set the custom data
     robot.setCustomData(customData);
-
     if (print_bool){
         std::cout << customData << std::endl;}
 }

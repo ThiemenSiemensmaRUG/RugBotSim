@@ -27,6 +27,7 @@ def plot_measurements(x_):
 
 def get_folder_results(run,len=100,size=5):
     outputfolder = f"/home/thiemenrug/Documents/OutputDir/JournalSI/data/{run}/"
+    
     result_ = []
     acc, time = [],[]
     for i in range(len):
@@ -59,7 +60,7 @@ def plot_calibration_us():
     k=10
     for i in range(8):
         for j in range(4):
-            run_ = f"/Calibration_Us/parallel_{k}"
+            run_ = f"/Cal_Us_2/parallel_{k}"
             x = get_folder_results(run_,batch_size)
 
             time,acc = x.get_dec_time_acc()
@@ -69,7 +70,7 @@ def plot_calibration_us():
     plt.figure()
     for i in range(len(usps)):
         plt.plot(etas,resulting_acc[:,i],label =f"$\kappa_{str(round(usps[i]/1000))}$",color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
-    plt.axhline(0.72,label = "$u^-$",color = 'red',linestyle = '--')
+    plt.axhline(0.72478767,label = "$u^-$",color = 'red',linestyle = '--')
     plt.xlabel("$\\eta$")
     plt.ylabel("Accuracy")
     plt.legend(loc='upper center', bbox_to_anchor=(0.425,1.25), ncol=5)
@@ -79,7 +80,7 @@ def plot_calibration_us():
     plt.figure()
     for i in range(len(usps)):
         plt.plot(etas,resulting_time[:,i],label =f"$\kappa_{str(round(usps[i]/1000))}$",color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
-    plt.axhline(893,label = "$u^-$",color = 'red',linestyle = '--')
+    plt.axhline(901.72719192,label = "$u^-$",color = 'red',linestyle = '--')
     plt.xlabel("$\\eta$")
     plt.ylabel("Time $[s]$")
     plt.legend(loc='upper center', bbox_to_anchor=(0.425,1.25), ncol=5)
@@ -130,7 +131,7 @@ def plot_fill_ratio_result():
     run = 50
     for i in range(len(fill_ratios)):
         for j in range(len(methods)):
-            run_ =  f"/fill_ratio/parallel_{run}"
+            run_ =  f"/fill_ratio2/parallel_{run}"
             x = get_folder_results(run_,batch_size)
             time,acc = x.get_dec_time_acc()
             if fill_ratios[i] >.5:
@@ -147,6 +148,8 @@ def plot_fill_ratio_result():
     for i in range(len(methods)):
         plt.plot(range(4),acc[:,i],label = str((methods[i])),color = c_1[i], linestyle = linestyles_[i],marker = markers_[i+2])
     plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
+    
+    plt.yticks([0.75,0.80,0.85,0.90,0.95])
     plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.25), ncol=4,fontsize= 10)
     plt.xlabel("$f$")
     plt.ylabel("Accuracy")
@@ -329,7 +332,7 @@ def plot_robustness_analysis():
     plt.subplots_adjust(left=0.0, right=1, top=1, bottom=0.0, wspace=0.01, hspace=0.01)
 
     
-    plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/grid_analysis.pdf', format='pdf', bbox_inches='tight', pad_inches=0.025)
+    plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/grid_analysis.pdf', format='pdf', bbox_inches='tight')#, pad_inches=0.025)
     
     plt.show()
     
@@ -341,5 +344,5 @@ def plot_robustness_analysis():
 
 if __name__ == "__main__":
 
-    batch_size = 3
-    plot_fill_ratio_result()
+    batch_size = 100
+    plot_calibration_us()

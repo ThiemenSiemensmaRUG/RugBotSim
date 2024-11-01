@@ -1,6 +1,13 @@
 #!/bin/bash
 
 # Displaying initial information
+echo "This has been tested and verified on a clean Ubuntu 22.04 LTS (Jammy Jellyfish)"
+read -p "Do you have a this OS? (y/n): " CONTINUE
+
+if [[ "$CONTINUE" != "y" && "$CONTINUE" != "Y" ]]; then
+    echo "Setup aborted. Exiting."
+    exit 0
+fi
 echo "This script will set up your development environment by installing the following:"
 echo "- Visual Studio Code"
 echo "- Google Chrome"
