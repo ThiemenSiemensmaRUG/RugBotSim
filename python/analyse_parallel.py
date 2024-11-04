@@ -173,40 +173,39 @@ def plot_fill_ratio_result():
     return
 
 def plot_multi_robot():
-    fill_ratios = [.48,.52]
+
     n_robots = [10,9,8,7,6,5]
     methods = ["$u^-$","$u^+$","$u^s$"]
     run = 100
-    resulting_acc = np.zeros(shape=(2,6,3))
-    col_time_p_sample = np.zeros(shape=(2,6,3))
-    resulting_time = np.zeros(shape = (2,6,3))
+    resulting_acc = np.zeros(shape=(6,3))
+    col_time_p_sample = np.zeros(shape=(6,3))
+    resulting_time = np.zeros(shape = (6,3))
 
-    resulting_acc_std = np.zeros(shape=(2,6,3))
-    resulting_time_std = np.zeros(shape = (2,6,3))
-    for fill in range(len(fill_ratios)):
-        for n_r in range(len(n_robots)):
-            for feedback in range(len(methods)):
-                run_ = f"/multi_robot/parallel_{run}"
-                x = get_folder_results(run_,batch_size)
-                time,acc,time_std,acc_std = x.get_dec_time_acc(True)
-                _,_,ca_time,_ = x.get_state_times()
-                ca_time = create_one_array(ca_time) / 1000
-                col_time_p_sample[fill,n_r,feedback] = np.mean(ca_time)
-                if fill >.5:
-                    acc= 1-acc
-                resulting_acc[fill,n_r,feedback] = acc
-                resulting_time[fill,n_r,feedback] = time
-                resulting_acc_std[fill,n_r,feedback] = acc_std
-                resulting_time_std[fill,n_r,feedback] = time_std
-                run+=1
+    resulting_acc_std = np.zeros(shape=(6,3))
+    resulting_time_std = np.zeros(shape = (6,3))
     
+    for n_r in range(len(n_robots)):
+        for feedback in range(len(methods)):
+            run_ = f"/multi_robot/parallel_{run}"
+            x = get_folder_results(run_,batch_size)
+            time,acc,time_std,acc_std = x.get_dec_time_acc(True)
+            _,_,ca_time,_ = x.get_state_times()
+            ca_time = create_one_array(ca_time) / 1000
+            col_time_p_sample[n_r,feedback] = np.mean(ca_time)
+
+            resulting_acc[n_r,feedback] = acc
+            resulting_time[n_r,feedback] = time
+            resulting_acc_std[n_r,feedback] = acc_std
+            resulting_time_std[n_r,feedback] = time_std
+            run+=1
+
     #select 0 or 1st index for 48 and 52 percent respectively
-    time = resulting_time[0,:,:].transpose()
-    col_time_p_sample = col_time_p_sample[0,:,:].transpose()
+    time = resulting_time[:,:].transpose()
+    col_time_p_sample = col_time_p_sample[:,:].transpose()
     print(col_time_p_sample)
-    acc = resulting_acc[0,:,:].transpose()
-    time_std = resulting_time_std[0,:,:].transpose()  
-    acc_std = resulting_acc_std[0,:,:].transpose()    
+    acc = resulting_acc[:,:].transpose()
+    time_std = resulting_time_std[:,:].transpose()  
+    acc_std = resulting_acc_std[:,:].transpose()    
     
     scaling = 0.5
     plt.figure(figsize = (6.4 * scaling*0.8 , 4.8 * scaling))
@@ -345,4 +344,4 @@ def plot_robustness_analysis():
 if __name__ == "__main__":
 
     batch_size = 100
-    plot_calibration_us()
+    plot_multi_robot()
