@@ -22,7 +22,7 @@ def plot_distance_direction(x_,label=None):
     plt.ylabel("Distance [m]")
     plt.tight_layout(pad=0.05)
     filename = f"Battery_drainage{label}.pdf"
-    plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/{filename}")
+    plt.savefig(figfolder + f"{filename}")
     data = np.array(dt['distance'].dropna())
     data = data[data>0.07].copy()
     data = data[data<.7].copy()
@@ -42,7 +42,7 @@ def plot_distance_direction(x_,label=None):
     plt.plot(x_space, pdf_fitted, label=f'{label}: distance')
     plt.tight_layout(pad=0.05)
     filename = f"Distance_between_samples{label}.pdf"
-    plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/{filename}")
+    plt.savefig(figfolder + f"{filename}")
 
 
     plt.figure()
@@ -53,7 +53,7 @@ def plot_distance_direction(x_,label=None):
     plt.clim(vmin =0,vmax = 20)
     plt.tight_layout(pad=0.05)
     filename = f"Distance_direction_between_samples{label}.pdf"
-    plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/{filename}")
+    plt.savefig(figfolder + f"{filename}")
     return hist_dt,hist_d,hist_da
 
 
@@ -79,7 +79,7 @@ def get_ca_per_sample(x_,label):
     plt.ylabel("Probability")
     plt.tight_layout()
     filename = f"ca_pers_sample{label}.pdf"
-    plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/{filename}")
+    plt.savefig(figfolder + f"{filename}")
     return hist
 
 def plot_state_times(x_,label= None):
@@ -93,10 +93,11 @@ def plot_state_times(x_,label= None):
     plt.boxplot([ca_time,sense_time,rw_time],labels=['CA','OBS','RW'])
     plt.tight_layout()
     filename = f"state_times{label}.pdf"
-    plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/{filename}")
+    plt.savefig(figfolder + f"{filename}")
     return np.array([ca_time,sense_time,rw_time])
 
 def plot_state_times_sim_real(x_sim,x_real,label= None):
+
     ca_sim,sense_sim,_,rw_sim= x_sim.get_state_times() 
     ca_sim = np.array(ca_sim) / 1000
     sense_sim = np.array(sense_sim) /1000
@@ -115,8 +116,8 @@ def plot_state_times_sim_real(x_sim,x_real,label= None):
     poss= [0.75, 1.25,  2.25,2.75, 3.75, 4.25]
     box = plt.boxplot([ca_sim,ca_real,sense_sim,sense_real,rw_sim,rw_real],positions = poss, widths=0.4, patch_artist=True)
     # Define colors for simulation and real
-    colors_sim = 'lightgray'
-    colors_real = 'dimgray'
+    colors_sim = 'mediumblue'
+    colors_real = 'lightcoral'
 
     # Color the boxes: alternate between sim and real colors
     for i, patch in enumerate(box['boxes']):
@@ -131,7 +132,7 @@ def plot_state_times_sim_real(x_sim,x_real,label= None):
     plt.tight_layout(pad=0.05)
     
     filename = f"state_times_sim_real.pdf"
-    plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/{filename}")
+    plt.savefig(figfolder + f"{filename}")
     return 
 
 def plot_vib_non_vib(x_):
@@ -153,8 +154,8 @@ def plot_measurements(x_):
 
 
 def fit_distributions_measurements(x_,label = None,i=0,threshold = 1.4):
-    colors_1 = 'lightgray'
-    colors_0 = 'dimgray'
+    colors_1 = '#440154'
+    colors_0 = '#fde725'
     plt.figure()
     x_.add_labels()
     vib, nonvib = x_.get_samples()
@@ -200,14 +201,15 @@ def sample_distribution(x_,label = None):
     plt.ylabel("Y position [m]")
     plt.tight_layout(pad=0.05)
     filename = f"sample_distribution_{label}.pdf"
-    plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/{filename}")
+    plt.savefig(figfolder + f"{filename}")
     return hist
 
 def concat_experiments(exps):
 
     for exp in exps[1:]:
-    
+        
         max_id = exps[0].data['robot_id'].max() +1
+        print(max_id)
         exp.data['robot_id'] = exp.data['robot_id'] + max_id 
         exps[0].data = pd.concat([exps[0].data,exp.data])
 
@@ -245,26 +247,12 @@ def calibrate(x_,vibthreshold):
 
 
 
-x1 = WebotsProcessor("measurements/","UMIN8.csv",1.47)
-x2 = WebotsProcessor("measurements/","UMIN9.csv",1.47)
-x3 = WebotsProcessor("measurements/","UMIN10.csv",1.47)
-x4 = WebotsProcessor("measurements/","UMIN11.csv",1.47)
-x5 = WebotsProcessor("measurements/","UMIN12.csv",1.47)
-x6 = WebotsProcessor("measurements/","UMIN13.csv",1.47)
-x = concat_experiments([x1,x2,x3,x4,x5,x6])
-plot_measurements(x)
-calibrate(x,1.33)
-x.threshold = 1.33
-x.add_labels()
-print(x.fp_percentage,x.fn_percentage)
-plt.show()
-
 ###main code for getting calibration values
 vib_threshold = 1.33
 
-calexp0 = WebotsProcessor("measurements/SM_2/",'CAL_1.csv',vib_threshold)
-calexp1 = WebotsProcessor("measurements/SM_2/",'CAL_2.csv',vib_threshold)
-calexp2 = WebotsProcessor("measurements/SM_2/",'CAL_3.csv',vib_threshold)
+calexp0 = WebotsProcessor("measurements/SM_2/",'CAL_1.csv',vib_threshold,until_decision=False)
+calexp1 = WebotsProcessor("measurements/SM_2/",'CAL_2.csv',vib_threshold,until_decision= False)
+calexp2 = WebotsProcessor("measurements/SM_2/",'CAL_3.csv',vib_threshold,until_decision= False)
 
 
 vib_threshold = 1.33
@@ -287,9 +275,9 @@ experiments = concat_experiments(exps)
 print(len(simulations.data))
 print(len(experiments.data))
 
-calibrate(simulations,vib_threshold)
-calibrate(experiments,vib_threshold)
-plt.show()
+# calibrate(simulations,vib_threshold)
+# calibrate(experiments,vib_threshold)
+# plt.show()
 
 
 
@@ -303,21 +291,21 @@ print(simulations.tn_percentage)
 
 
 #------------------------------------sample values--------------------------------------------------------------------
-
+figfolder = "/home/thiemenrug/Documents/OutputDir/JournalSI/figures/"
 vib_hist_exp,nonvib_hist_exp = fit_distributions_measurements(experiments,"exp",0,vib_threshold)
-plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/sample_values_exp.pdf")
+plt.savefig( figfolder + "sample_values_exp.pdf")
 vib_hist_sim,nonvib_hist_sim = fit_distributions_measurements(simulations,"sim",2,vib_threshold)
-plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/sample_values_sim.pdf")
+plt.savefig(figfolder + f"sample_values_sim.pdf")
 filename = "sample_values.pdf"
 
 plt.show()
 
 plot_measurements(simulations)
 filename = "measurements_simulation.pdf"
-plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/{filename}")
+plt.savefig(figfolder + f"{filename}")
 plot_measurements(experiments)
 filename = "measurements_experiments.pdf"
-plt.savefig(f"/home/thiemenrug/Documents/PDFs/ANTS2024JournalFigs/{filename}")
+plt.savefig(figfolder + f"{filename}")
 
 
 plt.show()

@@ -63,69 +63,72 @@ Us = get_batch_results(folder,Usfiles)
 bplot_acc = []
 bplot_time = []
 
-plt.figure()
+scaling = 0.5
+
+plt.figure(figsize = (6.4 * scaling, 4.8 * scaling))
 plt.ylim([0.3,1])
 t,p = Umin.compute_average_belief_over_time()
 df_t, df_acc = Umin.get_dec_time_acc_robots()
 bplot_acc.append(df_acc)
 bplot_time.append(df_t)
-plt.plot(t,p,label ="$u^-$",linestyle=linestyles_[1],color = "darkgray")
+plt.plot(t,p,label ="$u^-$",linestyle=linestyles_[1],color = "black")
 
 t,p = Uplus.compute_average_belief_over_time()
 df_t, df_acc = Uplus.get_dec_time_acc_robots()
 bplot_acc.append(df_acc)
 bplot_time.append(df_t)
-plt.plot(t,p,label ="$u^+$",linestyle=linestyles_[2],color = "black")
+plt.plot(t,p,label ="$u^+$",linestyle=linestyles_[2],color = "red")
 
 t,p = Us.compute_average_belief_over_time()
 df_t, df_acc = Us.get_dec_time_acc_robots()
 bplot_acc.append(df_acc)
 bplot_time.append(df_t)
-plt.plot(t,p,label ="$u^s$",linestyle=linestyles_[3],color ="dimgray")
+plt.plot(t,p,label ="$u^s$",linestyle=linestyles_[3],color ="green")
 
 plt.xlabel("Time [s]")
 plt.ylabel("Belief")
-plt.legend(loc='upper right', bbox_to_anchor=(1.0,1.2), ncol=3)
-plt.tight_layout(pad=0.05)
+plt.legend(loc='upper center', bbox_to_anchor=(0.45,1.25), ncol=4,fontsize= 9)
+plt.tight_layout()
 
 plt.savefig(figfolder + "/exp_exp_belief.pdf")
 
 bplot_acc_sim = []
 bplot_time_sim = []
 
-plt.figure()
+plt.figure(figsize = (6.4 * scaling, 4.8 * scaling))
 plt.ylim([0.3,1])
 t,p = Uminsim.compute_average_belief_over_time()
 df_t, df_acc = Uminsim.get_dec_time_acc_robots()
 bplot_acc_sim.append(df_acc)
 bplot_time_sim.append(df_t)
-plt.plot(t,p,label ="$u^-$",linestyle=linestyles_[1],color = "darkgray")
+plt.plot(t,p,label ="$u^-$",linestyle=linestyles_[1],color = "black")
 
 t,p = Uplussim.compute_average_belief_over_time()
 df_t, df_acc = Uplussim.get_dec_time_acc_robots()
 bplot_acc_sim.append(df_acc)
 bplot_time_sim.append(df_t)
-plt.plot(t,p,label ="$u^+$",linestyle=linestyles_[2],color = "black")
+plt.plot(t,p,label ="$u^+$",linestyle=linestyles_[2],color = "red")
 
 t,p = Ussim.compute_average_belief_over_time()
 df_t, df_acc = Ussim.get_dec_time_acc_robots()
 bplot_acc_sim.append(df_acc)
 bplot_time_sim.append(df_t)
-plt.plot(t,p,label ="$u^s$",linestyle=linestyles_[3],color ="dimgray")
+plt.plot(t,p,label ="$u^s$",linestyle=linestyles_[3],color ="green")
 
 plt.xlabel("Time [s]")
 plt.ylabel("Belief")
-plt.legend(loc='upper right', bbox_to_anchor=(1.0,1.2), ncol=3)
-plt.tight_layout(pad=0.05)
+plt.legend(loc='upper center', bbox_to_anchor=(0.45,1.25), ncol=4,fontsize= 9)
+plt.tight_layout()
 plt.savefig(figfolder + "exp_sim_belief.pdf")
 
-plt.figure()
+
+plt.figure(figsize = (6.4 * scaling, 4.8 * scaling))
 plt.ylim([-0.1,1.1])
 plt.ylabel("Accuracy [s]")
 poss= [0.75, 1.25,  2.25,2.75, 3.75, 4.25]
 box = plt.boxplot([bplot_acc_sim[0],bplot_acc[0],bplot_acc_sim[1],bplot_acc[1],bplot_acc_sim[2],bplot_acc[2]],positions = poss, widths=0.4, patch_artist=True)
-colors_sim = 'lightgray'
-colors_real = 'dimgray'
+colors_sim = 'mediumblue'
+colors_real = 'lightcoral'
 # Define colors for simulation and real
 for i, patch in enumerate(box['boxes']):
     if i % 2 == 0:  # Sim data (even indices)
@@ -137,22 +140,24 @@ for i, patch in enumerate(box['boxes']):
 for i, (sim_data, real_data) in enumerate(zip(bplot_acc_sim, bplot_acc)):
     x_sim = np.random.normal(poss[2*i], 0.05, size=len(sim_data))
     x_real = np.random.normal(poss[2*i + 1], 0.05, size=len(real_data))
-    plt.scatter(x_sim, sim_data, color='red', alpha=0.5, label="Sim" if i == 0 else "", zorder=3,s=1)
-    plt.scatter(x_real, real_data, color='red', alpha=0.5, label="Real" if i == 0 else "", zorder=3,s=1)
+    plt.scatter(x_sim, sim_data, color='black', alpha=0.5, label="Sim" if i == 0 else "", zorder=3,s=1)
+    plt.scatter(x_real, real_data, color='black', alpha=0.5, label="Real" if i == 0 else "", zorder=3,s=1)
 
 
 
 plt.xticks([1, 2.5, 4], ['$u^-$', '$u^+$', '$u^s$'])
-plt.legend([box["boxes"][0], box["boxes"][1]], ['Sim', 'Real'], loc='upper right', bbox_to_anchor=(0.85,1.2), ncol=2)
-plt.tight_layout(pad=0.05)
+plt.legend([box["boxes"][0], box["boxes"][1]], ['Sim', 'Real'], loc='upper right', bbox_to_anchor=(0.85,1.2), ncol=2,fontsize = 9)
+plt.tight_layout()
 plt.savefig( figfolder  + "/bb_acc_exp.pdf")
-plt.figure()
+
+
+plt.figure(figsize = (6.4 * scaling, 4.8 * scaling))
 plt.ylim([400,1200])
 plt.ylabel("Time [s]")
 poss= [0.75, 1.25,  2.25,2.75, 3.75, 4.25]
 box = plt.boxplot([bplot_time_sim[0],bplot_time[0],bplot_time_sim[1],bplot_time[1],bplot_time_sim[2],bplot_time[2]],positions = poss, widths=0.4, patch_artist=True)
-colors_sim = 'lightgray'
-colors_real = 'dimgray'
+colors_sim = 'mediumblue'
+colors_real = 'lightcoral'
 # Define colors for simulation and real
 for i, patch in enumerate(box['boxes']):
     if i % 2 == 0:  # Sim data (even indices)
@@ -163,12 +168,12 @@ for i, patch in enumerate(box['boxes']):
 for i, (sim_data, real_data) in enumerate(zip(bplot_time_sim, bplot_time)):
     x_sim = np.random.normal(poss[2*i], 0.05, size=len(sim_data))
     x_real = np.random.normal(poss[2*i + 1], 0.05, size=len(real_data))
-    plt.scatter(x_sim, sim_data, color='red', alpha=0.5, label="Sim" if i == 0 else "", zorder=3,s=1)
-    plt.scatter(x_real, real_data, color='red', alpha=0.5, label="Real" if i == 0 else "", zorder=3,s=1)
+    plt.scatter(x_sim, sim_data, color='black', alpha=0.5, label="Sim" if i == 0 else "", zorder=3,s=1)
+    plt.scatter(x_real, real_data, color='black', alpha=0.5, label="Real" if i == 0 else "", zorder=3,s=1)
 
 
 plt.xticks([1, 2.5, 4], ['$u^-$', '$u^+$', '$u^s$'])
-plt.legend([box["boxes"][0], box["boxes"][1]], ['Sim', 'Real'], loc='upper right', bbox_to_anchor=(0.85,1.2), ncol=2)
-plt.tight_layout(pad=0.05)
+plt.legend([box["boxes"][0], box["boxes"][1]], ['Sim', 'Real'], loc='upper right', bbox_to_anchor=(0.85,1.2), ncol=2,fontsize = 9)
+plt.tight_layout()
 plt.savefig(figfolder + "/bb_time_exp.pdf")
 plt.show()

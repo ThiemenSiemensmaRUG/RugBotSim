@@ -185,6 +185,7 @@ def plot_matrix(M):
     plt.imshow(M, cmap='Greys', interpolation='nearest')  # Plot matrix with grayscale
     plt.colorbar()  # Optional: Show color scale bar
     plt.title(f"Matrix Plot ({M.shape[0]}x{M.shape[1]})")
+    plt.grid()
     plt.show()
 
 
@@ -204,10 +205,34 @@ def diagonal_matrix():
     M[-5,-3] = 1
     return M
 
+def diagonal_matrix_46():
+    M = np.zeros(shape = (10,10))
+    M[:4,:4] = 1
+    
+    M[-4:,-4:]=1
+    
+    M[3:7,3:7] = 1
+    M[0,3] = 0
+    M[3,6] =0
+    M[6,3] = 0
+    M[2,4] = 1
+    M[4,2] = 1
+    M[-3,-5]=1
+    M[-5,-3] = 1
+    M[-1,-4] =0
+    return M
+
+
 def stripe_matrix():
     M = np.zeros(shape = (10,10))
     M[:5,:] = 1
     M[4,:2] = 0
+    return M
+
+def stripe_matrix_46():
+    M = np.zeros(shape = (10,10))
+    M[:5,:] = 1
+    M[4,:4] = 0
     return M
 
 def block_diagonal_matrix():
@@ -217,6 +242,13 @@ def block_diagonal_matrix():
     M[6,6] = 1
     M[6,7]=1
     M[7,6]=1
+    return M
+def block_diagonal_matrix_46():
+    M = np.zeros(shape = (10,10))
+    M[:6,:6] = 1
+    M[7:,7:] = 1
+    M[6,6] = 1
+
     return M
 
 def organized_alternating_matrix():
@@ -229,12 +261,25 @@ def organized_alternating_matrix():
     M[-1,-1] = 0
     return M
 
+def organized_alternating_matrix_46():
+    M = np.zeros(shape = (10,10))
+    for i in range(10):
+        for j in range(10):
+            if (i + j) % 2 == 0:  # Alternating pattern
+                M[i, j] = 1
+    M[0,0] = 0
+    M[-1,-1] = 0
+    M[4,4] = 0
+    M[4,6] = 0
+    
+    return M
 
-def random_matrix():
+
+def random_matrix(fill = 0.48):
     M = np.zeros(shape = (10,10))
 
     total_elements = 100
-    elements_to_fill = int(0.48 * total_elements)
+    elements_to_fill = int(fill * total_elements)
     np.random.seed(1)
     # Randomly choose indices to set to 1
     fill_indices = np.random.choice(total_elements, elements_to_fill, replace=False)

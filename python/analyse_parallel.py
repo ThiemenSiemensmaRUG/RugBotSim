@@ -60,7 +60,7 @@ def plot_calibration_us():
     k=10
     for i in range(8):
         for j in range(4):
-            run_ = f"/Cal_Us_2/parallel_{k}"
+            run_ = f"/Cal_Us/parallel_{k}"
             x = get_folder_results(run_,batch_size)
 
             time,acc = x.get_dec_time_acc()
@@ -69,21 +69,25 @@ def plot_calibration_us():
             k+=1
     plt.figure()
     for i in range(len(usps)):
-        plt.plot(etas,resulting_acc[:,i],label =f"$\kappa_{str(round(usps[i]/1000))}$",color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
+        t = (round(usps[i]/1000))
+        plt.plot(etas,resulting_acc[:,i],label = r"$u^s|_{k=" + str(t) + r"}$",color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
     plt.axhline(0.72478767,label = "$u^-$",color = 'red',linestyle = '--')
+    plt.axhline(0.72807469,label = "$u^+$",color = 'blue',linestyle = '-.')
     plt.xlabel("$\\eta$")
     plt.ylabel("Accuracy")
-    plt.legend(loc='upper center', bbox_to_anchor=(0.425,1.25), ncol=5)
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.325), ncol=3)
     plt.tight_layout(pad = 0.05)
     plt.savefig(f"/home/thiemenrug/Documents/OutputDir/JournalSI/figures/CalibrationUs_Accuracy.pdf")
 
     plt.figure()
     for i in range(len(usps)):
-        plt.plot(etas,resulting_time[:,i],label =f"$\kappa_{str(round(usps[i]/1000))}$",color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
+        t = (round(usps[i]/1000))
+        plt.plot(etas,resulting_time[:,i], label = r"$u^s|_{k=" + str(t) + r"}$" ,color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
     plt.axhline(901.72719192,label = "$u^-$",color = 'red',linestyle = '--')
+    plt.axhline(891.42513131,label = "$u^+$",color = 'blue',linestyle = '-.')
     plt.xlabel("$\\eta$")
     plt.ylabel("Time $[s]$")
-    plt.legend(loc='upper center', bbox_to_anchor=(0.425,1.25), ncol=5)
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.325), ncol=3)
     plt.tight_layout(pad = 0.05)
     plt.savefig(f"/home/thiemenrug/Documents/OutputDir/JournalSI/figures/CalibrationUs_Time.pdf")
     
@@ -126,41 +130,46 @@ def plot_calibration_us():
 def plot_fill_ratio_result():
     fill_ratios = [.44,.48,.52,.56]
     methods = ["$u^-$","$u^+$","$u^s$"]
-    resulting_acc = np.zeros(shape=(4,3))
-    resulting_time = np.zeros(shape = (4,3))
+    acc = np.zeros(shape=(4,3))
+    time = np.zeros(shape = (4,3))
+    acc_std = np.zeros(shape=(4,3))
+    time_std = np.zeros(shape = (4,3))
     run = 50
     for i in range(len(fill_ratios)):
         for j in range(len(methods)):
-            run_ =  f"/fill_ratio2/parallel_{run}"
+            run_ =  f"/fill_ratio/parallel_{run}"
             x = get_folder_results(run_,batch_size)
-            time,acc = x.get_dec_time_acc()
+            time_,acc_,tstd,astd = x.get_dec_time_acc(True)
             if fill_ratios[i] >.5:
-                acc= 1-acc
-            resulting_acc[i,j] = acc
-            resulting_time[i,j] = time
+                acc_= 1-acc_
+            acc[i,j] = acc_
+            time[i,j] = time_
+            acc_std[i,j] = astd / np.sqrt(batch_size)
+            time_std[i,j] = tstd / np.sqrt(batch_size)
             run+=1
-    print(resulting_time,"\n",resulting_acc)
-    time = resulting_time
-
-    acc = resulting_acc
-
-    plt.figure()
+    scaling = 0.5
+    print(acc,time)
+    plt.figure(figsize = (6.4 * scaling , 4.8 * scaling))
     for i in range(len(methods)):
         plt.plot(range(4),acc[:,i],label = str((methods[i])),color = c_1[i], linestyle = linestyles_[i],marker = markers_[i+2])
+        plt.fill_between(range(4),acc[:,i]- acc_std[:,i],acc[:,i]+ acc_std[:,i] ,color = c_1[i], alpha=.3)
     plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
     
-    plt.yticks([0.75,0.80,0.85,0.90,0.95])
+    plt.yticks([0.70,0.75,0.80,0.85,0.90,0.95])
     plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.25), ncol=4,fontsize= 10)
-    plt.xlabel("$f$")
+    plt.xlabel("Fill-ratio $(f)$")
     plt.ylabel("Accuracy")
     plt.tight_layout(pad = 0.05)
     plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/result_fill_ratio_acc.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
-    plt.figure()
+        
+
+    plt.figure(figsize = (6.4 * scaling , 4.8 * scaling))
     for i in range(len(methods)):
         plt.plot(range(4),time[:,i],label = str((methods[i])),color =c_1[i], linestyle = linestyles_[i],marker = markers_[i+2])
+        plt.fill_between(range(4),time[:,i]- time_std[:,i],time[:,i]+ time_std[:,i] ,color = c_1[i], alpha=.3)
     plt.xticks(ticks=np.arange(len(fill_ratios)), labels=[str((u)) for u in (fill_ratios)])
     plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.25), ncol=4,fontsize= 10)
-    plt.xlabel("$f$")
+    plt.xlabel("Fill-ratio $(f)$")
     plt.ylabel("Time")
     plt.tight_layout(pad = 0.05)
     plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/result_fill_ratio_time.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
@@ -177,76 +186,95 @@ def plot_multi_robot():
     n_robots = [10,9,8,7,6,5]
     methods = ["$u^-$","$u^+$","$u^s$"]
     run = 100
-    resulting_acc = np.zeros(shape=(6,3))
-    col_time_p_sample = np.zeros(shape=(6,3))
-    resulting_time = np.zeros(shape = (6,3))
-
-    resulting_acc_std = np.zeros(shape=(6,3))
-    resulting_time_std = np.zeros(shape = (6,3))
-    
+    acc = np.zeros(shape=(3,6))
+    CA_time = np.zeros(shape=(3,6))
+    DD_time = np.zeros(shape=(3,6))
+    CA_time_std = np.zeros(shape=(3,6))
+    DD_std = np.zeros(shape=(3,6))
+    time = np.zeros(shape = (3,6))
+    acc_std = np.zeros(shape=(3,6))
+    time_std = np.zeros(shape = (3,6))
     for n_r in range(len(n_robots)):
         for feedback in range(len(methods)):
             run_ = f"/multi_robot/parallel_{run}"
             x = get_folder_results(run_,batch_size)
-            time,acc,time_std,acc_std = x.get_dec_time_acc(True)
-            _,_,ca_time,_ = x.get_state_times()
-            ca_time = create_one_array(ca_time) / 1000
-            col_time_p_sample[n_r,feedback] = np.mean(ca_time)
-
-            resulting_acc[n_r,feedback] = acc
-            resulting_time[n_r,feedback] = time
-            resulting_acc_std[n_r,feedback] = acc_std
-            resulting_time_std[n_r,feedback] = time_std
+            time_,acc_,time_std_,acc_std_ = x.get_dec_time_acc(True)
+            _,_,ca_time_,_ = x.get_state_times()
+            d,_,_,_,_ = x.compute_distances_and_directions()
+            ca_time_ = create_one_array(ca_time_) / 1000
+            CA_time[feedback,n_r] = np.mean(ca_time_)
+            DD_time[feedback,n_r] =d.mean()
+            DD_std[feedback,n_r] = d.std() / np.sqrt(batch_size)
+            CA_time_std[feedback,n_r] = np.std(ca_time_) / np.sqrt(batch_size)
+            acc[feedback,n_r] = acc_
+            time[feedback,n_r] = time_
+            acc_std[feedback,n_r] = acc_std_ / np.sqrt(batch_size)
+            time_std[feedback,n_r] = time_std_/ np.sqrt(batch_size)
             run+=1
 
-    #select 0 or 1st index for 48 and 52 percent respectively
-    time = resulting_time[:,:].transpose()
-    col_time_p_sample = col_time_p_sample[:,:].transpose()
-    print(col_time_p_sample)
-    acc = resulting_acc[:,:].transpose()
-    time_std = resulting_time_std[:,:].transpose()  
-    acc_std = resulting_acc_std[:,:].transpose()    
-    
     scaling = 0.5
-    plt.figure(figsize = (6.4 * scaling*0.8 , 4.8 * scaling))
+    plt.figure(figsize = (6.4 * scaling , 4.8 * scaling))
     for i in range(len(methods)):
-        plt.plot(range(6),np.flip(acc[i,:],axis=0),label = str((methods[i])),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
-       # Secondary y-axis for CA (axis1)
-    
+        temp_ = np.flip(acc[i,:],axis=0)
+        temp_std = np.flip(acc_std[i,:],axis=0)
+        plt.plot(range(6),temp_,label = str((methods[i])),color = c_1[i], linestyle = linestyles_[i],marker = markers_[i+2])
+        plt.fill_between(range(6), temp_ - temp_std, temp_ + temp_std,color = c_1[i],alpha = 0.3)
+
     plt.xticks(ticks=np.arange(len(n_robots)), labels=[str(round(u)) for u in reversed(n_robots)])
-    plt.legend(loc='upper center', bbox_to_anchor=(0.4,1.25), ncol=4,fontsize= 10)
-    plt.xlabel("$N_r$")
+    plt.legend(loc='upper center', bbox_to_anchor=(0.45,1.25), ncol=4,fontsize= 9)
+    plt.xlabel("Number of robots")
     plt.ylabel("Accuracy")
-    plt.tight_layout(pad = 0.0)
+    plt.tight_layout()
     plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/multi_robot_acc.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
 
-     
-    plt.figure(figsize = (6.4 * scaling*0.8, 4.8 * scaling))
+    plt.figure(figsize = (6.4 * scaling, 4.8 * scaling))
     for i in range(len(methods)):
-        plt.plot(range(6),np.flip(col_time_p_sample[i,:],axis=0),label = str((methods[i])),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
-       
-    
+        temp_ = np.flip(CA_time[i,:],axis=0)
+        temp_std = np.flip(CA_time_std[i,:],axis=0)
+        plt.plot(range(6),temp_,label = str((methods[i])),color = c_1[i], linestyle = linestyles_[i],marker = markers_[i+2])
+        plt.fill_between(range(6), temp_ - temp_std, temp_ + temp_std,color = c_1[i],alpha = 0.3)
+
     plt.xticks(ticks=np.arange(len(n_robots)), labels=[str(round(u)) for u in reversed(n_robots)])
-    plt.legend(loc='upper center', bbox_to_anchor=(0.4,1.25), ncol=4,fontsize= 10)
-    plt.xlabel("$N_r$")
+    plt.legend(loc='upper center', bbox_to_anchor=(0.45,1.25), ncol=4,fontsize= 9)
+    plt.xlabel("Number of robots")
     plt.ylabel("CA time [s]")
-    plt.tight_layout(pad = 0.0)
+    plt.tight_layout()
     plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/multi_robot_ca_time.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
 
-    plt.figure(figsize = (6.4 * scaling*0.8 , 4.8 * scaling))
+    plt.figure(figsize = (6.4 * scaling , 4.8 * scaling))
     for i in range(len(methods)):
-        plt.plot(range(6),np.flip(time[i,:],axis=0),label = str((methods[i])),color = "black", linestyle = linestyles_[i],marker = markers_[i+2])
-    plt.yticks([200,300,400,500,600,700,800])
+        temp_ = np.flip(DD_time[i,:],axis=0)
+        temp_std = np.flip(DD_std[i,:],axis=0)
+        plt.plot(range(6),temp_,label = str((methods[i])),color = c_1[i], linestyle = linestyles_[i],marker = markers_[i+2])
+        plt.fill_between(range(6), temp_ - temp_std, temp_ + temp_std,color = c_1[i],alpha = 0.3)
     plt.xticks(ticks=np.arange(len(n_robots)), labels=[str(round(u)) for u in reversed(n_robots)])
-    plt.legend(loc='upper center', bbox_to_anchor=(0.4,1.25), ncol=4,fontsize= 10)
-    plt.xlabel("$N_r$")
+    plt.legend(loc='upper center', bbox_to_anchor=(0.45,1.25), ncol=4,fontsize= 9)
+    plt.xlabel("Number of robots")
+    plt.ylabel("Distance [m]")
+    plt.tight_layout()
+    plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/multi_robot_dist_driven.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
+
+
+
+    plt.figure(figsize = (6.4 * scaling , 4.8 * scaling))
+    for i in range(len(methods)):
+        temp_ = np.flip(time[i,:],axis=0)
+        temp_std = np.flip(time_std[i,:],axis=0)
+        plt.plot(range(6),temp_,label = str((methods[i])),color = c_1[i], linestyle = linestyles_[i],marker = markers_[i+2])
+        plt.fill_between(range(6), temp_ - temp_std, temp_ + temp_std,color = c_1[i],alpha = 0.3)
+
+    plt.yticks([400,500,600,700,800,900])
+    plt.xticks(ticks=np.arange(len(n_robots)), labels=[str(round(u)) for u in reversed(n_robots)])
+    plt.legend(loc='upper center', bbox_to_anchor=(0.45,1.25), ncol=4,fontsize= 9)
+    plt.xlabel("Number of robots")
     plt.ylabel("Time [s]")
-    
-    plt.tight_layout(pad = 0.0)
+    plt.tight_layout()
     plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/multi_robot_time.pdf', format='pdf', bbox_inches='tight', pad_inches=0.05)
     plt.show()
 
     return
+
+
 
 
 
@@ -256,45 +284,43 @@ def plot_robustness_analysis():
     M3 = block_diagonal_matrix()
     M4 = organized_alternating_matrix()
     M5 = random_matrix()
-    Ms = [M1,M2,M3,M4,M5]
-    matrices = ["M1","M2","M3","M4","M5"]
+    M1_46 = diagonal_matrix_46()
+    M2_46 = stripe_matrix_46()
+    M3_46 = block_diagonal_matrix_46()
+    M4_46 = organized_alternating_matrix_46()
+    M5_46 = random_matrix(0.46)
+    Ms = [M1,M2,M3,M4,M5,M1_46,M2_46,M3_46,M4_46,M5_46]
+    matrices = ["$M_{1_{48}}$","$M_{2_{48}}$","$M_{3_{48}}$","$M_{4_{48}}$","$M_{5_{48}}$","$M_{1_{46}}$","$M_{2_{46}}$","$M_{3_{46}}$","$M_{4_{46}}$","$M_{5_{46}}$"]
     methods = ["$u^-$","$u^+$","$u^s$"]
     run = 150
-    resulting_acc = np.empty(shape=(5,3),dtype=object)
-    resulting_time = np.empty(shape = (5,3),dtype=object)
-
-    objects = np.zeros(shape = (5,3))
+    acc = np.empty(shape=(10,2,3),dtype=object)
+    time = np.empty(shape = (10,2,3),dtype=object)
+    acc_std = np.empty(shape=(10,2,3),dtype=object)
+    time_std = np.empty(shape = (10,2,3),dtype=object)
     entropies = []
     MIs = []
-    for m in range(len(matrices)):
-        entropies.append(entropy(Ms[m]))
-        MIs.append(calculate_morans_I(Ms[m]))
-        for feedback in range(len(methods)):
-                run_ = f"/grid_results/parallel_{run}"
-                x = get_folder_results(run_,batch_size,size =10)
-                time,acc = x.get_dec_time_acc_robots()
-                resulting_acc[m,feedback] = acc
-                resulting_time[m,feedback] = time
-                run+=1
-    # print(resulting_acc,"\n",resulting_time)
-    # temp_acc = np.zeros(shape=(3,5,3))
-    # temp_time = np.zeros(shape=(3,5,3))
-    # for s in range(len(methods)):
-    #     acc = resulting_acc[:,s]
-    #     time = resulting_time[:,s]
-    #     for m in range(len(matrices)):
-    #         temp_acc[s,m,0] = acc[m]
-    #         temp_acc[s,m,1] = entropies[m]
-    #         temp_acc[s,m,2] = MIs[m]
-    #         temp_time[s,m,0] = time[m]
-    #         temp_time[s,m,1] = entropies[m]
-    #         temp_time[s,m,2] = MIs[m]
 
-    fig, axes = plt.subplots(3, 5,figsize = (6.4 * 1, 4.8 * 0.75), sharey='row')
-    matrices = [M1, M2, M3, M4, M5]
+    particles = [0,1]
+    for m in range(len(matrices)):
+        for part in particles:
+            entropies.append(entropy(Ms[m]))
+            MIs.append(calculate_morans_I(Ms[m]))
+            for feedback in range(len(methods)):
+                    run_ = f"/grid/parallel_{run}"
+                    x = get_folder_results(run_,batch_size,size =10)
+                    time_,acc_,time_std_,acc_std_ = x.get_dec_time_acc(True)
+                    acc[m,part,feedback] = acc_
+                    time[m,part,feedback] = time_
+                    acc_std[m,part,feedback] = acc_std_
+                    time_std[m,part,feedback] = time_std_
+                    run+=1
+
+
+    fig, axes = plt.subplots(5, 5,figsize = (6.4 * 1, 4.8 * 0.75*2), sharey='row')
+    matrices_ = [M1, M2, M3, M4, M5]
     titles = ["Diagonal", "Stripe", "Block Diagonal", "Alternating", "Random"]
 
-    for i, (matrix, title) in enumerate(zip(matrices, titles)):
+    for i, (matrix, title) in enumerate(zip(matrices_, titles)):
         ax = axes[0,i]
         ax.imshow(matrix, cmap="gray")
         ax.set_title(title,fontsize =7)
@@ -306,23 +332,35 @@ def plot_robustness_analysis():
             spine.set_visible(True)       # Show each spine (border)
             spine.set_linewidth(1)        # Set the border width
             spine.set_color("black")      # Set the border color to black
-    for i in range(1,3):
-        for j in range(5):
-            data = []
+    
+    for j in range(5):
+        ax_48_time = axes[1,j]
+        ax_48_acc = axes[2,j]
+        ax_46_time = axes[3,j]
+        ax_46_acc = axes[4,j]
+
+        for part in particles:
+            time_48 = []
+            acc_48 = []
+            time_46 = []
+            acc_46 = []
             for f in range(len(methods)):
-                if i ==1:
-                    temp_ = resulting_time[j,f]
-                else:
-                    temp_ = resulting_acc[j,f]
-                data.append(temp_)
-            ax = axes[i,j]
-            ax.set_xticks(ticks=np.arange(len(methods)), labels=[str((u)) for u in (methods)])
-            mean_values = np.mean(data, axis=1)
-            std_values = np.std(data, axis=1)
-            ax.plot(mean_values,linestyle = 'solid',marker = '*',linewidth =1.5,color= 'black')
-            ax.errorbar(range(len(mean_values)), mean_values, yerr=std_values,
-                linestyle='solid', marker='*', linewidth=1, color='black', capsize=3)
-            ax.axis("on")
+                time_48.append(time[j,part,f])
+                time_46.append(time[j+5,part,f])
+                acc_48.append(acc[j,part,f])
+                acc_46.append(acc[j+5,part,f])
+
+            ax_48_time.plot(time_48)
+            ax_48_acc.plot(acc_48)
+            ax_46_time.plot(time_46)
+            ax_46_acc.plot(acc_46)
+            
+                        
+                        
+
+
+
+
         
     axes[0, 0].set_ylabel('Environment', fontsize=8)
     axes[1, 0].set_ylabel('Time [s]', fontsize=8)
@@ -343,5 +381,5 @@ def plot_robustness_analysis():
 
 if __name__ == "__main__":
 
-    batch_size = 100
-    plot_multi_robot()
+    batch_size = 2
+    plot_robustness_analysis()

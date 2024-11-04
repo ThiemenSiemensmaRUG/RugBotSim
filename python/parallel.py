@@ -53,6 +53,16 @@ M2 = stripe_matrix()
 M3 = block_diagonal_matrix()
 M4 = organized_alternating_matrix()
 M5 = random_matrix()
+
+M1_46 = diagonal_matrix_46()
+M2_46 = stripe_matrix_46()
+M3_46 = block_diagonal_matrix_46()
+M4_46 = organized_alternating_matrix_46()
+M5_46 = random_matrix(0.46)
+
+
+
+
 CAL_GRID = np.array([
                     [0, 1, 0, 1, 0],  # Row corresponding to y=1.0 to y=0.8
                     [1, 0, 0, 1, 0],  # Row corresponding to y=0.8 to y=0.6
@@ -68,7 +78,7 @@ P_fn = 0
 sample_strategy = 1
 grid_start_seed = 400
 run_full=0
-batch_size = 101
+batch_size = 100
 number_of_thread = 3
 
 
@@ -100,36 +110,27 @@ x = [7860, 10725 , 3778  , 55,381]
 
 # # # """------------------------------------------------"""
 
-run_directory = 100 # start dir
-# # """Below code runs over multiple robots 2*6*3*100 = 3600 simulations"""
-grid_start_seed = 400
-for fill_ratio in [0.48]:
-    for n_robots in [10,9,8,7,6,5]:
-        for feedback in [0,1,2]:#Umin, Uplus and Us
-            launch_batch(batch_size=batch_size,workers=1,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=n_robots,size=5,desc=f"f{fill_ratio},feedbac strategy{feedback}")   
-            run_directory+=1
+# run_directory = 100 # start dir
+# # # """Below code runs over multiple robots 2*6*3*100 = 3600 simulations"""
+# grid_start_seed = 400
+# for fill_ratio in [0.48]:
+#     for n_robots in [10,9,8,7,6,5]:
+#         for feedback in [0,1,2]:#Umin, Uplus and Us
+#             launch_batch(batch_size=batch_size,workers=1,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=fill_ratio,robots=n_robots,size=5,desc=f"f{fill_ratio},feedbac strategy{feedback}")   
+#             run_directory+=1
 
 
 
-
+batch_size=2
 x_empirical =  [7500,15000,2000,50,320]
 
 run_directory = 150 #Start dir
 grid_start_seed = 400
-for pos in [x,x_empirical]:
-    for pattern in [M1,M2,M3,M4,M5]:
+for pattern in [M1,M2,M3,M4,M5,M1_46,M2_46,M3_46,M4_46,M5_46]:
+    for pos in [x,x_empirical]:
+    
         for feedback in [0,1,2]:#Umin, Uplus and Us
-            launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
+            launch_batch(batch_size=batch_size,workers=number_of_thread,x_=pos,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
             run_directory+=1
 
-run_directory = 200 #Start dir
-grid_start_seed = 400
 
-
-run_directory = 150 #Start dir
-grid_start_seed = 400
-for pos in [x,x_empirical]:
-    for pattern in [M1,M2,M3,M4,M5]:
-        for feedback in [0,1,2]:#Umin, Uplus and Us
-            launch_batch(batch_size=batch_size,workers=number_of_thread,x_=x,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
-            run_directory+=1

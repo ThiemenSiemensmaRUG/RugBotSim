@@ -3,12 +3,13 @@ import numpy as np
 
 
 class WebotsProcessor:
-    def __init__(self, folder,filename,threshold = None, grid = np.array([]),size = 5,time=1201) -> None:
+    def __init__(self, folder,filename,threshold = None, grid = np.array([]),size = 5,time=1201,until_decision=True) -> None:
    
         self.world_file = folder + filename
         self.folder = folder
         self.t_max = time
         self.data = None
+        self.until_dec = until_decision
         self.valid = True
         self.threshold = threshold
         if grid.shape[0] == 0:
@@ -24,6 +25,7 @@ class WebotsProcessor:
             self.grid = grid
  
         if "webots" in str(filename):
+           
       
             self.read_world_file(size)
 
@@ -32,7 +34,7 @@ class WebotsProcessor:
         else:
             self._read_exp_file()
         
-        
+
 
     def _read_exp_file(self):
         self.data = pd.read_csv(self.world_file)
@@ -52,17 +54,18 @@ class WebotsProcessor:
                                   "Sense Time":"sample_time"})
 
         self.data = self.data[self.data['print_bool'] == 1].reset_index()
-        self._add_d_f_indicator()
-        robot_ids = self.data['robot_id'].unique()
-        indices = []
-        for robot_id in np.sort(robot_ids):
-            robot_data = self.filter_by_robot_id(robot_id).copy()
-            robot_data.at[robot_data.index[-1], 'd_f_indicator'] = 1
-            index = (robot_data['d_f_indicator'] == 1.0).argmax()
-            time = robot_data['time'].iloc[index]
-            indices.append(time)
-        last_time = max(np.array(indices))
-        self.data = self.data[self.data['time']<=last_time].reset_index()
+        if self.until_dec:
+            self._add_d_f_indicator()
+            robot_ids = self.data['robot_id'].unique()
+            indices = []
+            for robot_id in np.sort(robot_ids):
+                robot_data = self.filter_by_robot_id(robot_id).copy()
+                robot_data.at[robot_data.index[-1], 'd_f_indicator'] = 1
+                index = (robot_data['d_f_indicator'] == 1.0).argmax()
+                time = robot_data['time'].iloc[index]
+                indices.append(time)
+            last_time = max(np.array(indices))
+            self.data = self.data[self.data['time']<=last_time].reset_index()
         self.add_labels()
         self.add_onboard_values()
         self.i_data = self.interpolate_data()
@@ -93,7 +96,7 @@ class WebotsProcessor:
         ]
         
         self.data = pd.DataFrame(data_list, columns=columns)
-
+        
         self.data['pos_y'] = abs(1-self.data['pos_y']).copy()
 
         self.add_labels()
