@@ -75,7 +75,19 @@ void Algorithm1::run() {
             case STATE_OBS:
                 sample_ = environ.getSample(robot.getPos()[0], robot.getPos()[1]);
                 std::cout<<sample_<<"\n";
-                states = STATE_RW;                  
+                
+
+                std::cout<<"Sample: "<<sample_<<" Robot position: "<< 1.0 * robot.getPos()[0] / 100<<" "<< 1.0 * robot.getPos()[1] / 100<<"\n";
+                // ADD INFERENCE:
+                // load CNN model
+                // read data: type A if sampled 0, type B if sampled 1
+                // use model to classify vibration
+                // return vibration type
+
+                states = STATE_RW;    
+
+
+
                 break;
 
 

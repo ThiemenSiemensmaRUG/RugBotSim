@@ -118,10 +118,10 @@ int Environment::getSample(double x, double y) {
 
     for (std::pair<int, int> coloredTile : d_grid) {
         if (
-            (x >= 1.0 * coloredTile.first / d_nrTiles) &&
-            (x <= (1.0 * coloredTile.first + 1) / d_nrTiles) &&
-            (y >= 1.0 * coloredTile.second / d_nrTiles) &&
-            (y <= (1.0 * coloredTile.second + 1) / d_nrTiles)
+            (x / 100 >= 1.0 * coloredTile.first / d_nrTiles) &&
+            (x / 100 <= (1.0 * coloredTile.first + 1) / d_nrTiles) &&
+            (y / 100 >= 1.0 * coloredTile.second / d_nrTiles) &&
+            (y / 100 <= (1.0 * coloredTile.second + 1) / d_nrTiles)
         ) {
             lastSample = 1;
 

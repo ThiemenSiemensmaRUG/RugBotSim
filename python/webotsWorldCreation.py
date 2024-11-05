@@ -63,6 +63,9 @@ class createWorld():
           filename =f"{run_dir}Instance_{self.instance}/world.txt"
 
           np.savetxt(filename, map.astype(int), delimiter=',', fmt='%d', footer="-1")
+
+          filename = f"{run_dir}Instance_{self.instance}/world_descriptive.txt"
+          np.savetxt(filename, grid.astype(int), delimiter=',', fmt='%d', footer="-1")
           
     def create_header(self):
         self.file.write("""#VRML_SIM R2023b utf8
@@ -100,7 +103,7 @@ DEF surface Solid {
       appearance Appearance {
         texture ImageTexture {
           url [
-            ""
+            "flip.jpeg"
           ]
         }
       }
