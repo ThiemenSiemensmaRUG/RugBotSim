@@ -121,7 +121,7 @@ x = [7860, 10725 , 3778  , 55,381]
 
 
 
-batch_size=2
+batch_size=100
 x_empirical =  [7500,15000,2000,50,320]
 
 run_directory = 150 #Start dir

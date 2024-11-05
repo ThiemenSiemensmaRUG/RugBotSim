@@ -275,7 +275,75 @@ def plot_multi_robot():
     return
 
 
+def plot_grid_results_error_bars(axs, index, time_arr, acc_arr, time_arr_std, acc_arr_std):
+    t = -0.1
+    colors = ['red','green']
+    for part in [0, 1]:
+        if part == 0:
+            label = "$P^*$"
+        else:
+            label = "$P_0$"
+        # Define axes for each part
+        ax_48_time = axs[1, index]
+        ax_48_acc = axs[3, index]
+        ax_46_time = axs[2, index]
+        ax_46_acc = axs[4, index]
 
+        # Extract data
+        time_48 = time_arr[index, part, :]
+        acc_48 = acc_arr[index, part, :]
+        time_46 = time_arr[index + 5, part, :]
+        acc_46 = acc_arr[index+5, part, :]
+
+        # Extract standard deviations
+        time_48_std = time_arr_std[index, part, :]  #/ np.sqrt(batch_size)
+        acc_48_std = acc_arr_std[index + 5, part, :] / np.sqrt(batch_size)
+        time_46_std = time_arr_std[index + 5, part, :] #/ np.sqrt(batch_size)
+        acc_46_std = acc_arr_std[index, part, :] / np.sqrt(batch_size)
+
+        # X positions for the scatter plot
+        x_vals = np.linspace(0, 2, 3) + t
+
+        # Plot points with error bars
+        ax_48_time.errorbar(x_vals, time_48, yerr=time_48_std, fmt='o', color=colors[part], label=label)
+        ax_48_acc.errorbar(x_vals, acc_48, yerr=acc_48_std, fmt='o', color=colors[part], label=label)
+        ax_46_time.errorbar(x_vals, time_46, yerr=time_46_std, fmt='o', color=colors[part], label=label)
+        ax_46_acc.errorbar(x_vals, acc_46, yerr=acc_46_std, fmt='o', color=colors[part], label=label)
+
+        t += 0.2  # Increment offset for the next part
+
+
+
+def plot_grid_results_belief(axs, index, beliefs,beliefs_std,methods):
+    ax_belief_48_Pstar = axs[1, index]
+    ax_belief_48_P0 = axs[2, index]
+    ax_belief_46_Pstar = axs[3, index]
+    ax_belief_46_P0 = axs[4, index]
+    cs = ['black','red','green']
+    for i in range(len(methods)):
+        belief_48 = beliefs[index,0,i]
+        belief_48_ = beliefs[index,1,i]
+        belief_46 = beliefs[index+5,0,i]
+        belief_46_ = beliefs[index+5,1,i]
+
+        belief_48_std = beliefs_std[index,0,i] / np.sqrt(batch_size)
+        belief_48_std_ = beliefs_std[index,1,i] / np.sqrt(batch_size)
+        belief_46_std = beliefs_std[index+5,0,i] / np.sqrt(batch_size)
+        belief_46_std_ = beliefs_std[index+5,1,i] / np.sqrt(batch_size)
+
+        ax_belief_48_Pstar.plot(belief_48,label = methods[i],color = cs[i])
+        ax_belief_48_Pstar.fill_between(range(1201),belief_48 - belief_48_std, belief_48 + belief_48_std, color= cs[i],alpha=.3)
+
+        ax_belief_48_P0.plot(belief_48_,label = methods[i],color = cs[i])
+        ax_belief_48_P0.fill_between(range(1201),belief_48_ - belief_48_std_, belief_48_ + belief_48_std_, color= cs[i],alpha=.3)
+
+        ax_belief_46_Pstar.plot(belief_46,label = methods[i],color = cs[i])
+        ax_belief_46_Pstar.fill_between(range(1201),belief_46 - belief_46_std, belief_46 + belief_46_std, color= cs[i],alpha=.3)
+
+        ax_belief_46_P0.plot(belief_46_,label = methods[i],color = cs[i])
+        ax_belief_46_P0.fill_between(range(1201),belief_46_ - belief_46_std_, belief_46_ + belief_46_std_, color= cs[i],alpha=.3)
+
+    return
 
 
 def plot_robustness_analysis():
@@ -297,9 +365,12 @@ def plot_robustness_analysis():
     time = np.empty(shape = (10,2,3),dtype=object)
     acc_std = np.empty(shape=(10,2,3),dtype=object)
     time_std = np.empty(shape = (10,2,3),dtype=object)
+    beliefs = np.empty(shape = (10,2,3),dtype = object)
+    beliefs_std = np.empty(shape = (10,2,3),dtype = object)
     entropies = []
     MIs = []
-
+    #set output to "belief" to plot belief
+    output = "belief"
     particles = [0,1]
     for m in range(len(matrices)):
         for part in particles:
@@ -309,12 +380,15 @@ def plot_robustness_analysis():
                     run_ = f"/grid/parallel_{run}"
                     x = get_folder_results(run_,batch_size,size =10)
                     time_,acc_,time_std_,acc_std_ = x.get_dec_time_acc(True)
+                    _, beliefs[m,part,feedback] = x.compute_average_belief_over_time()
+                    _, beliefs_std[m,part,feedback] = x.compute_std_beliefs_over_time()
                     acc[m,part,feedback] = acc_
                     time[m,part,feedback] = time_
                     acc_std[m,part,feedback] = acc_std_
                     time_std[m,part,feedback] = time_std_
                     run+=1
 
+    print(time.astype(float))
 
     fig, axes = plt.subplots(5, 5,figsize = (6.4 * 1, 4.8 * 0.75*2), sharey='row')
     matrices_ = [M1, M2, M3, M4, M5]
@@ -334,41 +408,48 @@ def plot_robustness_analysis():
             spine.set_color("black")      # Set the border color to black
     
     for j in range(5):
-        ax_48_time = axes[1,j]
-        ax_48_acc = axes[2,j]
-        ax_46_time = axes[3,j]
-        ax_46_acc = axes[4,j]
-
-        for part in particles:
-            time_48 = []
-            acc_48 = []
-            time_46 = []
-            acc_46 = []
-            for f in range(len(methods)):
-                time_48.append(time[j,part,f])
-                time_46.append(time[j+5,part,f])
-                acc_48.append(acc[j,part,f])
-                acc_46.append(acc[j+5,part,f])
-
-            ax_48_time.plot(time_48)
-            ax_48_acc.plot(acc_48)
-            ax_46_time.plot(time_46)
-            ax_46_acc.plot(acc_46)
-            
-                        
-                        
-
-
-
-
+        if output == "belief":
+            plot_grid_results_belief(axes, j, beliefs,beliefs_std,methods)
+        else:
+            plot_grid_results_error_bars(axes,j,time,acc,time_std,acc_std)
         
-    axes[0, 0].set_ylabel('Environment', fontsize=8)
-    axes[1, 0].set_ylabel('Time [s]', fontsize=8)
-    axes[2, 0].set_ylabel('Accuracy', fontsize=8)
+        
+    if output == "belief":
+        for ax_row in axes[:-1]:  # Iterate through rows except the last row
+            for ax in ax_row:
+                ax.label_outer()  # Hides x-axis labels and ticks on all but the last row
+        for ax in axes[-1]:  # Iterate through the last row
+            ax.set_xlabel("Time [s]")
+        for ax in axes[1:,0]:
+            ax.set_ylim(0.45,0.95)
+        axes[1,0].set_ylabel("$p(P^*)|_{f=0.48}$",fontsize = 7)
+        axes[2,0].set_ylabel("$p(P_0)|_{f=0.48}$",fontsize = 7)
+        axes[3,0].set_ylabel("$p(P^*)|_{f=0.46}$",fontsize = 7)
+        axes[4,0].set_ylabel("$p(P_0)|_{f=0.46}$",fontsize = 7)
+        axes[1,2].legend(loc='upper center',ncols=3,bbox_to_anchor=(0.5,1.25),fontsize=6)
+
+
+    else:
+        axes[1,0].set_ylim(0,1300)
+        axes[2,0].set_ylim(0,1300)
+        axes[3,0].set_ylim(0.55,0.9)
+        axes[4,0].set_ylim(0.65,1)
+
+        for ax in axes[1:, :].flatten():  # Flatten in case it's a 2D array of axes
+            ax.set_xticks(range(3))
+            ax.set_xticklabels(methods,fontsize=8)
+            ax.grid()
+        for ax in axes[1,:]:
+            ax.legend(loc='upper center',ncols=2,bbox_to_anchor=(0.5,1.25),fontsize=4)
+
+        axes[0, 0].set_ylabel('Environment', fontsize=8)
+        axes[1, 0].set_ylabel('$\\text{Time}_{f=0.48}$', fontsize=8)
+        axes[2, 0].set_ylabel('$\\text{Time}_{f=0.46}$', fontsize=8)
+        axes[3, 0].set_ylabel('$\\text{Accuracy}_{f=0.48}$', fontsize=8)
+        axes[4, 0].set_ylabel('$\\text{Accuracy}_{f=0.46}$', fontsize=8)
 
     plt.subplots_adjust(left=0.0, right=1, top=1, bottom=0.0, wspace=0.01, hspace=0.01)
 
-    
     plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/grid_analysis.pdf', format='pdf', bbox_inches='tight')#, pad_inches=0.025)
     
     plt.show()
@@ -381,5 +462,5 @@ def plot_robustness_analysis():
 
 if __name__ == "__main__":
 
-    batch_size = 2
+    batch_size = 100
     plot_robustness_analysis()
