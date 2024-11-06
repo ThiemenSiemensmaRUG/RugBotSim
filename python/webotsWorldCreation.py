@@ -4,8 +4,7 @@ import random
 from PIL import Image, ImageDraw 
 from scipy.spatial.transform import Rotation as R
 import argparse
-
-
+import matplotlib.pyplot as plt
 
 
 def rotate_Y(angle_rad):
@@ -66,6 +65,19 @@ class createWorld():
 
           filename = f"{run_dir}Instance_{self.instance}/world_descriptive.txt"
           np.savetxt(filename, grid.astype(int), delimiter=',', fmt='%d', footer="-1")
+        
+          # Set up a custom colormap with only black and white
+          cmap = plt.cm.colors.ListedColormap(['black', 'white'])
+
+          # Display the pattern without any extra elements
+          plt.imshow(grid, cmap=cmap, interpolation='nearest')
+          plt.axis('off')  # Turn off all axes
+          plt.gca().set_frame_on(False)  # Turn off the figure frame
+
+          # Save the image
+          plt.savefig("worlds/tile_pattern.png", bbox_inches='tight', pad_inches=0)
+          plt.close()
+
           
     def create_header(self):
         self.file.write("""#VRML_SIM R2023b utf8
@@ -103,7 +115,7 @@ DEF surface Solid {
       appearance Appearance {
         texture ImageTexture {
           url [
-            "flip.jpeg"
+            "tile_pattern.png"
           ]
         }
       }
