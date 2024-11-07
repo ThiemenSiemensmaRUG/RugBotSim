@@ -4,10 +4,10 @@
 #include <fstream>
 #include <vector>
 #include <complex>
-#include <vector>
 #include <cmath>
 #include <utility>
 #include <filesystem>
+#include <sstream>
 
 #include "RugBot.hh"
 #include "Environment.hh"
@@ -44,8 +44,8 @@ private:
     Radio_Rover radio;
     std::vector<int> pos;
     int sample_ = 0;
-
-    void readDataFromFile(const std::string& filename);
+    std::vector<std::vector<double>> data_matrix; // Matrix to store file data
+    std::vector<std::vector<double>> readDataFromFile(const std::string& filename);
 };
 
 void Algorithm1::run() {
@@ -67,10 +67,28 @@ void Algorithm1::run() {
                 std::cout << "Sample: " << sample_ << " Robot position: " 
                           << 1.0 * robot.getPos()[0] / 100 << " " << 1.0 * robot.getPos()[1] / 100 << "\n";
 
-                if (sample_ == 0) {
-                    // Read data from file
-                    readDataFromFile("../../data/capture1_60hz_30vol.txt");  
-                }
+                if (static_cast<int>(robot.d_robot->getTime()) > 25){ 
+                    if (sample_ == 0) {
+                        // Read data from file and capture the returned matrix
+                        data_matrix = readDataFromFile("../../data/capture1_60hz_30vol.txt");  
+
+                    } else {
+                        if (sample_ == 1) {
+                            data_matrix = readDataFromFile("../../data/capture2_40hz_60vol.txt"); 
+                        } else {
+                            std::cout << "Not a black or white tile." << "\n";
+                            data_matrix = std::vector<std::vector<double>>(24, std::vector<double>(3, 0.0));
+                        }
+                    }
+                    // std::cout << "Data Matrix: " << std::endl;
+                    // for (const auto& row : data_matrix) {
+                    //     for (const auto& val : row) {
+                    //         std::cout << val << "\t";
+                    //     }
+                    //     std::cout << std::endl;
+                    // }
+                    // std::cout << "TIMESTAMP " << robot.d_robot->getTime() << "\n";
+                } 
 
                 states = STATE_RW;
                 break;
@@ -87,23 +105,53 @@ void Algorithm1::run() {
     }
 }
 
-void Algorithm1::readDataFromFile(const std::string& filename) {
+
+std::vector<std::vector<double>> Algorithm1::readDataFromFile(const std::string& filename) {
     std::ifstream file(filename);
+    std::vector<std::vector<double>> data_matrix;
+
     if (!file.is_open()) {
         std::cerr << "Error: Unable to open file " << filename << std::endl;
-        return;
+        return data_matrix; // Return an empty matrix if file cannot be opened
     }
 
+    // Get the current timestamp as the starting row number
+    int start_row = static_cast<int>(robot.d_robot->getTime()) - 24;
+    
     std::string line;
+    int current_row = 0;
     while (std::getline(file, line)) {
-        // Process each line here as needed
-        std::cout << "Read line: " << line << std::endl;
+        // If the current row is less than the start row, skip it
+        if (current_row < start_row) {
+            ++current_row;
+            continue;
+        }
 
-        // Example: parse line data (if numeric data is stored in lines)
-        // double data = std::stod(line); // If you need to convert line to a number
+        // Stop reading if we have read 24 rows
+        if (data_matrix.size() >= 24) {
+            break;
+        }
+
+        // Parse the line into doubles and store it in the matrix
+        std::istringstream iss(line);
+        std::vector<double> row;
+        double value;
+        while (iss >> value) {
+            row.push_back(value);
+        }
+
+        if (!row.empty()) {
+            data_matrix.push_back(row); // Add the row to the matrix
+        }
+
+        ++current_row;
     }
+
     file.close();
+
+    return data_matrix; // Return the matrix
 }
+
 
 void Algorithm1::recvSample() {
     std::vector<int> messages = radio.getMessages();
