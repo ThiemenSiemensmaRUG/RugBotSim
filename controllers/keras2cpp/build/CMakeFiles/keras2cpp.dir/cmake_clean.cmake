@@ -1,0 +1,43 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/keras2cpp.dir/cpp_model.cc.o"
+  "CMakeFiles/keras2cpp.dir/cpp_model.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/baseLayer.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/baseLayer.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/activation.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/activation.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/batchNormalization.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/batchNormalization.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/conv1d.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/conv1d.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/conv2d.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/conv2d.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/dense.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/dense.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/elu.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/elu.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/embedding.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/embedding.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/flatten.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/flatten.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/locally1d.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/locally1d.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/locally2d.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/locally2d.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/lstm.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/lstm.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/layers/maxPooling2d.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/layers/maxPooling2d.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/model.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/model.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/tensor.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/tensor.cc.o.d"
+  "CMakeFiles/keras2cpp.dir/src/utils.cc.o"
+  "CMakeFiles/keras2cpp.dir/src/utils.cc.o.d"
+  "keras2cpp"
+  "keras2cpp.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/keras2cpp.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()
