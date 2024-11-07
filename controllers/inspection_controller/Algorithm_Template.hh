@@ -80,14 +80,23 @@ void Algorithm1::run() {
                             data_matrix = std::vector<std::vector<double>>(24, std::vector<double>(3, 0.0));
                         }
                     }
-                    // std::cout << "Data Matrix: " << std::endl;
-                    // for (const auto& row : data_matrix) {
-                    //     for (const auto& val : row) {
-                    //         std::cout << val << "\t";
-                    //     }
-                    //     std::cout << std::endl;
-                    // }
-                    // std::cout << "TIMESTAMP " << robot.d_robot->getTime() << "\n";
+                    // Writing current data in a file to be read for inference
+                    std::ofstream file("../../data/curr_data.txt", std::ofstream::trunc);  
+
+                    if (!file.is_open()) {
+                        std::cerr << "Error: Unable to open file " << std::endl;
+                        return;
+                    }
+
+                    for (const auto& row : data_matrix) {
+                        for (size_t i = 0; i < row.size(); ++i) {
+                            file << row[i];
+                            if (i < row.size() - 1) file << "\t";  
+                        }
+                        file << "\n";  
+                    }
+
+                    file.close();
                 } 
 
                 states = STATE_RW;
