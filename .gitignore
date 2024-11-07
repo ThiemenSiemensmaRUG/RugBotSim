@@ -1,0 +1,6 @@
+# Ignore everything in the build folder
+keras2cpp/build/*
+
+# Exclude .model files and keras2cpp executable
+!keras2cpp/build/*.model
+!keras2cpp/build/keras2cpp

@@ -1,3 +1,0 @@
-/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/keras2cpp/build/CMakeFiles/keras2cpp.dir
-/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/keras2cpp/build/CMakeFiles/edit_cache.dir
-/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/keras2cpp/build/CMakeFiles/rebuild_cache.dir
