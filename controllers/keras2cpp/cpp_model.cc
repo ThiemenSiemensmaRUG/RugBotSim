@@ -14,7 +14,6 @@ int main(int argc, char* argv[]) {
 
     // Load the model
     auto model = Model::load("cnn_model.model");
-    std::cout << "Model loaded successfully!" << std::endl;
 
     // Open the input file
     std::ifstream infile(argv[1]);
