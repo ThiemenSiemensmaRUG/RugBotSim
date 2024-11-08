@@ -14,7 +14,8 @@
 #include <memory>
 #include <thread>
 #include <chrono>
-
+#include <string>
+#include <algorithm>
 
 #include "RugBot.hh"
 #include "Environment.hh"
@@ -81,9 +82,34 @@ void Algorithm1::runKeras2cppExecutable() {
     // Restore the original working directory
     chdir(originalDir);
 
-    // Print the captured output
-    std::cout << "keras2cpp output: " << output << std::endl;
+    // Remove square brackets and replace commas with spaces
+    output.erase(std::remove_if(output.begin(), output.end(),
+                                [](char c) { return c == '[' || c == ']'; }),
+                 output.end());
+    std::replace(output.begin(), output.end(), ',', ' ');
+
+    // Print the cleaned output
+    std::cout << "Cleaned keras2cpp output: " << output << std::endl;
+
+    // Parse output to find the index with the highest value
+    std::istringstream iss(output);
+    std::vector<double> values;
+    double number;
+    while (iss >> number) {
+        values.push_back(number);
+    }
+
+    // Find the index of the maximum value
+    if (!values.empty()) {
+        auto max_it = std::max_element(values.begin(), values.end());
+        int max_index = std::distance(values.begin(), max_it);
+        std::cout << "Index of the highest value: " << max_index << std::endl;
+        std::cout << "Highest value: " << *max_it << std::endl;
+    } else {
+        std::cout << "No values found in the output." << std::endl;
+    }
 }
+
 
 void Algorithm1::run() {
     std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;

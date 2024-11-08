@@ -151,6 +151,25 @@ Sample: 1 Robot position: 0.35 0.36
 keras2cpp output: [0.000015, 0.008551, 0.991434]
 
 299,0
+Sample: 0 Robot position: 0.24 0.78
+keras2cpp output: [1.000000, 0.000000, 0.000000]
+
+309,0
+Sample: 1 Robot position: 0.6 0.6
+keras2cpp output: [0.000044, 0.020543, 0.979412]
+
+319,0
+Sample: 0 Robot position: 0.49 0.27
+keras2cpp output: [1.000000, 0.000000, 0.000000]
+
+Sample: 0 Robot position: 0.53 0.24
+keras2cpp output: [1.000000, 0.000000, 0.000000]
+
+329,0
+Sample: 1 Robot position: 0.48 0.67
+keras2cpp output: [0.000082, 0.033619, 0.966300]
+
+339,0
 [2Jmake clean
 Clean finished.
 make -j 32
@@ -158,21 +177,331 @@ make -j 32
 # compiling inspection_controller.cpp
 In file included from inspection_controller.cpp:32:
 Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
-Algorithm_Template.hh:209:14: warning: unused variable ‘sample’ [-Wunused-variable]
-  209 |     for (int sample : messages) {
+Algorithm_Template.hh:228:14: warning: unused variable ‘sample’ [-Wunused-variable]
+  228 |     for (int sample : messages) {
       |              ^~~~~~
 Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
-Algorithm_Template.hh:62:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   62 |     getcwd(originalDir, sizeof(originalDir));
+Algorithm_Template.hh:63:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   63 |     getcwd(originalDir, sizeof(originalDir));
       |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:65:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   65 |     chdir("../keras2cpp/build");
+Algorithm_Template.hh:66:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   66 |     chdir("../keras2cpp/build");
       |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:82:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   82 |     chdir(originalDir);
+Algorithm_Template.hh:83:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   83 |     chdir(originalDir);
       |     ~~~~~^~~~~~~~~~~~~
 # linking inspection_controller
 # copying to inspection_controller
 Nothing to be done for build targets.
+INFO: cpp_supervisor: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller/inspection_controller 1
+MAIN SUPERVISOR LOOP
+File data_rov.txt opened successfully
+RugRobot 0 with Seed 480
+Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
+Webots working dir enabled
+world.txt
+/home/justin/MIT_Project/Thiemen/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
+20
+30
+40
+11
+02
+32
+42
+23
+33
+43
+04
+14
+Unsupported file formatting in world file
+
+Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
+Sample: 1 Robot position: 0.06 0.88
+9,0
+Sample: 0 Robot position: 0.16 0.71
+19,0
+Sample: 0 Robot position: 0.3 0.49
+29,0
+Sample: 0 Robot position: 0.06 0.68
+keras2cpp output: [0.999990, 0.000000, 0.000010]
+
+No values found in the output.
+Sample: 0 Robot position: 0.11 0.62
+keras2cpp output: [0.999979, 0.000000, 0.000021]
+
+No values found in the output.
+39,0
+Sample: 1 Robot position: 0.26 0.89
+keras2cpp output: [0.000000, 0.000040, 0.999960]
+
+No values found in the output.
+49,0
+Sample: 1 Robot position: 0.56 0.64
+keras2cpp output: [0.000000, 0.000086, 0.999914]
+
+No values found in the output.
+59,0
+[2Jmake clean
+Clean finished.
+make -j 32
+# updating inspection_controller.d
+# compiling inspection_controller.cpp
+In file included from inspection_controller.cpp:32:
+Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
+Algorithm_Template.hh:233:14: warning: unused variable ‘sample’ [-Wunused-variable]
+  233 |     for (int sample : messages) {
+      |              ^~~~~~
+Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
+Algorithm_Template.hh:63:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   63 |     getcwd(originalDir, sizeof(originalDir));
+      |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Algorithm_Template.hh:66:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   66 |     chdir("../keras2cpp/build");
+      |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
+Algorithm_Template.hh:83:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   83 |     chdir(originalDir);
+      |     ~~~~~^~~~~~~~~~~~~
+# linking inspection_controller
+# copying to inspection_controller
+Nothing to be done for build targets.
+INFO: cpp_supervisor: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller/inspection_controller 1
+MAIN SUPERVISOR LOOP
+File data_rov.txt opened successfully
+RugRobot 0 with Seed 480
+Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
+Webots working dir enabled
+world.txt
+/home/justin/MIT_Project/Thiemen/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
+20
+30
+40
+11
+02
+32
+42
+23
+33
+43
+04
+14
+Unsupported file formatting in world file
+
+Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
+Sample: 1 Robot position: 0.06 0.88
+9,0
+Sample: 0 Robot position: 0.16 0.71
+19,0
+Sample: 0 Robot position: 0.3 0.49
+29,0
+Sample: 0 Robot position: 0.06 0.68
+Cleaned keras2cpp output: 0.999990, 0.000000, 0.000010
+
+Index of the highest value: 0
+Highest value: 0.99999
+Sample: 0 Robot position: 0.11 0.62
+Cleaned keras2cpp output: 0.999979, 0.000000, 0.000021
+
+Index of the highest value: 0
+Highest value: 0.999979
+39,0
+Sample: 1 Robot position: 0.26 0.89
+Cleaned keras2cpp output: 0.000000, 0.000040, 0.999960
+
+Index of the highest value: 0
+Highest value: 0
+49,0
+Sample: 1 Robot position: 0.56 0.64
+Cleaned keras2cpp output: 0.000000, 0.000086, 0.999914
+
+Index of the highest value: 0
+Highest value: 0
+59,0
+69,0
+[2Jmake clean
+Clean finished.
+make -j 32
+# updating inspection_controller.d
+# compiling inspection_controller.cpp
+In file included from inspection_controller.cpp:32:
+Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
+Algorithm_Template.hh:235:14: warning: unused variable ‘sample’ [-Wunused-variable]
+  235 |     for (int sample : messages) {
+      |              ^~~~~~
+Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
+Algorithm_Template.hh:63:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   63 |     getcwd(originalDir, sizeof(originalDir));
+      |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Algorithm_Template.hh:66:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   66 |     chdir("../keras2cpp/build");
+      |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
+Algorithm_Template.hh:83:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   83 |     chdir(originalDir);
+      |     ~~~~~^~~~~~~~~~~~~
+# linking inspection_controller
+# copying to inspection_controller
+Nothing to be done for build targets.
+INFO: cpp_supervisor: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller/inspection_controller 1
+MAIN SUPERVISOR LOOP
+File data_rov.txt opened successfully
+RugRobot 0 with Seed 480
+Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
+Webots working dir enabled
+world.txt
+/home/justin/MIT_Project/Thiemen/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
+20
+30
+40
+11
+02
+32
+42
+23
+33
+43
+04
+14
+Unsupported file formatting in world file
+
+Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
+Sample: 1 Robot position: 0.06 0.88
+9,0
+Sample: 0 Robot position: 0.16 0.71
+19,0
+Sample: 0 Robot position: 0.3 0.49
+29,0
+Sample: 0 Robot position: 0.06 0.68
+Cleaned keras2cpp output: 0.999990  0.000000  0.000010
+
+Index of the highest value: 0
+Highest value: 0.99999
+Sample: 0 Robot position: 0.11 0.62
+Cleaned keras2cpp output: 0.999979  0.000000  0.000021
+
+Index of the highest value: 0
+Highest value: 0.999979
+39,0
+Sample: 1 Robot position: 0.26 0.89
+Cleaned keras2cpp output: 0.000000  0.000040  0.999960
+
+Index of the highest value: 2
+Highest value: 0.99996
+49,0
+Sample: 1 Robot position: 0.56 0.64
+Cleaned keras2cpp output: 0.000000  0.000086  0.999914
+
+Index of the highest value: 2
+Highest value: 0.999914
+59,0
+69,0
+Sample: 1 Robot position: 0.66 0.42
+Cleaned keras2cpp output: 0.000000  0.000110  0.999890
+
+Index of the highest value: 2
+Highest value: 0.99989
+79,0
+Sample: 1 Robot position: 0.42 0.72
+Cleaned keras2cpp output: 0.000000  0.000105  0.999894
+
+Index of the highest value: 2
+Highest value: 0.999894
+89,0
+Sample: 0 Robot position: 0.51 0.29
+Cleaned keras2cpp output: 0.235075  0.000458  0.764467
+
+Index of the highest value: 2
+Highest value: 0.764467
+99,0
+Sample: 1 Robot position: 0.78 0.63
+Cleaned keras2cpp output: 0.000000  0.000124  0.999875
+
+Index of the highest value: 2
+Highest value: 0.999875
+109,0
+Sample: 1 Robot position: 0.8 0.43
+Cleaned keras2cpp output: 0.000000  0.000071  0.999929
+
+Index of the highest value: 2
+Highest value: 0.999929
+119,0
+Sample: 1 Robot position: 0.87 0.07
+Cleaned keras2cpp output: 0.000000  0.000059  0.999941
+
+Index of the highest value: 2
+Highest value: 0.999941
+129,0
+Sample: 0 Robot position: 0.93 0.28
+Cleaned keras2cpp output: 0.001743  0.038079  0.960178
+
+Index of the highest value: 2
+Highest value: 0.960178
+139,0
+Sample: 1 Robot position: 0.54 0.13
+Cleaned keras2cpp output: 0.000000  0.000081  0.999919
+
+Index of the highest value: 2
+Highest value: 0.999919
+Sample: 1 Robot position: 0.44 0.17
+Cleaned keras2cpp output: 0.000000  0.000093  0.999907
+
+Index of the highest value: 2
+Highest value: 0.999907
+149,0
+Sample: 1 Robot position: 0.73 0.19
+Cleaned keras2cpp output: 0.000000  0.000089  0.999911
+
+Index of the highest value: 2
+Highest value: 0.999911
+159,0
+Sample: 0 Robot position: 0.81 0.38
+Cleaned keras2cpp output: 0.668270  0.000086  0.331644
+
+Index of the highest value: 0
+Highest value: 0.66827
+169,0
+Sample: 1 Robot position: 0.71 0.76
+Cleaned keras2cpp output: 0.000000  0.000133  0.999866
+
+Index of the highest value: 2
+Highest value: 0.999866
+179,0
+Sample: 0 Robot position: 0.93 0.82
+Cleaned keras2cpp output: 0.988043  0.000000  0.011957
+
+Index of the highest value: 0
+Highest value: 0.988043
+189,0
+Sample: 1 Robot position: 0.91 0.75
+Cleaned keras2cpp output: 0.000000  0.000296  0.999704
+
+Index of the highest value: 2
+Highest value: 0.999704
+Sample: 1 Robot position: 0.68 0.74
+Cleaned keras2cpp output: 0.000000  0.000190  0.999810
+
+Index of the highest value: 2
+Highest value: 0.99981
+199,0
+Sample: 1 Robot position: 0.86 0.52
+Cleaned keras2cpp output: 0.000001  0.000452  0.999548
+
+Index of the highest value: 2
+Highest value: 0.999548
+209,0
+Sample: 1 Robot position: 0.82 0.71
+Cleaned keras2cpp output: 0.000001  0.000589  0.999410
+
+Index of the highest value: 2
+Highest value: 0.99941
+219,0
+229,0
+Sample: 0 Robot position: 0.16 0.66
+Cleaned keras2cpp output: 1.000000  0.000000  0.000000
+
+Index of the highest value: 0
+Highest value: 1
+239,0
 INFO: cpp_supervisor: Terminating.
 INFO: inspection_controller: Terminating.
