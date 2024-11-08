@@ -1,4 +1,4 @@
-ERROR: Missing declaration for 'Plastic', add: 'EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Plastic.proto"' to '/home/diana/MIT/RugBotSim/protos/RovableV2.proto'.
+ERROR: Missing declaration for 'Plastic', add: 'EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Plastic.proto"' to '/home/justin/MIT_Project/Thiemen/RugBotSim/protos/RovableV2.proto'.
 INFO: RovableV2 "r0" > Camera "camera" > Pose  > Shape  > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
 INFO: RovableV2 "r0" > DEF WHEEL4 HingeJoint > Solid "wheel4" > USE WHEEL_BOUNDING > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
 INFO: RovableV2 "r0" > DEF WHEEL3 HingeJoint > Solid "wheel3" > USE WHEEL_BOUNDING > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
@@ -9,16 +9,16 @@ INFO: RovableV2 "r0" > Receiver "receiver": Trying to resolve the backwards comp
 INFO: RovableV2 "r0" > Camera "camera": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
 INFO: RovableV2 "r0" > Emitter "emitter": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
 INFO: RovableV2 "r0" > Receiver "receiver": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
-WARNING: DEF surface Solid > Shape  > Appearance "appearance" > ImageTexture : Texture image size of '/home/diana/MIT/RugBotSim/worlds/tile_pattern.png' is not a power of two: rescaling it from 369x369 to 512x512.
-INFO: cpp_supervisor: Starting controller: /home/diana/MIT/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
-INFO: inspection_controller: Starting controller: /home/diana/MIT/RugBotSim/controllers/inspection_controller/inspection_controller 1
+WARNING: DEF surface Solid > Shape  > Appearance "appearance" > ImageTexture : Texture image size of '/home/justin/MIT_Project/Thiemen/RugBotSim/worlds/tile_pattern.png' is not a power of two: rescaling it from 369x369 to 512x512.
+INFO: cpp_supervisor: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller/inspection_controller 1
 MAIN SUPERVISOR LOOP
 File data_rov.txt opened successfully
 RugRobot 0 with Seed 480
-Current working directory: "/home/diana/MIT/RugBotSim/controllers/inspection_controller"
+Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
 Webots working dir enabled
 world.txt
-/home/diana/MIT/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
+/home/justin/MIT_Project/Thiemen/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
 20
 30
 40
@@ -33,7 +33,7 @@ world.txt
 14
 Unsupported file formatting in world file
 
-Current working directory: "/home/diana/MIT/RugBotSim/controllers/inspection_controller"
+Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
 Sample: 1 Robot position: 0.06 0.88
 9,0
 Sample: 0 Robot position: 0.16 0.71
@@ -147,5 +147,32 @@ Sample: 0 Robot position: 0.11 0.66
 keras2cpp output: [1.000000, 0.000000, 0.000000]
 
 289,0
+Sample: 1 Robot position: 0.35 0.36
+keras2cpp output: [0.000015, 0.008551, 0.991434]
+
+299,0
+[2Jmake clean
+Clean finished.
+make -j 32
+# updating inspection_controller.d
+# compiling inspection_controller.cpp
+In file included from inspection_controller.cpp:32:
+Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
+Algorithm_Template.hh:209:14: warning: unused variable ‘sample’ [-Wunused-variable]
+  209 |     for (int sample : messages) {
+      |              ^~~~~~
+Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
+Algorithm_Template.hh:62:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   62 |     getcwd(originalDir, sizeof(originalDir));
+      |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Algorithm_Template.hh:65:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   65 |     chdir("../keras2cpp/build");
+      |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
+Algorithm_Template.hh:82:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   82 |     chdir(originalDir);
+      |     ~~~~~^~~~~~~~~~~~~
+# linking inspection_controller
+# copying to inspection_controller
+Nothing to be done for build targets.
 INFO: cpp_supervisor: Terminating.
 INFO: inspection_controller: Terminating.
