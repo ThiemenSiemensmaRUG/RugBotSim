@@ -1,4 +1,4 @@
-ERROR: Missing declaration for 'Plastic', add: 'EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Plastic.proto"' to '/home/justin/MIT_Project/Thiemen/RugBotSim/protos/RovableV2.proto'.
+ERROR: Missing declaration for 'Plastic', add: 'EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Plastic.proto"' to '/home/diana/MIT/RugBotSim/protos/RovableV2.proto'.
 INFO: RovableV2 "r0" > Camera "camera" > Pose  > Shape  > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
 INFO: RovableV2 "r0" > DEF WHEEL4 HingeJoint > Solid "wheel4" > USE WHEEL_BOUNDING > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
 INFO: RovableV2 "r0" > DEF WHEEL3 HingeJoint > Solid "wheel3" > USE WHEEL_BOUNDING > Cylinder : Trying to resolve the backwards compability by adjusting the rotation (strategy B1).
@@ -9,16 +9,16 @@ INFO: RovableV2 "r0" > Receiver "receiver": Trying to resolve the backwards comp
 INFO: RovableV2 "r0" > Camera "camera": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
 INFO: RovableV2 "r0" > Emitter "emitter": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
 INFO: RovableV2 "r0" > Receiver "receiver": Trying to resolve the backwards compability by adjusting the rotation (strategy A2).
-WARNING: DEF surface Solid > Shape  > Appearance "appearance" > ImageTexture : Texture image size of '/home/justin/MIT_Project/Thiemen/RugBotSim/worlds/tile_pattern.png' is not a power of two: rescaling it from 369x369 to 512x512.
-INFO: cpp_supervisor: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
-INFO: inspection_controller: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller/inspection_controller 1
+WARNING: DEF surface Solid > Shape  > Appearance "appearance" > ImageTexture : Texture image size of '/home/diana/MIT/RugBotSim/worlds/tile_pattern.png' is not a power of two: rescaling it from 369x369 to 512x512.
+INFO: cpp_supervisor: Starting controller: /home/diana/MIT/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/diana/MIT/RugBotSim/controllers/inspection_controller/inspection_controller 1
 MAIN SUPERVISOR LOOP
 File data_rov.txt opened successfully
 RugRobot 0 with Seed 480
-Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
+Current working directory: "/home/diana/MIT/RugBotSim/controllers/inspection_controller"
 Webots working dir enabled
 world.txt
-/home/justin/MIT_Project/Thiemen/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
+/home/diana/MIT/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
 20
 30
 40
@@ -33,520 +33,7 @@ world.txt
 14
 Unsupported file formatting in world file
 
-Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
-Sample: 1 Robot position: 0.06 0.88
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-9,0
-Sample: 0 Robot position: 0.16 0.71
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-19,0
-Sample: 0 Robot position: 0.3 0.49
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-29,0
-Sample: 0 Robot position: 0.06 0.68
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-Sample: 0 Robot position: 0.11 0.62
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-39,0
-Sample: 1 Robot position: 0.26 0.89
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-49,0
-Sample: 1 Robot position: 0.56 0.64
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-59,0
-69,0
-Sample: 1 Robot position: 0.66 0.42
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-79,0
-Sample: 1 Robot position: 0.42 0.72
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-89,0
-Sample: 0 Robot position: 0.51 0.29
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-99,0
-Sample: 1 Robot position: 0.78 0.63
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-109,0
-Sample: 1 Robot position: 0.8 0.43
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-119,0
-Sample: 1 Robot position: 0.87 0.07
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-129,0
-Sample: 0 Robot position: 0.93 0.28
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-139,0
-Sample: 1 Robot position: 0.54 0.13
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-Sample: 1 Robot position: 0.44 0.17
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-149,0
-Sample: 1 Robot position: 0.73 0.19
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-159,0
-Sample: 0 Robot position: 0.81 0.38
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-169,0
-Sample: 1 Robot position: 0.71 0.76
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-179,0
-Sample: 0 Robot position: 0.93 0.82
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-189,0
-Sample: 1 Robot position: 0.91 0.75
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-Sample: 1 Robot position: 0.68 0.74
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-199,0
-Sample: 1 Robot position: 0.86 0.52
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-209,0
-Sample: 1 Robot position: 0.82 0.71
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-219,0
-229,0
-Sample: 0 Robot position: 0.16 0.66
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-239,0
-Sample: 1 Robot position: 0.06 0.91
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-249,0
-Sample: 1 Robot position: 0.14 0.58
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-259,0
-Sample: 0 Robot position: 0.13 0.13
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-269,0
-Sample: 0 Robot position: 0.18 0.27
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-279,0
-Sample: 0 Robot position: 0.11 0.66
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-289,0
-Sample: 1 Robot position: 0.35 0.36
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-299,0
-Sample: 0 Robot position: 0.24 0.78
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-309,0
-Sample: 1 Robot position: 0.6 0.6
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-319,0
-Sample: 0 Robot position: 0.49 0.27
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-Sample: 0 Robot position: 0.53 0.24
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-329,0
-Sample: 1 Robot position: 0.48 0.67
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-339,0
-Sample: 1 Robot position: 0.58 0.19
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-349,0
-Sample: 0 Robot position: 0.19 0.25
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-359,0
-Sample: 1 Robot position: 0.47 0.06
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-369,0
-Sample: 0 Robot position: 0.57 0.38
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-Sample: 0 Robot position: 0.52 0.34
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-379,0
-Sample: 0 Robot position: 0.21 0.57
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-389,0
-Sample: 0 Robot position: 0.1 0.39
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-399,0
-409,0
-Sample: 0 Robot position: 0.46 0.58
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-Sample: 0 Robot position: 0.68 0.39
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-419,0
-Sample: 0 Robot position: 0.27 0.18
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-429,0
-Sample: 0 Robot position: 0.11 0.25
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-439,0
-Sample: 1 Robot position: 0.14 0.58
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-449,0
-Sample: 1 Robot position: 0.29 0.24
-keras2cpp output: [0.052221, 0.938639, 0.009140]
-
-459,0
-[2Jmake clean
-Clean finished.
-make -j 32
-# updating inspection_controller.d
-# compiling inspection_controller.cpp
-In file included from inspection_controller.cpp:32:
-Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
-Algorithm_Template.hh:205:14: warning: unused variable ‘sample’ [-Wunused-variable]
-  205 |     for (int sample : messages) {
-      |              ^~~~~~
-Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
-Algorithm_Template.hh:59:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   59 |     getcwd(originalDir, sizeof(originalDir));
-      |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:62:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   62 |     chdir("../keras2cpp/build");
-      |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:79:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   79 |     chdir(originalDir);
-      |     ~~~~~^~~~~~~~~~~~~
-# linking inspection_controller
-# copying to inspection_controller
-Nothing to be done for build targets.
-INFO: cpp_supervisor: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
-INFO: inspection_controller: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller/inspection_controller 1
-MAIN SUPERVISOR LOOP
-File data_rov.txt opened successfully
-RugRobot 0 with Seed 480
-Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
-Webots working dir enabled
-world.txt
-/home/justin/MIT_Project/Thiemen/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
-20
-30
-40
-11
-02
-32
-42
-23
-33
-43
-04
-14
-Unsupported file formatting in world file
-
-Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
-Sample: 1 Robot position: 0.06 0.88
-9,0
-Sample: 0 Robot position: 0.16 0.71
-19,0
-[2Jmake clean
-Clean finished.
-make -j 32
-# updating inspection_controller.d
-# compiling inspection_controller.cpp
-In file included from inspection_controller.cpp:32:
-Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
-Algorithm_Template.hh:207:14: warning: unused variable ‘sample’ [-Wunused-variable]
-  207 |     for (int sample : messages) {
-      |              ^~~~~~
-Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
-Algorithm_Template.hh:59:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   59 |     getcwd(originalDir, sizeof(originalDir));
-      |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:62:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   62 |     chdir("../keras2cpp/build");
-      |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:79:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   79 |     chdir(originalDir);
-      |     ~~~~~^~~~~~~~~~~~~
-# linking inspection_controller
-# copying to inspection_controller
-Nothing to be done for build targets.
-INFO: cpp_supervisor: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
-INFO: inspection_controller: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller/inspection_controller 1
-MAIN SUPERVISOR LOOP
-File data_rov.txt opened successfully
-RugRobot 0 with Seed 480
-Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
-Webots working dir enabled
-world.txt
-/home/justin/MIT_Project/Thiemen/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
-20
-30
-40
-11
-02
-32
-42
-23
-33
-43
-04
-14
-Unsupported file formatting in world file
-
-Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
-Sample: 1 Robot position: 0.06 0.88
-9,0
-Sample: 0 Robot position: 0.16 0.71
-19,0
-Sample: 0 Robot position: 0.3 0.49
-29,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 0 Robot position: 0.06 0.68
-JJJJJJJJJJJ
-keras2cpp output: 
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 0 Robot position: 0.11 0.62
-JJJJJJJJJJJ
-keras2cpp output: 
-39,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.26 0.89
-JJJJJJJJJJJ
-keras2cpp output: 
-49,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.56 0.64
-JJJJJJJJJJJ
-keras2cpp output: 
-59,0
-69,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.66 0.42
-JJJJJJJJJJJ
-keras2cpp output: 
-79,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.42 0.72
-JJJJJJJJJJJ
-keras2cpp output: 
-89,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 0 Robot position: 0.51 0.29
-JJJJJJJJJJJ
-keras2cpp output: 
-99,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.78 0.63
-JJJJJJJJJJJ
-keras2cpp output: 
-109,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.8 0.43
-JJJJJJJJJJJ
-keras2cpp output: 
-119,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.87 0.07
-JJJJJJJJJJJ
-keras2cpp output: 
-129,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 0 Robot position: 0.93 0.28
-JJJJJJJJJJJ
-keras2cpp output: 
-139,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.54 0.13
-JJJJJJJJJJJ
-keras2cpp output: 
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.44 0.17
-JJJJJJJJJJJ
-keras2cpp output: 
-149,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.73 0.19
-JJJJJJJJJJJ
-keras2cpp output: 
-159,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 0 Robot position: 0.81 0.38
-JJJJJJJJJJJ
-keras2cpp output: 
-169,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.71 0.76
-JJJJJJJJJJJ
-keras2cpp output: 
-179,0
-[2Jmake clean
-Clean finished.
-make -j 32
-# updating inspection_controller.d
-# compiling inspection_controller.cpp
-In file included from inspection_controller.cpp:32:
-Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
-Algorithm_Template.hh:209:14: warning: unused variable ‘sample’ [-Wunused-variable]
-  209 |     for (int sample : messages) {
-      |              ^~~~~~
-Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
-Algorithm_Template.hh:62:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   62 |     getcwd(originalDir, sizeof(originalDir));
-      |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:65:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   65 |     chdir("../keras2cpp/build");
-      |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:82:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   82 |     chdir(originalDir);
-      |     ~~~~~^~~~~~~~~~~~~
-# linking inspection_controller
-# copying to inspection_controller
-Nothing to be done for build targets.
-INFO: cpp_supervisor: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
-INFO: inspection_controller: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller/inspection_controller 1
-MAIN SUPERVISOR LOOP
-File data_rov.txt opened successfully
-RugRobot 0 with Seed 480
-Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
-Webots working dir enabled
-world.txt
-/home/justin/MIT_Project/Thiemen/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
-20
-30
-40
-11
-02
-32
-42
-23
-33
-43
-04
-14
-Unsupported file formatting in world file
-
-Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
-Sample: 1 Robot position: 0.06 0.88
-9,0
-Sample: 0 Robot position: 0.16 0.71
-19,0
-Sample: 0 Robot position: 0.3 0.49
-29,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 0 Robot position: 0.06 0.68
-keras2cpp output: 
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 0 Robot position: 0.11 0.62
-keras2cpp output: 
-39,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.26 0.89
-keras2cpp output: 
-49,0
-Error: Unable to open file ../../data/curr_data.txt
-Sample: 1 Robot position: 0.56 0.64
-keras2cpp output: 
-[2Jmake clean
-Clean finished.
-make -j 32
-# updating inspection_controller.d
-# compiling inspection_controller.cpp
-In file included from inspection_controller.cpp:32:
-Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
-Algorithm_Template.hh:209:14: warning: unused variable ‘sample’ [-Wunused-variable]
-  209 |     for (int sample : messages) {
-      |              ^~~~~~
-Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
-Algorithm_Template.hh:62:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   62 |     getcwd(originalDir, sizeof(originalDir));
-      |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:65:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   65 |     chdir("../keras2cpp/build");
-      |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:82:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   82 |     chdir(originalDir);
-      |     ~~~~~^~~~~~~~~~~~~
-# linking inspection_controller
-# copying to inspection_controller
-Nothing to be done for build targets.
-[2Jmake clean
-Clean finished.
-make -j 32
-# updating inspection_controller.d
-# compiling inspection_controller.cpp
-In file included from inspection_controller.cpp:32:
-Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
-Algorithm_Template.hh:209:14: warning: unused variable ‘sample’ [-Wunused-variable]
-  209 |     for (int sample : messages) {
-      |              ^~~~~~
-Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
-Algorithm_Template.hh:62:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   62 |     getcwd(originalDir, sizeof(originalDir));
-      |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:65:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   65 |     chdir("../keras2cpp/build");
-      |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:82:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   82 |     chdir(originalDir);
-      |     ~~~~~^~~~~~~~~~~~~
-# linking inspection_controller
-# copying to inspection_controller
-Nothing to be done for build targets.
-INFO: cpp_supervisor: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
-INFO: inspection_controller: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller/inspection_controller 1
-MAIN SUPERVISOR LOOP
-File data_rov.txt opened successfully
-RugRobot 0 with Seed 480
-Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
-Webots working dir enabled
-world.txt
-/home/justin/MIT_Project/Thiemen/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
-20
-30
-40
-11
-02
-32
-42
-23
-33
-43
-04
-14
-Unsupported file formatting in world file
-
-Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
+Current working directory: "/home/diana/MIT/RugBotSim/controllers/inspection_controller"
 Sample: 1 Robot position: 0.06 0.88
 9,0
 Sample: 0 Robot position: 0.16 0.71
@@ -619,5 +106,46 @@ keras2cpp output: [0.000000, 0.000133, 0.999866]
 Sample: 0 Robot position: 0.93 0.82
 keras2cpp output: [0.988043, 0.000000, 0.011957]
 
+189,0
+Sample: 1 Robot position: 0.91 0.75
+keras2cpp output: [0.000000, 0.000296, 0.999704]
+
+Sample: 1 Robot position: 0.68 0.74
+keras2cpp output: [0.000000, 0.000190, 0.999810]
+
+199,0
+Sample: 1 Robot position: 0.86 0.52
+keras2cpp output: [0.000001, 0.000452, 0.999548]
+
+209,0
+Sample: 1 Robot position: 0.82 0.71
+keras2cpp output: [0.000001, 0.000589, 0.999410]
+
+219,0
+229,0
+Sample: 0 Robot position: 0.16 0.66
+keras2cpp output: [1.000000, 0.000000, 0.000000]
+
+239,0
+Sample: 1 Robot position: 0.06 0.91
+keras2cpp output: [0.000002, 0.001142, 0.998856]
+
+249,0
+Sample: 1 Robot position: 0.14 0.58
+keras2cpp output: [0.000004, 0.002063, 0.997933]
+
+259,0
+Sample: 0 Robot position: 0.13 0.13
+keras2cpp output: [1.000000, 0.000000, 0.000000]
+
+269,0
+Sample: 0 Robot position: 0.18 0.27
+keras2cpp output: [1.000000, 0.000000, 0.000000]
+
+279,0
+Sample: 0 Robot position: 0.11 0.66
+keras2cpp output: [1.000000, 0.000000, 0.000000]
+
+289,0
 INFO: cpp_supervisor: Terminating.
 INFO: inspection_controller: Terminating.
