@@ -83,10 +83,11 @@ void Algorithm1::runKeras2cppExecutable() {
     // Restore the original working directory
     chdir(originalDir);
 
-    // Remove square brackets from the output
+    // Remove square brackets and replace commas with spaces
     output.erase(std::remove_if(output.begin(), output.end(),
                                 [](char c) { return c == '[' || c == ']'; }),
                  output.end());
+    std::replace(output.begin(), output.end(), ',', ' ');
 
     // Print the cleaned output
     std::cout << "Cleaned keras2cpp output: " << output << std::endl;
@@ -109,6 +110,7 @@ void Algorithm1::runKeras2cppExecutable() {
         std::cout << "No values found in the output." << std::endl;
     }
 }
+
 
 void Algorithm1::run() {
     std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;

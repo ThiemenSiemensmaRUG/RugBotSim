@@ -41,6 +41,445 @@ Sample: 0 Robot position: 0.16 0.71
 Sample: 0 Robot position: 0.3 0.49
 29,0
 Sample: 0 Robot position: 0.06 0.68
+Cleaned keras2cpp output: 0.999990, 0.000000, 0.000010
+
+Index of the highest value: 0
+Highest value: 0.99999
+Sample: 0 Robot position: 0.11 0.62
+Cleaned keras2cpp output: 0.999979, 0.000000, 0.000021
+
+Index of the highest value: 0
+Highest value: 0.999979
+39,0
+Sample: 1 Robot position: 0.26 0.89
+Cleaned keras2cpp output: 0.000000, 0.000040, 0.999960
+
+Index of the highest value: 0
+Highest value: 0
+49,0
+Sample: 1 Robot position: 0.56 0.64
+Cleaned keras2cpp output: 0.000000, 0.000086, 0.999914
+
+Index of the highest value: 0
+Highest value: 0
+59,0
+69,0
+Sample: 1 Robot position: 0.66 0.42
+Cleaned keras2cpp output: 0.000000, 0.000110, 0.999890
+
+Index of the highest value: 0
+Highest value: 0
+79,0
+Sample: 1 Robot position: 0.42 0.72
+Cleaned keras2cpp output: 0.000000, 0.000105, 0.999894
+
+Index of the highest value: 0
+Highest value: 0
+89,0
+Sample: 0 Robot position: 0.51 0.29
+Cleaned keras2cpp output: 0.235075, 0.000458, 0.764467
+
+Index of the highest value: 0
+Highest value: 0.235075
+99,0
+Sample: 1 Robot position: 0.78 0.63
+Cleaned keras2cpp output: 0.000000, 0.000124, 0.999875
+
+Index of the highest value: 0
+Highest value: 0
+109,0
+Sample: 1 Robot position: 0.8 0.43
+Cleaned keras2cpp output: 0.000000, 0.000071, 0.999929
+
+Index of the highest value: 0
+Highest value: 0
+119,0
+Sample: 1 Robot position: 0.87 0.07
+Cleaned keras2cpp output: 0.000000, 0.000059, 0.999941
+
+Index of the highest value: 0
+Highest value: 0
+129,0
+Sample: 0 Robot position: 0.93 0.28
+Cleaned keras2cpp output: 0.001743, 0.038079, 0.960178
+
+Index of the highest value: 0
+Highest value: 0.001743
+139,0
+Sample: 1 Robot position: 0.54 0.13
+Cleaned keras2cpp output: 0.000000, 0.000081, 0.999919
+
+Index of the highest value: 0
+Highest value: 0
+Sample: 1 Robot position: 0.44 0.17
+Cleaned keras2cpp output: 0.000000, 0.000093, 0.999907
+
+Index of the highest value: 0
+Highest value: 0
+149,0
+Sample: 1 Robot position: 0.73 0.19
+Cleaned keras2cpp output: 0.000000, 0.000089, 0.999911
+
+Index of the highest value: 0
+Highest value: 0
+159,0
+Sample: 0 Robot position: 0.81 0.38
+Cleaned keras2cpp output: 0.668270, 0.000086, 0.331644
+
+Index of the highest value: 0
+Highest value: 0.66827
+169,0
+Sample: 1 Robot position: 0.71 0.76
+Cleaned keras2cpp output: 0.000000, 0.000133, 0.999866
+
+Index of the highest value: 0
+Highest value: 0
+179,0
+Sample: 0 Robot position: 0.93 0.82
+Cleaned keras2cpp output: 0.988043, 0.000000, 0.011957
+
+Index of the highest value: 0
+Highest value: 0.988043
+189,0
+Sample: 1 Robot position: 0.91 0.75
+Cleaned keras2cpp output: 0.000000, 0.000296, 0.999704
+
+Index of the highest value: 0
+Highest value: 0
+Sample: 1 Robot position: 0.68 0.74
+Cleaned keras2cpp output: 0.000000, 0.000190, 0.999810
+
+Index of the highest value: 0
+Highest value: 0
+199,0
+Sample: 1 Robot position: 0.86 0.52
+Cleaned keras2cpp output: 0.000001, 0.000452, 0.999548
+
+Index of the highest value: 0
+Highest value: 1e-06
+209,0
+Sample: 1 Robot position: 0.82 0.71
+Cleaned keras2cpp output: 0.000001, 0.000589, 0.999410
+
+Index of the highest value: 0
+Highest value: 1e-06
+219,0
+229,0
+Sample: 0 Robot position: 0.16 0.66
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+239,0
+Sample: 1 Robot position: 0.06 0.91
+Cleaned keras2cpp output: 0.000002, 0.001142, 0.998856
+
+Index of the highest value: 0
+Highest value: 2e-06
+249,0
+Sample: 1 Robot position: 0.14 0.58
+Cleaned keras2cpp output: 0.000004, 0.002063, 0.997933
+
+Index of the highest value: 0
+Highest value: 4e-06
+259,0
+Sample: 0 Robot position: 0.13 0.13
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+269,0
+Sample: 0 Robot position: 0.18 0.27
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+279,0
+Sample: 0 Robot position: 0.11 0.66
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+289,0
+Sample: 1 Robot position: 0.35 0.36
+Cleaned keras2cpp output: 0.000015, 0.008551, 0.991434
+
+Index of the highest value: 0
+Highest value: 1.5e-05
+299,0
+Sample: 0 Robot position: 0.24 0.78
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+309,0
+Sample: 1 Robot position: 0.6 0.6
+Cleaned keras2cpp output: 0.000044, 0.020543, 0.979412
+
+Index of the highest value: 0
+Highest value: 4.4e-05
+319,0
+Sample: 0 Robot position: 0.49 0.27
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+Sample: 0 Robot position: 0.53 0.24
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+329,0
+Sample: 1 Robot position: 0.48 0.67
+Cleaned keras2cpp output: 0.000082, 0.033619, 0.966300
+
+Index of the highest value: 0
+Highest value: 8.2e-05
+339,0
+Sample: 1 Robot position: 0.58 0.19
+Cleaned keras2cpp output: 0.000088, 0.037220, 0.962691
+
+Index of the highest value: 0
+Highest value: 8.8e-05
+349,0
+Sample: 0 Robot position: 0.19 0.25
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+359,0
+Sample: 1 Robot position: 0.47 0.06
+Cleaned keras2cpp output: 0.000095, 0.052600, 0.947305
+
+Index of the highest value: 0
+Highest value: 9.5e-05
+369,0
+Sample: 0 Robot position: 0.57 0.38
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+Sample: 0 Robot position: 0.52 0.34
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+379,0
+Sample: 0 Robot position: 0.21 0.57
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+389,0
+Sample: 0 Robot position: 0.1 0.39
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+399,0
+409,0
+Sample: 0 Robot position: 0.46 0.58
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+Sample: 0 Robot position: 0.68 0.39
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+419,0
+Sample: 0 Robot position: 0.27 0.18
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+429,0
+Sample: 0 Robot position: 0.11 0.25
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+439,0
+Sample: 1 Robot position: 0.14 0.58
+Cleaned keras2cpp output: 0.000006, 0.007937, 0.992057
+
+Index of the highest value: 0
+Highest value: 6e-06
+449,0
+Sample: 1 Robot position: 0.29 0.24
+Cleaned keras2cpp output: 0.000008, 0.009254, 0.990738
+
+Index of the highest value: 0
+Highest value: 8e-06
+459,0
+469,0
+Sample: 1 Robot position: 0.59 0.73
+Cleaned keras2cpp output: 0.000002, 0.003182, 0.996816
+
+Index of the highest value: 0
+Highest value: 2e-06
+479,0
+Sample: 0 Robot position: 0.5 0.85
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+489,0
+Sample: 1 Robot position: 0.4 0.4
+Cleaned keras2cpp output: 0.000001, 0.001832, 0.998166
+
+Index of the highest value: 0
+Highest value: 1e-06
+Sample: 1 Robot position: 0.42 0.14
+Cleaned keras2cpp output: 0.000001, 0.002073, 0.997925
+
+Index of the highest value: 0
+Highest value: 1e-06
+499,0
+Sample: 1 Robot position: 0.09 0.51
+Cleaned keras2cpp output: 0.000001, 0.001469, 0.998529
+
+Index of the highest value: 0
+Highest value: 1e-06
+509,0
+Sample: 1 Robot position: 0.22 0.82
+Cleaned keras2cpp output: 0.000001, 0.001989, 0.998010
+
+Index of the highest value: 0
+Highest value: 1e-06
+519,0
+Sample: 1 Robot position: 0.05 0.83
+Cleaned keras2cpp output: 0.000001, 0.001235, 0.998764
+
+Index of the highest value: 0
+Highest value: 1e-06
+529,0
+Sample: 1 Robot position: 0.12 0.91
+Cleaned keras2cpp output: 0.000000, 0.000934, 0.999066
+
+Index of the highest value: 0
+Highest value: 0
+Sample: 0 Robot position: 0.26 0.61
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+539,0
+Sample: 0 Robot position: 0.56 0.89
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+549,0
+Sample: 0 Robot position: 0.38 0.48
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+559,0
+Sample: 0 Robot position: 0.23 0.43
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+Sample: 1 Robot position: 0.09 0.56
+Cleaned keras2cpp output: 0.000000, 0.000546, 0.999453
+
+Index of the highest value: 0
+Highest value: 0
+569,0
+Sample: 1 Robot position: 0.35 0.28
+Cleaned keras2cpp output: 0.000000, 0.000308, 0.999691
+
+Index of the highest value: 0
+Highest value: 0
+579,0
+Sample: 0 Robot position: 0.11 0.75
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+589,0
+599,0
+Sample: 0 Robot position: 0.27 0.62
+Cleaned keras2cpp output: 1.000000, 0.000000, 0.000000
+
+Index of the highest value: 0
+Highest value: 1
+Sample: 1 Robot position: 0.28 0.9
+Cleaned keras2cpp output: 0.000000, 0.000146, 0.999854
+
+Index of the highest value: 0
+Highest value: 0
+609,0
+619,0
+Sample: 1 Robot position: 0.6 0.08
+Cleaned keras2cpp output: 0.000000, 0.000203, 0.999797
+
+Index of the highest value: 0
+Highest value: 0
+629,0
+Sample: 1 Robot position: 0.3 0.33
+Cleaned keras2cpp output: 0.000000, 0.000103, 0.999897
+
+Index of the highest value: 0
+Highest value: 0
+639,0
+[2Jmake clean
+Clean finished.
+make -j 32
+# updating inspection_controller.d
+# compiling inspection_controller.cpp
+In file included from inspection_controller.cpp:32:
+Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
+Algorithm_Template.hh:236:14: warning: unused variable ‘sample’ [-Wunused-variable]
+  236 |     for (int sample : messages) {
+      |              ^~~~~~
+Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
+Algorithm_Template.hh:64:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   64 |     getcwd(originalDir, sizeof(originalDir));
+      |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Algorithm_Template.hh:67:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   67 |     chdir("../keras2cpp/build");
+      |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
+Algorithm_Template.hh:84:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   84 |     chdir(originalDir);
+      |     ~~~~~^~~~~~~~~~~~~
+# linking inspection_controller
+# copying to inspection_controller
+Nothing to be done for build targets.
+INFO: cpp_supervisor: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/cpp_supervisor/cpp_supervisor 0
+INFO: inspection_controller: Starting controller: /home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller/inspection_controller 1
+MAIN SUPERVISOR LOOP
+File data_rov.txt opened successfully
+RugRobot 0 with Seed 480
+Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
+Webots working dir enabled
+world.txt
+/home/justin/MIT_Project/Thiemen/RugBotSim/jobfiles/Run_1/tmp/job_1/world.txt
+20
+30
+40
+11
+02
+32
+42
+23
+33
+43
+04
+14
+Unsupported file formatting in world file
+
+Current working directory: "/home/justin/MIT_Project/Thiemen/RugBotSim/controllers/inspection_controller"
+Sample: 1 Robot position: 0.06 0.88
+9,0
+Sample: 0 Robot position: 0.16 0.71
+19,0
+Sample: 0 Robot position: 0.3 0.49
+29,0
+Sample: 0 Robot position: 0.06 0.68
 Cleaned keras2cpp output: 0.999990  0.000000  0.000010
 
 Index of the highest value: 0
@@ -152,252 +591,5 @@ Cleaned keras2cpp output: 0.000000  0.000190  0.999810
 Index of the highest value: 2
 Highest value: 0.99981
 199,0
-Sample: 1 Robot position: 0.86 0.52
-Cleaned keras2cpp output: 0.000001  0.000452  0.999548
-
-Index of the highest value: 2
-Highest value: 0.999548
-209,0
-Sample: 1 Robot position: 0.82 0.71
-Cleaned keras2cpp output: 0.000001  0.000589  0.999410
-
-Index of the highest value: 2
-Highest value: 0.99941
-219,0
-229,0
-Sample: 0 Robot position: 0.16 0.66
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-239,0
-Sample: 1 Robot position: 0.06 0.91
-Cleaned keras2cpp output: 0.000002  0.001142  0.998856
-
-Index of the highest value: 2
-Highest value: 0.998856
-249,0
-Sample: 1 Robot position: 0.14 0.58
-Cleaned keras2cpp output: 0.000004  0.002063  0.997933
-
-Index of the highest value: 2
-Highest value: 0.997933
-259,0
-Sample: 0 Robot position: 0.13 0.13
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-269,0
-Sample: 0 Robot position: 0.18 0.27
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-279,0
-Sample: 0 Robot position: 0.11 0.66
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-289,0
-Sample: 1 Robot position: 0.35 0.36
-Cleaned keras2cpp output: 0.000015  0.008551  0.991434
-
-Index of the highest value: 2
-Highest value: 0.991434
-299,0
-Sample: 0 Robot position: 0.24 0.78
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-309,0
-Sample: 1 Robot position: 0.6 0.6
-Cleaned keras2cpp output: 0.000044  0.020543  0.979412
-
-Index of the highest value: 2
-Highest value: 0.979412
-319,0
-Sample: 0 Robot position: 0.49 0.27
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-Sample: 0 Robot position: 0.53 0.24
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-329,0
-Sample: 1 Robot position: 0.48 0.67
-Cleaned keras2cpp output: 0.000082  0.033619  0.966300
-
-Index of the highest value: 2
-Highest value: 0.9663
-339,0
-Sample: 1 Robot position: 0.58 0.19
-Cleaned keras2cpp output: 0.000088  0.037220  0.962691
-
-Index of the highest value: 2
-Highest value: 0.962691
-349,0
-Sample: 0 Robot position: 0.19 0.25
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-359,0
-Sample: 1 Robot position: 0.47 0.06
-Cleaned keras2cpp output: 0.000095  0.052600  0.947305
-
-Index of the highest value: 2
-Highest value: 0.947305
-369,0
-Sample: 0 Robot position: 0.57 0.38
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-Sample: 0 Robot position: 0.52 0.34
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-379,0
-Sample: 0 Robot position: 0.21 0.57
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-389,0
-Sample: 0 Robot position: 0.1 0.39
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-399,0
-409,0
-Sample: 0 Robot position: 0.46 0.58
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-Sample: 0 Robot position: 0.68 0.39
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-419,0
-Sample: 0 Robot position: 0.27 0.18
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-429,0
-Sample: 0 Robot position: 0.11 0.25
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-439,0
-Sample: 1 Robot position: 0.14 0.58
-Cleaned keras2cpp output: 0.000006  0.007937  0.992057
-
-Index of the highest value: 2
-Highest value: 0.992057
-449,0
-Sample: 1 Robot position: 0.29 0.24
-Cleaned keras2cpp output: 0.000008  0.009254  0.990738
-
-Index of the highest value: 2
-Highest value: 0.990738
-459,0
-469,0
-Sample: 1 Robot position: 0.59 0.73
-Cleaned keras2cpp output: 0.000002  0.003182  0.996816
-
-Index of the highest value: 2
-Highest value: 0.996816
-479,0
-Sample: 0 Robot position: 0.5 0.85
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-489,0
-Sample: 1 Robot position: 0.4 0.4
-Cleaned keras2cpp output: 0.000001  0.001832  0.998166
-
-Index of the highest value: 2
-Highest value: 0.998166
-Sample: 1 Robot position: 0.42 0.14
-Cleaned keras2cpp output: 0.000001  0.002073  0.997925
-
-Index of the highest value: 2
-Highest value: 0.997925
-499,0
-Sample: 1 Robot position: 0.09 0.51
-Cleaned keras2cpp output: 0.000001  0.001469  0.998529
-
-Index of the highest value: 2
-Highest value: 0.998529
-509,0
-Sample: 1 Robot position: 0.22 0.82
-Cleaned keras2cpp output: 0.000001  0.001989  0.998010
-
-Index of the highest value: 2
-Highest value: 0.99801
-519,0
-Sample: 1 Robot position: 0.05 0.83
-Cleaned keras2cpp output: 0.000001  0.001235  0.998764
-
-Index of the highest value: 2
-Highest value: 0.998764
-529,0
-Sample: 1 Robot position: 0.12 0.91
-Cleaned keras2cpp output: 0.000000  0.000934  0.999066
-
-Index of the highest value: 2
-Highest value: 0.999066
-Sample: 0 Robot position: 0.26 0.61
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-539,0
-Sample: 0 Robot position: 0.56 0.89
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-549,0
-Sample: 0 Robot position: 0.38 0.48
-Cleaned keras2cpp output: 1.000000  0.000000  0.000000
-
-Index of the highest value: 0
-Highest value: 1
-559,0
-[2Jmake clean
-Clean finished.
-make -j 32
-# updating inspection_controller.d
-# compiling inspection_controller.cpp
-In file included from inspection_controller.cpp:32:
-Algorithm_Template.hh: In member function ‘void Algorithm1::recvSample()’:
-Algorithm_Template.hh:234:14: warning: unused variable ‘sample’ [-Wunused-variable]
-  234 |     for (int sample : messages) {
-      |              ^~~~~~
-Algorithm_Template.hh: In member function ‘void Algorithm1::runKeras2cppExecutable()’:
-Algorithm_Template.hh:64:11: warning: ignoring return value of ‘char* getcwd(char*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   64 |     getcwd(originalDir, sizeof(originalDir));
-      |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:67:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   67 |     chdir("../keras2cpp/build");
-      |     ~~~~~^~~~~~~~~~~~~~~~~~~~~~
-Algorithm_Template.hh:84:10: warning: ignoring return value of ‘int chdir(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   84 |     chdir(originalDir);
-      |     ~~~~~^~~~~~~~~~~~~
-# linking inspection_controller
-# copying to inspection_controller
-Nothing to be done for build targets.
+INFO: cpp_supervisor: Terminating.
+INFO: inspection_controller: Terminating.
