@@ -59,6 +59,7 @@ void Algorithm1::run() {
     pos = roundToNearest10(robot.getPos());
     robot.setCustomData("");
     settings.readSettings();
+    
 
     while(robot.d_robot->step(TIME_STEP) != -1) {
         

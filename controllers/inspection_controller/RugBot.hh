@@ -171,8 +171,8 @@ bool RugRobot::collAvoid() {
 }
 
 void RugRobot::setSpeed(double speedl, double speedr) {
-    speedl = std::clamp(speedl, -100.0, 100.0);
-    speedr = std::clamp(speedr, -100.0, 100.0);
+    // speedl = std::clamp(speedl, -100.0, 100.0);
+    // speedr = std::clamp(speedr, -100.0, 100.0);
 
     leftMotor->setVelocity(speedl / 100 * (1 - motor_dev) * speed_dev * 10);
     rightMotor->setVelocity(speedr / 100 * (1 + motor_dev) * speed_dev * 10);
@@ -227,7 +227,7 @@ std::vector<int> RugRobot::getMessages() {
 void RugRobot::generateRW(){
     rw_time =rw_time_gen(generator);
     rw_angle = rw_angle_gen(generator);
-    rw_time = std::clamp(rw_time,1000.0,20000.0);
+    //rw_time = std::clamp(rw_time,1000.0,20000.0);
     //std::cout<<"RW parameters= "<<rw_time<<',' <<rw_angle<<'\n';
     state = STATE_PAUSE;
     
