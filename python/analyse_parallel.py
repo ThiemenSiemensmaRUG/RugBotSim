@@ -297,9 +297,9 @@ def plot_grid_results_error_bars(axs, index, time_arr, acc_arr, time_arr_std, ac
 
         # Extract standard deviations
         time_48_std = time_arr_std[index, part, :]  #/ np.sqrt(batch_size)
-        acc_48_std = acc_arr_std[index + 5, part, :] / np.sqrt(batch_size)
+        acc_48_std = acc_arr_std[index + 5, part, :] #/ np.sqrt(batch_size)
         time_46_std = time_arr_std[index + 5, part, :] #/ np.sqrt(batch_size)
-        acc_46_std = acc_arr_std[index, part, :] / np.sqrt(batch_size)
+        acc_46_std = acc_arr_std[index, part, :]# / np.sqrt(batch_size)
 
         # X positions for the scatter plot
         x_vals = np.linspace(0, 2, 3) + t
@@ -358,6 +358,8 @@ def plot_robustness_analysis():
     M4_46 = organized_alternating_matrix_46()
     M5_46 = random_matrix(0.46)
     Ms = [M1,M2,M3,M4,M5,M1_46,M2_46,M3_46,M4_46,M5_46]
+    for m in Ms:
+        print(f"MI:{calculate_morans_I(m)}, E:{entropy(m)}")
     matrices = ["$M_{1_{48}}$","$M_{2_{48}}$","$M_{3_{48}}$","$M_{4_{48}}$","$M_{5_{48}}$","$M_{1_{46}}$","$M_{2_{46}}$","$M_{3_{46}}$","$M_{4_{46}}$","$M_{5_{46}}$"]
     methods = ["$u^-$","$u^+$","$u^s$"]
     run = 150
@@ -370,7 +372,7 @@ def plot_robustness_analysis():
     entropies = []
     MIs = []
     #set output to "belief" to plot belief
-    output = "belief"
+    output = "d"
     particles = [0,1]
     for m in range(len(matrices)):
         for part in particles:
@@ -432,16 +434,20 @@ def plot_robustness_analysis():
     else:
         axes[1,0].set_ylim(0,1300)
         axes[2,0].set_ylim(0,1300)
-        axes[3,0].set_ylim(0.55,0.9)
-        axes[4,0].set_ylim(0.65,1)
-
-        for ax in axes[1:, :].flatten():  # Flatten in case it's a 2D array of axes
+        axes[3,0].set_ylim(0.5,1)
+        axes[4,0].set_ylim(0.5,1)
+        for ax in axes[1:4, :].flatten():  # Flatten in case it's a 2D array of axes
+            ax.set_xticks(range(3))
+            ax.set_xticklabels([])
+            ax.grid()
+        for ax in axes[4:, :].flatten():  # Flatten in case it's a 2D array of axes
             ax.set_xticks(range(3))
             ax.set_xticklabels(methods,fontsize=8)
             ax.grid()
         for ax in axes[1,:]:
-            ax.legend(loc='upper center',ncols=2,bbox_to_anchor=(0.5,1.25),fontsize=4)
-
+            ax.legend(loc='upper center',ncols=2,bbox_to_anchor=(0.5,1.25),fontsize=6)
+        for ax in axes[3:,0]:
+            ax.set_yticks([0.5,0.75,1.0])
         axes[0, 0].set_ylabel('Environment', fontsize=8)
         axes[1, 0].set_ylabel('$\\text{Time}_{f=0.48}$', fontsize=8)
         axes[2, 0].set_ylabel('$\\text{Time}_{f=0.46}$', fontsize=8)
@@ -454,6 +460,49 @@ def plot_robustness_analysis():
     
     plt.show()
     
+def plot_robustness_analysis_2():
+    M1 = diagonal_matrix()
+    M2 = stripe_matrix()
+    M3 = block_diagonal_matrix()
+    M4 = organized_alternating_matrix()
+    M5 = random_matrix()
+    M1_46 = diagonal_matrix_46()
+    M2_46 = stripe_matrix_46()
+    M3_46 = block_diagonal_matrix_46()
+    M4_46 = organized_alternating_matrix_46()
+    M5_46 = random_matrix(0.46)
+    Ms = [M1,M2,M3,M4,M5,M1_46,M2_46,M3_46,M4_46,M5_46]
+    matrices = ["$M_{1_{48}}$","$M_{2_{48}}$","$M_{3_{48}}$","$M_{4_{48}}$","$M_{5_{48}}$","$M_{1_{46}}$","$M_{2_{46}}$","$M_{3_{46}}$","$M_{4_{46}}$","$M_{5_{46}}$"]
+    methods = ["$u^-$","$u^+$","$u^s$"]
+    run = 150
+    acc = np.empty(shape=(10,2,3),dtype=object)
+    time = np.empty(shape = (10,2,3),dtype=object)
+    acc_std = np.empty(shape=(10,2,3),dtype=object)
+    time_std = np.empty(shape = (10,2,3),dtype=object)
+    beliefs = np.empty(shape = (10,2,3),dtype = object)
+    beliefs_std = np.empty(shape = (10,2,3),dtype = object)
+    entropies = []
+    MIs = []
+    #set output to "belief" to plot belief
+    output = "belief"
+    particles = [0,1]
+    for m in range(len(matrices)):
+        for part in particles:
+            entropies.append(entropy(Ms[m]))
+            MIs.append(calculate_morans_I(Ms[m]))
+            for feedback in range(len(methods)):
+                    run_ = f"/grid/parallel_{run}"
+                    x = get_folder_results(run_,batch_size,size =10)
+                    time_,acc_,time_std_,acc_std_ = x.get_dec_time_acc(True)
+                    _, beliefs[m,part,feedback] = x.compute_average_belief_over_time()
+                    _, beliefs_std[m,part,feedback] = x.compute_std_beliefs_over_time()
+                    acc[m,part,feedback] = acc_
+                    time[m,part,feedback] = time_
+                    acc_std[m,part,feedback] = acc_std_
+                    time_std[m,part,feedback] = time_std_
+                    run+=1
+
+    print(time.astype(float))
 
         
 
@@ -463,4 +512,5 @@ def plot_robustness_analysis():
 if __name__ == "__main__":
 
     batch_size = 100
+
     plot_robustness_analysis()

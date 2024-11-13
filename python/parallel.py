@@ -71,7 +71,7 @@ CAL_GRID = np.array([
                     [1, 0, 0, 1, 0]   # Row corresponding to y=0.2 to y=0.0
                 ])
 
-
+print(calculate_morans_I(CAL_GRID),entropy(CAL_GRID))
 
 P_fp = 0
 P_fn = 0

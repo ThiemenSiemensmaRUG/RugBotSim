@@ -259,6 +259,7 @@ def organized_alternating_matrix():
                 M[i, j] = 1
     M[0,0] = 0
     M[-1,-1] = 0
+
     return M
 
 def organized_alternating_matrix_46():
@@ -267,8 +268,8 @@ def organized_alternating_matrix_46():
         for j in range(10):
             if (i + j) % 2 == 0:  # Alternating pattern
                 M[i, j] = 1
-    M[0,0] = 0
-    M[-1,-1] = 0
+    # M[0,0] = 0
+    # M[-1,-1] = 0
     M[4,4] = 0
     M[4,6] = 0
     
@@ -280,7 +281,7 @@ def random_matrix(fill = 0.48):
 
     total_elements = 100
     elements_to_fill = int(fill * total_elements)
-    np.random.seed(1)
+    np.random.seed(3)
     # Randomly choose indices to set to 1
     fill_indices = np.random.choice(total_elements, elements_to_fill, replace=False)
     M[np.unravel_index(fill_indices, (10,10))] = 1
