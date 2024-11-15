@@ -194,6 +194,7 @@ int Environment::getSample(double x, double y) {
         }
     }
 
+
     if (method_read == 1) { // Use distributions
         for (std::pair<int, int> coloredTile : d_grid) {
             
