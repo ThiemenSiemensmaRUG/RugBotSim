@@ -35,7 +35,9 @@ class createWorld():
 
     def create_header(self):
         self.file.write("""#VRML_SIM R2023b utf8
-
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/apartment_structure/protos/Wall.proto"
 EXTERNPROTO "../protos/RovableV2.proto"
 
 WorldInfo {
@@ -160,8 +162,8 @@ Robot {
     def save_settings(self,run_dir,c_settings,s_settings):
         # Open a file in write mode
 
-        fcsettings =  f"{run_dir}I_{self.instance}/c_settings.txt"
-        fssettings =  f"{run_dir}I_{self.instance}/s_settings.txt"
+        fcsettings =  f"{run_dir}Instance_{self.instance}/c_settings.txt"
+        fssettings =  f"{run_dir}Instance_{self.instance}/s_settings.txt"
         for file,setting in zip([fcsettings,fssettings],[c_settings,s_settings]):
             with open(file, 'w') as file:
                 for value in setting.values():
