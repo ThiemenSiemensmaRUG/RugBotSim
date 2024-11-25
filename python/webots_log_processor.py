@@ -422,6 +422,7 @@ class WebotsProcessor:
 def preprocess_multi_exp(folder,file,outputfolder,suffix=""):
     df = pd.read_csv(folder + file)
     df = df.dropna().reset_index()
+    df['Timestamp'] = df['Timestamp'] - df['Timestamp'].iloc[0]
     print(df)
     df1 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p1','df1','ss','sr','a1','b1','CA','SE']]
     df2 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p2','df2','ss','sr','a2','b2','CA','SE']]
