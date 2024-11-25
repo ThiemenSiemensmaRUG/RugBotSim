@@ -181,7 +181,11 @@ void Algorithm1::sendSample(int sample){
 void Algorithm1::getSample(int posx, int posy) {
     
     // Construct the file path based on posx and posy
-    std::string filePath = "/home/thiemenrug/Documents/GitHub/RugBotSim/measurements/acc_x" + std::to_string(posx) + "_y" + std::to_string(posy) + ".txt";
+    std::filesystem::path currentPath = std::filesystem::current_path();
+    // Assuming this code is located in the controllers/inspection_controller directory
+    std::filesystem::path basePath = currentPath.parent_path().parent_path();
+    std::string filePath = (basePath / "measurements" / ("acc_x" + std::to_string(posx) + "_y" + std::to_string(posy) + ".txt")).string();
+
     //std::cout << "Attempting to open file: " << filePath << std::endl; // Add this line for debugging
 
     // Open the file
@@ -289,17 +293,3 @@ void Algorithm1::saveFilteredData(const std::vector<double>& data, const std::st
     outputFile.close();
 }
 #endif // INCLUDED_ALGORITHM1_HH_
-
-
-
-
-
-
-
-
-
-
-
-
-
-
