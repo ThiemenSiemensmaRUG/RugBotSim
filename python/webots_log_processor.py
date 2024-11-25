@@ -419,3 +419,44 @@ class WebotsProcessor:
 
 
 
+def preprocess_multi_exp(folder,file,outputfolder,suffix=""):
+    df = pd.read_csv(folder + file)
+    df = df.dropna().reset_index()
+    print(df)
+    df1 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p1','df1','ss','sr','a1','b1','CA','SE']]
+    df2 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p2','df2','ss','sr','a2','b2','CA','SE']]
+    df3 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p3','df3','ss','sr','a3','b3','CA','SE']]
+    df1 = df1.rename(columns={
+                'p1':'Belief',
+                'df1':'d_f',
+                'a1':'Alpha',
+                'b1':"Beta",
+                'ss':"Swarm send",
+                'sr':"Swarm Recv",
+                "CA":"Collision Time",
+                "SE":"Sense Time"
+                    })
+    df2 = df2.rename(columns={
+                'p2':'Belief',
+                'df2':'d_f',
+                'a2':'Alpha',
+                'b2':"Beta",
+                'ss':"Swarm send",
+                'sr':"Swarm Recv",
+                "CA":"Collision Time",
+                "SE":"Sense Time"
+                    })
+    df3 = df3.rename(columns={
+                'p3':'Belief',
+                'df3':'d_f',
+                'a3':'Alpha',
+                'b3':"Beta",
+                'ss':"Swarm send",
+                'sr':"Swarm Recv",
+                "CA":"Collision Time",
+                "SE":"Sense Time"
+                    })
+    df1.to_csv(outputfolder + "/Umin"  + suffix + ".csv")
+    df2.to_csv(outputfolder + "/Uplus" + suffix + ".csv")
+    df3.to_csv(outputfolder + "/Us"    + suffix + ".csv")
+    return [df1,df2,df3]

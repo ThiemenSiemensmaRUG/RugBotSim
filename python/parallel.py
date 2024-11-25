@@ -126,11 +126,12 @@ x_empirical =  [7500,15000,2000,50,320]
 
 run_directory = 150 #Start dir
 grid_start_seed = 400
-for pattern in [M1,M2,M3,M4,M5,M1_46,M2_46,M3_46,M4_46,M5_46]:
-    for pos in [x,x_empirical]:
-    
-        for feedback in [0,1,2]:#Umin, Uplus and Us
-            launch_batch(batch_size=batch_size,workers=number_of_thread,x_=pos,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=5,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
-            run_directory+=1
+for nrovs in [5,6,7,8,9,10]:
+    for pattern in [M1,M2,M3,M4,M5,M1_46,M2_46,M3_46,M4_46,M5_46]:
+        for pos in [x,x_empirical]:
+        
+            for feedback in [0,1,2]:#Umin, Uplus and Us
+                launch_batch(batch_size=batch_size,workers=1,x_=pos,run_dir=run_directory,feedback=feedback,fill_ratio=0.48,robots=nrovs,grid=pattern,size=pattern.shape[0],desc=f"Moran Index with n_robots {5}, feedback {feedback}",)   
+                run_directory+=1
 
 
