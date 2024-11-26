@@ -264,8 +264,7 @@ if plot_dec_acc:
     # Adjust x-axis for grouped appearance
     ax.set_xticks(np.arange(1, len(n_rovs) + 1) + 0.2)  # Center x-ticks
     ax.set_xticklabels(n_rovs)
-    ax.set_xlabel("Number of Robots")
-    ax.set_ylabel("Accuracy")
+
 
     # Create a general legend above the figure
     handles, labels_legend = ax.get_legend_handles_labels()
@@ -273,9 +272,12 @@ if plot_dec_acc:
         handles=handles, 
         labels=[f"{label}" for label in labels],  # Adjusted legend labels
         loc="upper center", 
-        bbox_to_anchor=(0.5, 1.15),  # Place legend above the figure
-        ncol=3,  # Place the legend in 3 columns
-        fontsize=10
+        bbox_to_anchor=(0.5, 1.25),  # Place legend above the figure
+        ncol=4,  # Place the legend in 3 columns
+        fontsize=9
     )
+    ax.set_xlabel("Number of Robots")
+    ax.set_ylabel("Accuracy")
     plt.tight_layout()
+    plt.savefig("dec_accuracy.pdf",  format='pdf', bbox_inches='tight', pad_inches=0.05)  # Save the figure as a PDF
     plt.show()
