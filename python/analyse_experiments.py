@@ -1,4 +1,4 @@
-from webots_log_processor import WebotsProcessor,preprocess_multi_exp
+from webots_log_processor import WebotsProcessor,preprocess_multi_exp,compute_loss
 import numpy as np
 import matplotlib.pyplot as plt
 from utils import *
@@ -43,7 +43,28 @@ n_rovs = np.array([5,6,7,8,9,10])
 #         except:
 #             None
     
+total_loss = np.empty(shape=(3,6),dtype= object)
+total_loss_p = np.empty(shape=(3,6),dtype=object)
+total_loss_std = np.empty(shape=(3,6),dtype= object)
+total_loss_p_std = np.empty(shape=(3,6),dtype=object)
+for i, m in enumerate(['Umin','Uplus','Us']):
+    for r,rov in enumerate(n_rovs):
 
+        _f = folder + f"{rov}_rovs/"
+        loss_temp = []
+        loss_p_temp = []
+        for k in range(1,16):
+            
+            file = f"{m}_{k}.csv"
+            loss,loss_p= compute_loss(_f + file)
+            loss_temp.append(loss)
+            loss_p_temp.append(loss_p)
+    
+        total_loss[i,r] = create_one_array(loss_temp).mean()
+        total_loss_p[i,r] = create_one_array(loss_p_temp).mean()
+
+        total_loss_std[i,r] = create_one_array(loss_temp).std() #/ np.sqrt(len(create_one_array(loss_temp)))
+        total_loss_p_std[i,r] = create_one_array(loss_p_temp).std()# / np.sqrt(len(create_one_array(loss_p_temp)))
 
 # #files used
 
@@ -51,6 +72,7 @@ plot_dec_time = True
 plot_ca_time = True
 plot_distance = True
 plot_dec_acc = True
+plot_loss = True
 
 _5 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 _6 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
@@ -91,7 +113,7 @@ for i,rov in enumerate(n_rovs):
         CA_times[k,i] = np.mean(create_one_array(ca_)) / 1000
         CA_times_std[k,i] = np.std(create_one_array(ca_) / np.sqrt(len(create_one_array(ca_)))) /1000
         distance_d[k,i] = np.mean(d) 
-        distance_d_std[k,i] =( np.std(d) / np.sqrt(len(d))) 
+        distance_d_std[k,i] =( np.std(d)/ np.sqrt(len(d))) 
         belief_over_time[k,i] = b
     t,a = x_min.get_dec_time_acc_robots()
     times_umin[i] = t
@@ -123,6 +145,8 @@ n_rovs = [5, 6, 7, 8, 9, 10]  # Number of robots corresponding to `times_umin`
 times_umin = [np.array(times_umin[i]).flatten() for i in range(len(times_umin))]
 times_uplus = [np.array(times_uplus[i]).flatten() for i in range(len(times_uplus))]
 times_us = [np.array(times_us[i]).flatten() for i in range(len(times_us))]
+
+linestyles_ = ['-','--','-.']
 
 if plot_dec_time:
     # Combine all datasets into one for plotting
@@ -176,11 +200,11 @@ if plot_dec_time:
             mean,
             marker='o',
             color=colors[i],
-            label=f"Mean {labels[i]}",
-            linestyle='--',
-            markersize=6,
+            linestyle=linestyles_[i],
+            markersize=4,
             markeredgecolor = "black",
-            linewidth=1.5
+            linewidth=1.5,
+            label=f"Mean {labels[i]}"
         )
         # Adding error bars (standard error)
         ax.errorbar(
@@ -189,11 +213,11 @@ if plot_dec_time:
             yerr=se,  # Standard error
             fmt='o',
             color=colors[i],
-            markersize=6,
+            markersize=5,
             markeredgecolor = "black",
             linestyle='',
-            capsize=5,  # Error bar cap size
-            elinewidth=2
+            capsize=2.5,  # Error bar cap size
+            elinewidth=1.5
         )
 
     # Adjust x-axis for grouped appearance
@@ -236,8 +260,8 @@ if plot_dec_acc:
             marker='o',
             color=colors[i],
             label=f"Mean {labels[i]}",
-            linestyle='--',
-            markersize=6,
+            linestyle=linestyles_[i],
+            markersize=4,
             markeredgecolor = "black",
             linewidth=1.5
         )
@@ -248,16 +272,17 @@ if plot_dec_acc:
             yerr=se,  # Standard error
             fmt='o',
             color=colors[i],
-            markersize=6,
+            markersize=5,
             markeredgecolor = "black",
             linestyle='',
-            capsize=3,  # Error bar cap size
+            capsize=2.5,  # Error bar cap size
             elinewidth=1
         )
 
     # Adjust x-axis for grouped appearance
     ax.set_xticks(np.arange(1, len(n_rovs) + 1) + 0.2)  # Center x-ticks
     ax.set_xticklabels(n_rovs)
+    ax.set_yticks([0.6,0.7,0.8,0.9])
 
 
     # Create a general legend above the figure
@@ -289,8 +314,8 @@ if plot_ca_time:
             marker='o',
             color=colors[i],
             label=f"Mean {labels[i]}",
-            linestyle='--',
-            markersize=6,
+            linestyle=linestyles_[i],
+            markersize=4,
             markeredgecolor = "black",
             linewidth=1.5
         )
@@ -301,10 +326,10 @@ if plot_ca_time:
             yerr=se,  # Standard error
             fmt='o',
             color=colors[i],
-            markersize=6,
+            markersize=5,
             markeredgecolor = "black",
             linestyle='',
-            capsize=3,  # Error bar cap size
+            capsize=2.5,  # Error bar cap size
             elinewidth=1
         )
 
@@ -343,8 +368,8 @@ if plot_distance:
             marker='o',
             color=colors[i],
             label=f"Mean {labels[i]}",
-            linestyle='--',
-            markersize=6,
+            linestyle=linestyles_[i],
+            markersize=4,
             markeredgecolor = "black",
             linewidth=1.5
         )
@@ -355,10 +380,10 @@ if plot_distance:
             yerr=se,  # Standard error
             fmt='o',
             color=colors[i],
-            markersize=6,
+            markersize=5,
             markeredgecolor = "black",
             linestyle='',
-            capsize=3,  # Error bar cap size
+            capsize=2.5,  # Error bar cap size
             elinewidth=1
         )
 
@@ -383,6 +408,63 @@ if plot_distance:
     plt.tight_layout()
     plt.savefig("exp_distance_driven.pdf",  format='pdf', bbox_inches='tight', pad_inches=0.025)  # Save the figure as a PDF
 
+
+if plot_loss:
+    colors = ["black", "red", "green"]
+    labels = ["$u^-$", "$u^+$", "$u^s$"]
+    fig, ax = plt.subplots(figsize=(6.4*0.5, 4.8*0.5))
+    for i,m in enumerate(range(len(labels))):
+        
+        mean = np.array(total_loss_p[i,:]).flatten().astype(float)
+        se = np.array(total_loss_p_std[i,:]).flatten().astype(float)
+
+        ax.plot(
+            np.arange(1, len(n_rovs) + 1) + i * 0.2,  
+            mean,
+            marker='o',
+            color=colors[i],
+            linestyle=linestyles_[i],
+            markersize=4,
+            markeredgecolor = "black",
+            linewidth=1.5,
+            label = labels[i]
+        )
+        handles, labels_legend = ax.get_legend_handles_labels()
+                # Adding error bars (standard error)
+        ax.errorbar(
+            np.arange(1, len(n_rovs) + 1) + i * 0.2,  # Match violin x-positions
+            mean,
+            yerr=se,  # Standard error
+            fmt='o',
+            color=colors[i],
+            markersize=5,
+            markeredgecolor = "black",
+            linestyle='',
+            capsize=2.5,  # Error bar cap size
+            elinewidth=1
+        )
+
+
+    # Adjust x-axis for grouped appearance
+    ax.set_xticks(np.arange(1, len(n_rovs) + 1) + 0.2)  # Center x-ticks
+    ax.set_xticklabels(n_rovs)
+
+    ax.set_yticks([0.00,2.50,5.00,7.50,10.0])
+    # Create a general legend above the figure
+    handles, labels_legend = ax.get_legend_handles_labels()
+
+    ax.legend(
+        handles=handles, 
+        labels=[f"{label}" for label in labels],  # Adjusted legend labels
+        loc="upper center", 
+        bbox_to_anchor=(0.5, 1.25),  # Place legend above the figure
+        ncol=4,  # Place the legend in 3 columns
+        fontsize=9
+    )
+    ax.set_xlabel("Number of Robots")
+    ax.set_ylabel("Package Loss [%]")
+    plt.tight_layout()
+    plt.savefig("network_loss.pdf",  format='pdf', bbox_inches='tight', pad_inches=0.025)  # Save the figure as a PDF
 
 
 plt.show()

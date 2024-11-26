@@ -430,12 +430,35 @@ class WebotsProcessor:
 
 
 
-
+def compute_loss(file):
+    df = pd.read_csv(file)
+    total_m = 0
+    for rov in df["ROV Number"].unique():
+        df_ = df[df['ROV Number'] == rov]
+        #print(total_m,max(df_['Swarm Send']))
+        total_m += max(df_['Swarm Send'])
+    loss = []
+    loss_p = []
+    for rov in df["ROV Number"].unique():
+        df_ = df[df['ROV Number'] == rov]
+        #print(df_.iloc[-1])
+        
+        loss_ =(total_m - max(df_['Swarm Recv']) - max(df_['Swarm Send']))
+        loss_p_ =( loss_ / total_m) * 100
+        # print(df_['Swarm Recv'].iloc[-1])
+        #print(rov,total_m, max(df_['Swarm Recv']),max(df_['Swarm Send']),loss_,loss_p_)
+        loss.append(loss_)
+        loss_p.append(loss_p_)
+    
+    return loss, loss_p
 
 def preprocess_multi_exp(folder,file,outputfolder,suffix=""):
     df = pd.read_csv(folder + file)
     df = df.dropna().reset_index()
     df['Timestamp'] = df['Timestamp'] - df['Timestamp'].iloc[0]
+
+
+
 
     df1 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p1','df1','ss','sr','a1','b1','CA','SE']]
     df2 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p2','df2','ss','sr','a2','b2','CA','SE']]
