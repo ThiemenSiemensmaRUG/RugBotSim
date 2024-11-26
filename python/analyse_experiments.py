@@ -20,27 +20,11 @@ def get_batch_results(folder,files):
     exps = []
 
     for file in files:
+
         exps.append(WebotsProcessor(folder,file,1.33,time=1001))
     results = concat_experiments(exps)
     return results
 
-def compare(folder):
-    Uminfiles = [f"UMIN{i}.csv" for i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]]
-    Uplusfiles = [f"UPLUS{i}.csv" for i in [1,2,3,4,5,6,7,8,9,10,11,12]]
-    Usfiles = [f"US{i}.csv" for i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14]]
-    for i,file in enumerate(Uminfiles):
-        x= WebotsProcessor(folder,file,1)
-        t,a = x.get_dec_time_acc()
-        print(f"{file}: t={round(t)}, a = {round(a,2)}")
-    for i,file in enumerate(Uplusfiles):
-        x= WebotsProcessor(folder,file,1)
-        t,a = x.get_dec_time_acc()
-        print(f"{file}: t={round(t)}, a = {round(a,2)}")
-    for i,file in enumerate(Usfiles):
-        x= WebotsProcessor(folder,file,1)
-        t,a = x.get_dec_time_acc()
-        print(f"{file}: t={round(t)}, a = {round(a,2)}")
-    pass
 
 
 folder = "/home/thiemenrug/Documents/mrr/"
@@ -61,14 +45,19 @@ n_rovs = np.array([5,6,7,8,9,10])
     
 
 
-#files used
+# #files used
+
+plot_dec_time = True
+plot_ca_time = True
+plot_distance = True
+plot_dec_acc = True
 
 _5 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 _6 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-_7 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
-_8 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
-_9 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
-_10 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+_7 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+_8 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+_9 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+_10 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
 datasets = [_5,_6,_7,_8,_9,_10]
 
@@ -81,8 +70,11 @@ accuracies_uplus = np.empty(6, dtype=object)
 times_us = np.empty(6, dtype=object)
 accuracies_us = np.empty(6, dtype=object)
 
-
-CA_times = np.empty(6,dtype= object)
+CA_times = np.empty(shape=(3,6),dtype= object)
+CA_times_std = np.empty(shape=(3,6),dtype= object)
+distance_d = np.empty(shape=(3,6),dtype= object)
+distance_d_std = np.empty(shape=(3,6),dtype= object)
+belief_over_time = np.empty(shape=(3,6),dtype=object)
 
 for i,rov in enumerate(n_rovs):
 
@@ -92,7 +84,15 @@ for i,rov in enumerate(n_rovs):
     x_min = get_batch_results(folder,Umin_f)
     x_plus = get_batch_results(folder,Uplus_f)
     x_s = get_batch_results(folder,Us_f)
-    
+    for k,x in enumerate([x_min,x_plus,x_s]):
+        _,_,ca_,_ = x.get_state_times()
+        d,_,_,_,_ = x.compute_distances_and_directions()
+        t,b = x.compute_average_belief_over_time()
+        CA_times[k,i] = np.mean(create_one_array(ca_)) / 1000
+        CA_times_std[k,i] = np.std(create_one_array(ca_) / np.sqrt(len(create_one_array(ca_)))) /1000
+        distance_d[k,i] = np.mean(d) 
+        distance_d_std[k,i] =( np.std(d) / np.sqrt(len(d))) 
+        belief_over_time[k,i] = b
     t,a = x_min.get_dec_time_acc_robots()
     times_umin[i] = t
     accuracies_umin[i] = a
@@ -105,9 +105,7 @@ for i,rov in enumerate(n_rovs):
     times_us[i] = t
     accuracies_us[i] = a
 
-plot_dec_time = False
 
-plot_dec_acc = True
 
 accuracies_umin = [np.array(accuracies_umin[i]).flatten() for i in range(len(accuracies_umin))]
 accuracies_uplus = [np.array(accuracies_uplus[i]).flatten() for i in range(len(accuracies_uplus))]
@@ -138,7 +136,7 @@ if plot_dec_time:
 
 
     # Plot settings
-    fig, ax = plt.subplots(figsize=(6.4, 4))
+    fig, ax = plt.subplots(figsize=(6.4, 4.8*0.75))
 
     # Create grouped violin plots
     for i, times in enumerate(all_times):
@@ -212,23 +210,19 @@ if plot_dec_time:
         loc="upper center", 
         bbox_to_anchor=(0.5, 1.15),  # Place legend above the figure
         ncol=3,  # Place the legend in 3 columns
-        fontsize=12
+        fontsize=9
     )
 
     # Add grid for better readability
     ax.grid(axis='y', linestyle='--', alpha=0.7)
 
     # Save as PDF
-    output_path = "violin_plot_with_mean_lines.pdf"
+    output_path = "exp_decision_time.pdf"
     plt.tight_layout()
-    plt.savefig(output_path, format='pdf')  # Save the figure as a PDF
-    print(f"Plot saved as {output_path}")
+    plt.savefig(output_path, format='pdf', bbox_inches='tight', pad_inches=0.025)  # Save the figure as a PDF
+
 
     # Show the plot
-    plt.show()
-
-
-
 
 if plot_dec_acc:
     colors = ["black", "red", "green"]
@@ -279,5 +273,116 @@ if plot_dec_acc:
     ax.set_xlabel("Number of Robots")
     ax.set_ylabel("Accuracy")
     plt.tight_layout()
-    plt.savefig("dec_accuracy.pdf",  format='pdf', bbox_inches='tight', pad_inches=0.05)  # Save the figure as a PDF
-    plt.show()
+    plt.savefig("exp_decision_accuracy.pdf",  format='pdf', bbox_inches='tight', pad_inches=0.025)  # Save the figure as a PDF
+
+if plot_ca_time:
+    colors = ["black", "red", "green"]
+    labels = ["$u^-$", "$u^+$", "$u^s$"]
+    fig, ax = plt.subplots(figsize=(6.4*0.5, 4.8*0.5))
+    for i,m in enumerate(range(len(labels))):
+        mean = np.array(CA_times[m,:].flatten().astype(float))
+        se = np.array(CA_times_std[m,:].flatten().astype(float))
+
+        ax.plot(
+            np.arange(1, len(n_rovs) + 1) + i * 0.2,  
+            mean,
+            marker='o',
+            color=colors[i],
+            label=f"Mean {labels[i]}",
+            linestyle='--',
+            markersize=6,
+            markeredgecolor = "black",
+            linewidth=1.5
+        )
+                # Adding error bars (standard error)
+        ax.errorbar(
+            np.arange(1, len(n_rovs) + 1) + i * 0.2,  # Match violin x-positions
+            mean,
+            yerr=se,  # Standard error
+            fmt='o',
+            color=colors[i],
+            markersize=6,
+            markeredgecolor = "black",
+            linestyle='',
+            capsize=3,  # Error bar cap size
+            elinewidth=1
+        )
+
+
+    # Adjust x-axis for grouped appearance
+    ax.set_xticks(np.arange(1, len(n_rovs) + 1) + 0.2)  # Center x-ticks
+    ax.set_xticklabels(n_rovs)
+
+
+    # Create a general legend above the figure
+    handles, labels_legend = ax.get_legend_handles_labels()
+    ax.legend(
+        handles=handles, 
+        labels=[f"{label}" for label in labels],  # Adjusted legend labels
+        loc="upper center", 
+        bbox_to_anchor=(0.5, 1.25),  # Place legend above the figure
+        ncol=4,  # Place the legend in 3 columns
+        fontsize=9
+    )
+    ax.set_xlabel("Number of Robots")
+    ax.set_ylabel("CA time [s]")
+    plt.tight_layout()
+    plt.savefig("exp_ca_time.pdf",  format='pdf', bbox_inches='tight', pad_inches=0.025)  # Save the figure as a PDF
+
+if plot_distance:
+    colors = ["black", "red", "green"]
+    labels = ["$u^-$", "$u^+$", "$u^s$"]
+    fig, ax = plt.subplots(figsize=(6.4*0.5, 4.8*0.5))
+    for i,m in enumerate(range(len(labels))):
+        mean = np.array(distance_d[m,:].flatten().astype(float))
+        se = np.array(distance_d_std[m,:].flatten().astype(float))
+
+        ax.plot(
+            np.arange(1, len(n_rovs) + 1) + i * 0.2,  
+            mean,
+            marker='o',
+            color=colors[i],
+            label=f"Mean {labels[i]}",
+            linestyle='--',
+            markersize=6,
+            markeredgecolor = "black",
+            linewidth=1.5
+        )
+                # Adding error bars (standard error)
+        ax.errorbar(
+            np.arange(1, len(n_rovs) + 1) + i * 0.2,  # Match violin x-positions
+            mean,
+            yerr=se,  # Standard error
+            fmt='o',
+            color=colors[i],
+            markersize=6,
+            markeredgecolor = "black",
+            linestyle='',
+            capsize=3,  # Error bar cap size
+            elinewidth=1
+        )
+
+
+    # Adjust x-axis for grouped appearance
+    ax.set_xticks(np.arange(1, len(n_rovs) + 1) + 0.2)  # Center x-ticks
+    ax.set_xticklabels(n_rovs)
+
+
+    # Create a general legend above the figure
+    handles, labels_legend = ax.get_legend_handles_labels()
+    ax.legend(
+        handles=handles, 
+        labels=[f"{label}" for label in labels],  # Adjusted legend labels
+        loc="upper center", 
+        bbox_to_anchor=(0.5, 1.25),  # Place legend above the figure
+        ncol=4,  # Place the legend in 3 columns
+        fontsize=9
+    )
+    ax.set_xlabel("Number of Robots")
+    ax.set_ylabel("Distance [m]")
+    plt.tight_layout()
+    plt.savefig("exp_distance_driven.pdf",  format='pdf', bbox_inches='tight', pad_inches=0.025)  # Save the figure as a PDF
+
+
+
+plt.show()

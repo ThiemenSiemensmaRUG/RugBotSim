@@ -183,6 +183,19 @@ class WebotsProcessor:
         # Return processed data, or you could aggregate results if needed
         return ca_time,sense_time,ca_per_sample,rw_time
 
+    def get_network_loss(self):
+        total_traffic = 0
+        loss = []
+        for robot_id in self.data['robot_id'].unique():
+            
+            robot_data  = self.filter_by_robot_id(robot_id).copy()
+         
+            total_traffic += max(robot_data['sends'])
+        for robot_id in self.data['robot_id'].unique():
+            robot_data  = self.filter_by_robot_id(robot_id).copy()
+            loss_ = total_traffic - max(robot_data['recvs']) - max(robot_data['sends'])
+            loss.append(loss_)
+        return loss        
 
 
     def get_intersample_time(self):
@@ -423,16 +436,17 @@ def preprocess_multi_exp(folder,file,outputfolder,suffix=""):
     df = pd.read_csv(folder + file)
     df = df.dropna().reset_index()
     df['Timestamp'] = df['Timestamp'] - df['Timestamp'].iloc[0]
-    print(df)
+
     df1 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p1','df1','ss','sr','a1','b1','CA','SE']]
     df2 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p2','df2','ss','sr','a2','b2','CA','SE']]
     df3 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p3','df3','ss','sr','a3','b3','CA','SE']]
+    
     df1 = df1.rename(columns={
                 'p1':'Belief',
                 'df1':'d_f',
                 'a1':'Alpha',
                 'b1':"Beta",
-                'ss':"Swarm send",
+                'ss':"Swarm Send",
                 'sr':"Swarm Recv",
                 "CA":"Collision Time",
                 "SE":"Sense Time"
@@ -442,7 +456,7 @@ def preprocess_multi_exp(folder,file,outputfolder,suffix=""):
                 'df2':'d_f',
                 'a2':'Alpha',
                 'b2':"Beta",
-                'ss':"Swarm send",
+                'ss':"Swarm Send",
                 'sr':"Swarm Recv",
                 "CA":"Collision Time",
                 "SE":"Sense Time"
@@ -452,7 +466,7 @@ def preprocess_multi_exp(folder,file,outputfolder,suffix=""):
                 'df3':'d_f',
                 'a3':'Alpha',
                 'b3':"Beta",
-                'ss':"Swarm send",
+                'ss':"Swarm Send",
                 'sr':"Swarm Recv",
                 "CA":"Collision Time",
                 "SE":"Sense Time"
