@@ -224,7 +224,7 @@ if plot_dec_time:
     ax.set_xticks(np.arange(1, len(n_rovs) + 1) + 0.2)  # Center x-ticks
     ax.set_xticklabels(n_rovs)
     ax.set_xlabel("Number of Robots")
-    ax.set_ylabel("Decision Times")
+    ax.set_ylabel("Decision Time [s]")
 
     # Create a general legend above the figure
     handles, labels_legend = ax.get_legend_handles_labels()

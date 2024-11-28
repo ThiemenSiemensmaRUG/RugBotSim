@@ -75,7 +75,7 @@ def plot_calibration_us():
     plt.axhline(0.72807469,label = "$u^+$",color = 'blue',linestyle = '-.')
     plt.xlabel("$\\eta$")
     plt.ylabel("Accuracy")
-    plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.325), ncol=3)
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.4), ncol=3,fontsize = 9)
     plt.tight_layout(pad = 0.05)
     plt.savefig(f"/home/thiemenrug/Documents/OutputDir/JournalSI/figures/CalibrationUs_Accuracy.pdf")
 
@@ -87,7 +87,7 @@ def plot_calibration_us():
     plt.axhline(891.42513131,label = "$u^+$",color = 'blue',linestyle = '-.')
     plt.xlabel("$\\eta$")
     plt.ylabel("Time $[s]$")
-    plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.325), ncol=3)
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.4), ncol=3,fontsize = 9)
     plt.tight_layout(pad = 0.05)
     plt.savefig(f"/home/thiemenrug/Documents/OutputDir/JournalSI/figures/CalibrationUs_Time.pdf")
     
@@ -277,12 +277,14 @@ def plot_multi_robot():
 
 def plot_grid_results_error_bars(axs, index, time_arr, acc_arr, time_arr_std, acc_arr_std):
     t = -0.1
-    colors = ['red','green']
+    colors = ['green','red']
     for part in [0, 1]:
         if part == 0:
             label = "$P^*$"
+            marker_ = '<'
         else:
             label = "$P_0$"
+            marker_= "^"
         # Define axes for each part
         ax_48_time = axs[1, index]
         ax_48_acc = axs[3, index]
@@ -296,19 +298,19 @@ def plot_grid_results_error_bars(axs, index, time_arr, acc_arr, time_arr_std, ac
         acc_46 = acc_arr[index+5, part, :]
 
         # Extract standard deviations
-        time_48_std = time_arr_std[index, part, :]  #/ np.sqrt(batch_size)
-        acc_48_std = acc_arr_std[index + 5, part, :] #/ np.sqrt(batch_size)
+        time_48_std = time_arr_std[index, part, :] # / np.sqrt(batch_size)
+        acc_48_std = acc_arr_std[index + 5, part, :] / np.sqrt(batch_size)
         time_46_std = time_arr_std[index + 5, part, :] #/ np.sqrt(batch_size)
-        acc_46_std = acc_arr_std[index, part, :]# / np.sqrt(batch_size)
+        acc_46_std = acc_arr_std[index, part, :] / np.sqrt(batch_size)
 
         # X positions for the scatter plot
         x_vals = np.linspace(0, 2, 3) + t
 
         # Plot points with error bars
-        ax_48_time.errorbar(x_vals, time_48, yerr=time_48_std, fmt='o', color=colors[part], label=label)
-        ax_48_acc.errorbar(x_vals, acc_48, yerr=acc_48_std, fmt='o', color=colors[part], label=label)
-        ax_46_time.errorbar(x_vals, time_46, yerr=time_46_std, fmt='o', color=colors[part], label=label)
-        ax_46_acc.errorbar(x_vals, acc_46, yerr=acc_46_std, fmt='o', color=colors[part], label=label)
+        ax_48_time.errorbar(x_vals, time_48, yerr=time_48_std, fmt='o', color=colors[part], label=label,marker = marker_)
+        ax_48_acc.errorbar(x_vals, acc_48, yerr=acc_48_std, fmt='o', color=colors[part], label=label,marker = marker_)
+        ax_46_time.errorbar(x_vals, time_46, yerr=time_46_std, fmt='o', color=colors[part], label=label,marker = marker_)
+        ax_46_acc.errorbar(x_vals, acc_46, yerr=acc_46_std, fmt='o', color=colors[part], label=label,marker = marker_)
 
         t += 0.2  # Increment offset for the next part
 
@@ -392,7 +394,7 @@ def plot_robustness_analysis():
 
     print(time.astype(float))
 
-    fig, axes = plt.subplots(5, 5,figsize = (6.4 * 1, 4.8 * 0.75*2), sharey='row')
+    fig, axes = plt.subplots(5, 5,figsize = (6.4 * 1, 4.8 * 0.75*1.75), sharey='row')
     matrices_ = [M1, M2, M3, M4, M5]
     titles = ["Diagonal", "Stripe", "Block Diagonal", "Alternating", "Random"]
 
@@ -445,7 +447,16 @@ def plot_robustness_analysis():
             ax.set_xticklabels(methods,fontsize=8)
             ax.grid()
         for ax in axes[1,:]:
-            ax.legend(loc='upper center',ncols=2,bbox_to_anchor=(0.5,1.25),fontsize=6)
+            handles, labels_legend = ax.get_legend_handles_labels()
+        fig.legend(
+        handles=handles, 
+        labels=[f"{label}" for label in ["$P^*$","$P_0$"]],  # Adjusted legend labels
+        loc="upper center", 
+        bbox_to_anchor=(0.55, 0.8125),  # Place legend above the figure
+        ncol=2,  # Place the legend in 3 columns
+        fontsize=8
+        )
+           
         for ax in axes[3:,0]:
             ax.set_yticks([0.5,0.75,1.0])
         axes[0, 0].set_ylabel('Environment', fontsize=8)
@@ -502,15 +513,126 @@ def plot_robustness_analysis_2():
                     time_std[m,part,feedback] = time_std_
                     run+=1
 
-    print(time.astype(float))
 
         
+def plot_grid_multi_robot():
+    run = 150
+    EN = []
+    MI = []
+    M1 = diagonal_matrix()
+    M2 = stripe_matrix()
+    M3 = block_diagonal_matrix()
+    M4 = organized_alternating_matrix()
+    M5 = random_matrix()
+    M1_46 = diagonal_matrix_46()
+    M2_46 = stripe_matrix_46()
+    M3_46 = block_diagonal_matrix_46()
+    M4_46 = organized_alternating_matrix_46()
+    M5_46 = random_matrix(0.46)
 
+    acc = np.empty(shape=(6,5,2,3),dtype=object)
+    time = np.empty(shape = (6,5,2,3),dtype=object)
+    acc_std = np.empty(shape= (6,5,2,3),dtype=object)
+    time_std = np.empty(shape = (6,5,2,3),dtype=object)
 
+    Ms = [M1,M2,M3,M4,M5,M1_46,M2_46,M3_46,M4_46,M5_46]
+    methods = ["$u^-$","$u^+$","$u^s$"]
+    matrices = ["$M_{1_{48}}$","$M_{2_{48}}$","$M_{3_{48}}$","$M_{4_{48}}$","$M_{5_{48}}$","$M_{1_{46}}$","$M_{2_{46}}$","$M_{3_{46}}$","$M_{4_{46}}$","$M_{5_{46}}$"]
+    for r,robot in enumerate([5,6,7,8,9,10]):
+        for m,matrix in enumerate(matrices):
+   
+            for p,particle in enumerate([0,1]):
+                EN.append(entropy(Ms[m]))
+                MI.append(calculate_morans_I(Ms[m]))
+                for f,feedback in enumerate(methods):
+                    run+=1
+
+                    if "46" in matrix:
+                        continue  # Skip iteration for matrices containing '46'
+                    run_ = f"/multi_robot_grid/parallel_{run}"
+                    x = get_folder_results(run_,batch_size,size =10)
+                    time_,acc_,time_std_,acc_std_ = x.get_dec_time_acc(True)
+                    time[r,m,p,f] = time_
+                    acc[r,m,p,f] = acc_
+                    time_std[r,m,p,f] = time_std_
+                    acc_std[r,m,p,f] = acc_std_
+                    print(run)
+    fig, axes = plt.subplots(5, 5,figsize = (6.4 * 1, 4.8 * 0.75*2), sharey='row')
+    matrices_ = [M1, M2, M3, M4, M5]
+    titles = ["Diagonal", "Stripe", "Block Diagonal", "Alternating", "Random"]
+
+    for i, (matrix, title) in enumerate(zip(matrices_, titles)):
+        ax = axes[0,i]
+        ax.imshow(matrix, cmap="gray")
+        ax.set_title(title,fontsize =7)
+        ax.axis("on")
+        ax.set_xticks([])
+        ax.set_yticks([])
+            # Show spines (borders) around each subplot
+        for spine in ax.spines.values():
+            spine.set_visible(True)       # Show each spine (border)
+            spine.set_linewidth(1)        # Set the border width
+            spine.set_color("black")      # Set the border color to black
+
+    for p,particle in enumerate(["$P^*$","$P_0$"]):
+        acc_umin = acc[:,:,p,0]
+        acc_uplus = acc[:,:,p,1]
+        acc_us = acc[:,:,p,2]
+      
+        time_umin = time[:,:,p,0]
+        time_uplus = time[:,:,p,1]
+        time_us = time[:,:,p,2]
+    
+        
+        
+        for ax_x in range(5):
+            p_ = p
+            if p ==0:
+                p_ = 1
+
+            axes[p_ + 2 * p, ax_x].plot(time_umin[:,ax_x],color = "black",label = "$u^-")
+            axes[p_ + 2 * p, ax_x].plot(time_uplus[:,ax_x], color = "red",label = "$u^+")
+            axes[p_ + 2 * p, ax_x].plot(time_us[:,ax_x], color = "green",label = "$u^s")
+
+            axes[p_ + 2 * p+1, ax_x].plot(acc_umin[:,ax_x],color = "black",label = "$u^-")
+            axes[p_ + 2 * p+1, ax_x].plot(acc_uplus[:,ax_x], color = "red",label = "$u^+")
+            axes[p_ + 2 * p+1, ax_x].plot(acc_us[:,ax_x], color = "green",label = "$u^s")
+    axes[0, 0].set_ylabel('Environment', fontsize=8)
+    axes[1, 0].set_ylabel('$\\text{Time} (P^*)$', fontsize=8)
+    axes[3, 0].set_ylabel('$\\text{Time} (P_0)$', fontsize=8)
+    axes[2, 0].set_ylabel('$\\text{Accuracy} (P^*)$', fontsize=8)
+    axes[4, 0].set_ylabel('$\\text{Accuracy} (P_0)$', fontsize=8)
+    axes[1,0].set_ylim(0,1300)
+    axes[3,0].set_ylim(0,1300)
+    axes[2,0].set_ylim(0.5,1)
+    axes[4,0].set_ylim(0.5,1)
+    for ax in axes[1:4, :].flatten():  # Flatten in case it's a 2D array of axes
+        ax.set_xticks(range(6))
+        ax.set_xticklabels([])
+        ax.grid()
+    for ax in axes[4:, :].flatten():  # Flatten in case it's a 2D array of axes
+        ax.set_xticks(range(6))
+        ax.set_xticklabels([5,6,7,8,9,10],fontsize=8)
+        ax.grid()
+        
+        ax.set_xlabel("Number of Robots",fontsize = 8)
+        handles, labels_legend = ax.get_legend_handles_labels()
+
+    fig.legend(
+        handles=handles, 
+        labels=[f"{label}" for label in methods],  # Adjusted legend labels
+        loc="upper center", 
+        bbox_to_anchor=(0.55, 0.825),  # Place legend above the figure
+        ncol=3,  # Place the legend in 3 columns
+        fontsize=8
+    )
+
+    plt.tight_layout()
+    plt.savefig('/home/thiemenrug/Documents/OutputDir/JournalSI/figures/grid_analysis.pdf', format='pdf', bbox_inches='tight')#, pad_inches=0.025)
+    plt.show()
 
 
 if __name__ == "__main__":
 
     batch_size = 100
-
-    plot_robustness_analysis()
+    plot_calibration_us()
