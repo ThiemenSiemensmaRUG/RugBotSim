@@ -100,7 +100,7 @@ public:
 RugRobot::RugRobot(double timeStep) : timeStep(timeStep) {
     d_robot = new Supervisor();
 
-
+    spend_time = 0;
 
     for (std::size_t i = 0; i < n_sensors; ++i) {
         d_distance_sensors[i] = d_robot->getDistanceSensor(distance_sensors_names[i]);
