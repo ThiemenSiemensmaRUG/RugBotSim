@@ -59,8 +59,8 @@ labels = ["No filter","Slow filter","Faster filter 6 robots","Fast filter 2 robo
 plt.figure(figsize=(12, 6))
 i=0
 outputfolder= "jobfiles/Run_1/"
-for file in [4,0,1,2,3]:
-    filename = outputfolder+ "I_" + str(file) +f"/webots_log_{file}.txt"
+for file in [1]:
+    filename = outputfolder+ "Instance_" + str(file) +f"/webots_log_{file}.txt"
     x = analysis(filename)
     x.read_data()
     plt.semilogy(x.time,abs((x.std)),label=labels[i])
