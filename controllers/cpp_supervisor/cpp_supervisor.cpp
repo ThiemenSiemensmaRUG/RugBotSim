@@ -31,7 +31,7 @@ int main() {
   std::string rov_r = "r";
   int start_itt = 0;
   // Loop to gather robot nodes from the world
-  while (1) {
+  while (start_itt <= 10) {
     try {
       std::string temp = rov_r;
       temp.append(std::to_string(start_itt));
@@ -122,24 +122,18 @@ int main() {
           }
         }
       }
-      if ((int(t) % print_time_interval != 0)) {
-        show_info = true;
+    }
+    if ((int(t) % print_time_interval != 0)) {
+      show_info = true;
     }
 
-
-  if(t>1200){
-    // Pause simulation and exit
-    supervisor->simulationSetMode(supervisor->SIMULATION_MODE_PAUSE);
-    std::cout<<"Quiting simulation" << '\n';
-    supervisor->simulationQuit(0);
-    if (supervisor->step(TIME_STEP) == -1) {
-      return cleanUp(supervisor);
+    if (t > TIME_MAX) {
+      // Pause simulation and exit
+      supervisor->simulationSetMode(supervisor->SIMULATION_MODE_PAUSE);
+      std::cout << "Quitting simulation" << '\n';
+      supervisor->simulationQuit(0);
+      cleanUp(supervisor);
+      return 0;
     }
-
-    delete supervisor;
-    return 0;
-    }
-
-
-
-}};
+  }
+};
