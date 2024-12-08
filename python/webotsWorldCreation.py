@@ -82,23 +82,43 @@ DEF surface Solid {
 Wall {
   translation 0.5 0 -0.025
   size 1 0.05 0.025
+  appearance Appearance {
+    material Material {
+      diffuseColor 0.8 0.8 0.8
+    }
+  }
 }
 Wall {
   translation 0.5 0 1
   name "wall(1)"
   size 1 0.05 0.025
+  appearance Appearance {
+    material Material {
+      diffuseColor 0.8 0.8 0.8
+    }
+  }
 }
 Wall {
   translation 1 0 0.5
   rotation 0 1 0 1.5708
   name "wall(2)"
   size 1 0.05 0.025
+  appearance Appearance {
+    material Material {
+      diffuseColor 0.8 0.8 0.8
+    }
+  }
 }
 Wall {
   translation -0.025 0 0.5
   rotation 0 1 0 1.5708
   name "wall(3)"
   size 1 0.05 0.025
+  appearance Appearance {
+    material Material {
+      diffuseColor 0.8 0.8 0.8
+    }
+  }
 }
 Robot {
   name "Bayes Bot Supervisor"
@@ -142,7 +162,6 @@ Robot {
         self.ry = []
         self.rz = []
         self.w = []
-        self.orientation = [[1, 0, 0, -1.57], [0.577, 0.577, 0.577, -2.09], [0, 0.707106, 0.707107, 3.14159], [0.577, -0.577, -0.577, -2.09]]
         
         for i in range(self.n_robots):
             x = random.uniform(0.05,0.95)
