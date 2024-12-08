@@ -4,9 +4,6 @@
 #include <cmath>
 
 
-const double PI = 3.141592653589793238460;
-
-
 typedef std::complex<double> Complex;
 typedef std::vector<Complex> CArray;
 typedef std::vector<double> Array;
@@ -28,7 +25,7 @@ void fft(CArray& x) {
     fft(odd);
     // combine
     for (size_t k = 0; k < N / 2; ++k) {
-        Complex t = std::polar(1.0, -2.0 * PI * k / N) * odd[k];
+        Complex t = std::polar(1.0, -2.0 * M_PI * k / N) * odd[k];
         x[k] = even[k] + t;
         x[k + N / 2] = even[k] - t;
     }
@@ -66,7 +63,6 @@ std::vector<double> butter_lowpass_filter(const std::vector<double>& data, doubl
 std::vector<double> forwardButterworth(const std::vector<double>& b, const std::vector<double>& a, const std::vector<double>& fft) {
     int len_fft = fft.size();
     int len_b = b.size();
-    int len_a = a.size();
 
     std::vector<double> filtered_fft(len_fft, 0.0);
 
@@ -86,7 +82,6 @@ std::vector<double> forwardButterworth(const std::vector<double>& b, const std::
 std::vector<double> backwardButterworth(const std::vector<double>& b, const std::vector<double>& a, const std::vector<double>& fft_out) {
     int len_fft = fft_out.size();
     int len_b = b.size();
-    int len_a = a.size();
 
     std::vector<double> filtered_fft(len_fft, 0.0);
 
