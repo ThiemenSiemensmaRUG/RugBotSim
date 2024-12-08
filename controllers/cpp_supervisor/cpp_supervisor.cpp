@@ -37,8 +37,9 @@ int main() {
       temp.append(std::to_string(start_itt));
 
       // Check if the robot node exists
-      if (supervisor->getFromDef(temp) != NULL) {
-        robots.push_back(supervisor->getFromDef(temp));
+      Node *robotNode = supervisor->getFromDef(temp);
+      if (robotNode != NULL) {
+        robots.push_back(robotNode);
         start_itt += 1;
       } else {
         break;
@@ -98,12 +99,8 @@ int main() {
         const std::string data_rov = data->getSFString();
         std::cout << data_rov << '\n';
 
-        int pos = data_rov.find_last_of(",");
-        int str_len = (int) data_rov.length();
-        
         // outputFile <<t<<","<< data_rov << '\n';
         // outputFile.flush(); // Ensure all buffered data is written to file
-        }
       }
     }
 
