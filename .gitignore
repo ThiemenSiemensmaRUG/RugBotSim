@@ -1,6 +1,18 @@
-
-*.txt
+# Generated files
+measurements/*.txt
+*settings.txt
+data_rov.txt
 *.wbproj
 *.wbt
 
 jobfiles/Run_*/
+
+# IDE files
+.vscode
+
+# compiled files
+*.exe
+controllers/cpp_supervisor/cpp_supervisor
+controllers/inspection_controller/inspection_controller
+__pycache__/
+build/
