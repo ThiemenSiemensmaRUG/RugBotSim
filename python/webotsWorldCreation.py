@@ -163,19 +163,44 @@ Robot {
         self.rz = []
         self.w = []
         
+        positions = set()
+        min_distance = 0.04
+        max_attempts = 1000
+        
         for i in range(self.n_robots):
-            x = random.uniform(0.05,0.95)
-            y = random.uniform(0.05,0.95)
-            POSE = rotate_Y(random.uniform(0,math.pi*2))
-            if ((x not in self.initialX) and (y not in self.initialY)):
+          attempts = 0
+          while attempts < max_attempts:
+              x = random.uniform(0.05,0.95)
+              y = random.uniform(0.05,0.95)
+              POSE = rotate_Y(random.uniform(0,math.pi*2))
+              
+              if all(math.sqrt((x - px) ** 2 + (y - py) ** 2) >= min_distance for px, py in positions):
+                  positions.add((x, y))
+                  self.initialX.append(x)
+                  self.initialY.append(y)
+                  self.rx.append(POSE[0])
+                  self.ry.append(POSE[1])
+                  self.rz.append(POSE[2])
+                  self.w.append(POSE[3])
+                  if i == 0:
+                      print(self.initialX, self.initialY, self.rx, self.ry, self.rz, self.w)
+                  break
+              attempts += 1
+              
+        if len(positions) < self.n_robots:
+            print(f"Could not find positions for {self.n_robots - len(positions)} robots. Adding the rest at random positions.")
+            for i in range(self.n_robots - len(positions)):
+                x = random.uniform(0.05,0.95)
+                y = random.uniform(0.05,0.95)
+                POSE = rotate_Y(random.uniform(0,math.pi*2))
                 self.initialX.append(x)
                 self.initialY.append(y)
                 self.rx.append(POSE[0])
                 self.ry.append(POSE[1])
                 self.rz.append(POSE[2])
                 self.w.append(POSE[3])
-                if i ==0:
-                  print(self.initialX,self.initialY,self.rx,self.ry,self.rz,self.w)
+                positions.add((x, y))
+        
 
 
     def save_settings(self,run_dir,c_settings,s_settings):
