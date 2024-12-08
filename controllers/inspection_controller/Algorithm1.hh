@@ -91,7 +91,6 @@ class Algorithm1 {
  * The function also outputs the robot's time, name, estimated frequency, position, alpha, beta, and iteration count.
  */
 void Algorithm1::run() {
-    // std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
     pos = roundToNearest10(robot.getPos());
     robot.setCustomData("");
     settings.readSettings();
@@ -145,7 +144,6 @@ void Algorithm1::run() {
                 break;
 
             case STATE_PAUSE:
-                // Pause logic here
                 break;
         }
         if (robot.d_robot->getTime() > 5) {
