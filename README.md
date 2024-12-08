@@ -10,7 +10,13 @@ pip install -r requirements.txt
 
 # Usage
 
-You can run the scripts by running the following command:
+First, you need to generate some dummy data. You can do this by running the following command from the root directory:
+
+```bash
+python3 python/generate_dummy_data.py
+```
+
+Then, you can run the main scripts by running the following command:
 
 ```bash
 python3 python/webots.py
