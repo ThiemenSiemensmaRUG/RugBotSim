@@ -79,7 +79,26 @@ private:
 
 };
 
-
+/**
+ * @brief Executes the main algorithm loop for the robot's inspection controller.
+ * 
+ * This function performs the following steps:
+ * 1. Initializes the robot's position and settings.
+ * 2. Reads settings and initializes natural frequency parameters.
+ * 3. Creates an array to store FFT results and a frequency array.
+ * 4. Enters a loop that continues while the robot is active.
+ * 5. Depending on the current state, performs actions such as random walk, obstacle detection, 
+ *    sampling, FFT computation, peak detection, and frequency update.
+ * 6. Sends the sample data and updates the robot's custom data with the current state and frequency information.
+ * 
+ * The function handles three states:
+ * - STATE_RW: Random walk state where the robot moves randomly for a certain time period.
+ * - STATE_OBS: Obstacle state where the robot pauses, samples data, performs FFT, detects peaks, 
+ *              updates natural frequency, and sends the sample.
+ * - STATE_PAUSE: Pause state where the robot is stationary.
+ * 
+ * The function also outputs the robot's time, name, estimated frequency, position, alpha, beta, and iteration count.
+ */
 void Algorithm1::run() {
     //std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
     pos = roundToNearest10(robot.getPos());
@@ -157,8 +176,13 @@ void Algorithm1::run() {
     }
 }
 
-
-void Algorithm1::recvSample(){
+/**
+ * @brief Receives and processes samples from the radio.
+ *
+ * This function retrieves a list of messages from the radio and processes each
+ * message by updating the natural frequency with the received sample.
+ */
+void Algorithm1::recvSample() {
     std::vector<int> messages = radio.getMessages();
         // Process received messages
         for (int sample : messages) {
@@ -167,17 +191,30 @@ void Algorithm1::recvSample(){
         }
 }
 
-void Algorithm1::sendSample(int sample){
-
-    // Determine the message to send based on decision flag or observation color
-    int const *message;
-
-    message = &sample;
-    // Send the message
-    radio.sendMessage(message, sizeof(message));
-
+/**
+ * @brief Sends a sample value as a message.
+ *
+ * This function takes an integer sample value, determines the message
+ * to send based on the decision flag or observation color, and sends the message.
+ *
+ * @param sample The flag or observation color to send as a message.
+ */
+void Algorithm1::sendSample(int sample) {
+    int const message = sample;
+    radio.sendMessage(&message, sizeof(int));
 }
 
+/**
+ * @brief Reads a sample of data from a file, based on the given position coordinates.
+ *
+ * This function first constructs the file path based on the x and y coordinates,
+ * and attempts to open the corresponding file located in the "measurements" directory.
+ * It reads up to N_samples lines from the file, converts each line to a double, then stores
+ * the values in the `numbers` vector.
+ *
+ * @param posx The x-coordinate used to construct the file name.
+ * @param posy The y-coordinate used to construct the file name.
+ */
 void Algorithm1::getSample(int posx, int posy) {
     
     // Construct the file path based on posx and posy
@@ -213,8 +250,18 @@ void Algorithm1::getSample(int posx, int posy) {
         states= STATE_PAUSE;
     }
 }
-void Algorithm1::detectPeaks(Array freqArray){
-    //saveFilteredData(pos_abs_fft_results,"fft_output.txt");
+
+/**
+ * @brief Detects peaks in the given frequency array after applying a Butterworth filter.
+ *
+ * This function applies a Butterworth filter to the input frequency array in both forward and backward directions
+ * to achieve zero phase shift. It then detects peaks in the filtered signal and selects the top N peaks based on
+ * their magnitudes. The selected peaks are sorted by frequency and stored in the variables `peak_freq` and `peak_mag`.
+ *
+ * @param freqArray The input array of frequencies to be analyzed.
+ */
+void Algorithm1::detectPeaks(Array freqArray) {
+    // saveFilteredData(pos_abs_fft_results,"fft_output.txt");
 
     // Apply Butterworth filter in forward direction and get filtered output
     std::vector<double> filtered_fft_forward = forwardButterworth(b, a, pos_abs_fft_results);
@@ -279,6 +326,15 @@ void Algorithm1::detectPeaks(Array freqArray){
 
 }
 
+/**
+ * @brief Saves the filtered data to a specified file.
+ *
+ * This function takes a vector of doubles and writes each value to a new line
+ * in the specified file.
+ *
+ * @param data A vector of double values to be saved.
+ * @param filename The name of the file where the data will be saved.
+ */
 void Algorithm1::saveFilteredData(const std::vector<double>& data, const std::string& filename) {
     std::ofstream outputFile(filename);
     if (!outputFile.is_open()) {
