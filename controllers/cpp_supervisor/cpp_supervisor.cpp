@@ -13,7 +13,7 @@ using namespace webots;
 #define TIME_MAX 1200
 #define TIME_STEP 20
 
-int print_time_interval = 10;
+const int print_time_interval = 10;
 
 // Get the working directory path
 char *pPath = getenv("WB_WORKING_DIR");
