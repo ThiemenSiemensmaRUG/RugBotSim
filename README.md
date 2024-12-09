@@ -4,7 +4,7 @@ Submitted to Swarm Intelligence journal - Siemensma et al.
 
 ## Overview
 
-This repository simulated the Bayesian decision making process. It contains PSO optimization, grid search for Us, and other simulation results. Moreover, the analysis of experiments is done using the same post-processing scripts as during simulations. The folders within this repository are organized as follows:
+This repository simulates the Bayesian decision making process. It contains PSO optimization, grid search for Us, and other simulation results. Moreover, the analysis of experiments is done using the same post-processing scripts as during simulations. The folders within this repository are organized as follows:
 
 ### 📁 controllers
 Code for the Webots robot controller and supervisor controllers.  
