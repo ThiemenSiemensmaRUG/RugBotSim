@@ -1,3 +1,0 @@
-This state machine does not include CA time within samples
-
-So the counter tau is reset after every collision

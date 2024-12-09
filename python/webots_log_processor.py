@@ -454,15 +454,16 @@ def compute_loss(file):
 
 def preprocess_multi_exp(folder,file,outputfolder,suffix=""):
     df = pd.read_csv(folder + file)
+
     df = df.dropna().reset_index()
     df['Timestamp'] = df['Timestamp'] - df['Timestamp'].iloc[0]
 
 
 
 
-    df1 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p1','df1','ss','sr','a1','b1','CA','SE']]
-    df2 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p2','df2','ss','sr','a2','b2','CA','SE']]
-    df3 = df[['Timestamp','ROV Number','Marker ID','X Meter', 'Y Meter', 'Energy','p3','df3','ss','sr','a3','b3','CA','SE']]
+    df1 = df[['Timestamp','ROV Number','Marker ID','X Meter','Energy','Y Meter','p1','df1','ss','sr','a1','b1','CA','SE']]
+    df2 = df[['Timestamp','ROV Number','Marker ID','X Meter','Energy','Y Meter','p2','df2','ss','sr','a2','b2','CA','SE']]
+    df3 = df[['Timestamp','ROV Number','Marker ID','X Meter','Energy','Y Meter','p3','df3','ss','sr','a3','b3','CA','SE']]
     
     df1 = df1.rename(columns={
                 'p1':'Belief',

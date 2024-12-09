@@ -1,27 +1,44 @@
-# RugBot
+#  Optimization of Collective Bayesian Decision-Making in a Swarm of Miniaturized Vibration-Sensing Robots
 
-Swarm of miniature robots. Simulated version of RugBot in Webots.
+Submitted to Swarm Intelligence journal - Siemensma et al. 
 
 ## Overview
 
-This repository simulates the RugBot robot used for surface inspection tasks at the Distributed Robotic Systems Lab, Groningen. It is part of the ENTEG institute, specifically the DTPA department.
+This repository simulated the Bayesian decision making process. It contains PSO optimization, grid search for Us, and other simulation results. Moreover, the analysis of experiments is done using the same post-processing scripts as during simulations. The folders within this repository are organized as follows:
 
-### Distributed Robotic Systems Lab, Groningen
+### 📁 controllers
+Code for the Webots robot controller and supervisor controllers.  
+- **compile.sh**: Script used to compile both controllers.  
+- Each robot within the simulation runs an instance of the inspection controller.
 
-The Distributed Robotic Systems Lab at Groningen focuses on developing advanced robotic systems for distributed tasks. This repository contains the simulated version of the robot used in various experiments.
+### 📁 jobfiles
+Stores the temporary simulation files.  
+- These files are cleaned and moved after the simulation is finished.  
 
-## Repository Details
+### 📁 measurements
+Contains files used for calibrating the experimental setup to match the simulation.
 
-The `main` branch is dedicated to developing core functionalities for the RugBot simulation, including output-related tasks for the Webots robotic simulator (such as setting up environments).
+### 📁 protos
+Contains proto files of the simulation, which define the models of the robots.
 
-### Branches
+### 📁 python
+Contains all Python code.  
+- **analyse_experiments.py**: Script used for calibrating the experimental setup to the simulation as described within the paper.
+- **analyse_parallel.py**: Script used for calibrating the experimental setup to the simulation as described within the paper.
+- **analyse_pso.py**: Used for analyzing PSO results
+- **calibration.py**: Script used for calibrating the experimental setup to the simulation as described within the paper.
+- **optimization.py**: Used for running the PSO optimization
+- **parallel.py**: Used for running the batch results, such as grid search Us, fill-ratio results, and multi-robot results
+- **PSO.py**: PSO library
+- **utils.py**: Utilities library
+- **webots_log_processor.py**: Functionallity to analyse Webots or real experimental results
+- **webots.py**: Contains file to run Webots
+- **webotsWorldCreation.py**: Library functionality to create Webots worlds 
 
-- Each branch focuses on specific algorithm development.
-- The `main` branch serves as the base for merging updates to basic functionalities.
 
 ## Installation
 
-To set up your environment for RugBot simulation, this repository includes a `setup.sh` script located at the root of the repository. The script will automate the installation of necessary dependencies, including Webots, GitHub Desktop, Google Chrome, and Python packages, and configure VS Code with essential extensions.
+To set up your environment for simulation, this repository includes a `setup.sh` script located at the root of the repository. The script will automate the installation of necessary dependencies, including Webots, GitHub Desktop, Google Chrome, and Python packages, and configure VS Code with essential extensions.
 
 ### Running the `setup.sh` Script
 
@@ -50,21 +67,10 @@ The script will perform the following actions (optional is not required for func
 
 After the script completes, you will be prompted to restart your machine to apply all changes.
 
-## Usage
-
-Details on how to use and interact with the simulation will be included in this section.
-
-## Contributing
-
-Information on how to contribute to the project will be provided here, including guidelines for pull requests and the code of conduct.
-
-## License
-
-This project is licensed under the [License Name] - details about the license will be provided here.
 
 ## Contact
 
 For questions or further information, please contact:
 
-- [Bahar Haghighat](mailto:bahar.haghighat@yourdomain.com) (PI, Distributed Robotic Systems Lab, Groningen)
-- [Thiemen Siemensma](mailto:thiemen.siemensma@yourdomain.com) (PhD Student, Distributed Robotic Systems Lab, Groningen)
+- [Bahar Haghighat](mailto:bahar.haghighat@yourdomain.com) (PI, DAISY Lab, Groningen)
+- [Thiemen Siemensma](mailto:thiemen.siemensma@yourdomain.com) (PhD Student, DAISY Lab, Groningen)

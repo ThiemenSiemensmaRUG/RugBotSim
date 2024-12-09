@@ -250,18 +250,18 @@ def calibrate(x_,vibthreshold):
 ###main code for getting calibration values
 vib_threshold = 1.33
 
-calexp0 = WebotsProcessor("measurements/SM_2/",'CAL_1.csv',vib_threshold,until_decision=False)
-calexp1 = WebotsProcessor("measurements/SM_2/",'CAL_2.csv',vib_threshold,until_decision= False)
-calexp2 = WebotsProcessor("measurements/SM_2/",'CAL_3.csv',vib_threshold,until_decision= False)
+calexp0 = WebotsProcessor("measurements/",'CAL_1.csv',vib_threshold,until_decision=False)
+calexp1 = WebotsProcessor("measurements/",'CAL_2.csv',vib_threshold,until_decision= False)
+calexp2 = WebotsProcessor("measurements/",'CAL_3.csv',vib_threshold,until_decision= False)
 
 
 vib_threshold = 1.33
 
 
 
-calsim0 = WebotsProcessor("measurements/SM_2/",'webots_log_0.txt',vib_threshold)
-calsim1 = WebotsProcessor("measurements/SM_2/",'webots_log_1.txt',vib_threshold)
-calsim2 = WebotsProcessor("measurements/SM_2/",'webots_log_2.txt',vib_threshold)
+calsim0 = WebotsProcessor("measurements/",'webots_log_0.txt',vib_threshold)
+calsim1 = WebotsProcessor("measurements/",'webots_log_1.txt',vib_threshold)
+calsim2 = WebotsProcessor("measurements/",'webots_log_2.txt',vib_threshold)
 
 
 
@@ -275,9 +275,6 @@ experiments = concat_experiments(exps)
 print(len(simulations.data))
 print(len(experiments.data))
 
-# calibrate(simulations,vib_threshold)
-# calibrate(experiments,vib_threshold)
-# plt.show()
 
 
 

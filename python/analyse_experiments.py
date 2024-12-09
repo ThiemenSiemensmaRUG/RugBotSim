@@ -26,23 +26,22 @@ def get_batch_results(folder,files):
     return results
 
 
-
+# REPLACE WITH CORRECT FOLDER
 folder = "/home/thiemenrug/Documents/mrr/"
 
 n_rovs = np.array([5,6,7,8,9,10])
 
+# Uncomment for preprocessing and splitting the files
+for rov in n_rovs:
+    _f = folder + f"{rov}_rovs/"
+    for i in range(1,16):
 
-# for rov in n_rovs:
-#     _f = folder + f"{rov}_rovs/"
-#     for i in range(1,17):
-#         try:
-#             file = f"/{rov}_rov_exp_{i}.csv"
-#             _ = pd.read_csv(_f + file)
-#             preprocess_multi_exp(_f,file,_f,f"_{i}")
-#             print(rov,i)
-#         except:
-#             None
-    
+        file = f"/{rov}_rov_exp_{i}.csv"
+        _ = pd.read_csv(_f + file)
+
+        preprocess_multi_exp(_f,file,_f,f"_{i}")
+        print(rov,i)
+
 total_loss = np.empty(shape=(3,6),dtype= object)
 total_loss_p = np.empty(shape=(3,6),dtype=object)
 total_loss_std = np.empty(shape=(3,6),dtype= object)
