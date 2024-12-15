@@ -1,36 +1,35 @@
 // File:          inspection_controller.cpp
 // Date:          1-11-23
-// Description:   RugBot simulation controller 
+// Description:   RugBot simulation controller
 // Author:        Thiemen Siemensma
 // Modifications:
 
-#include <stdlib.h>
-#include <cstdlib>
 #include <math.h>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream> 
+#include <stdlib.h>
 #include <time.h>
-#include <webots/Robot.hpp> 
-#include <webots/Motor.hpp>
-#include <webots/Gyro.hpp>
+#include <unistd.h>
+
+#include <cmath>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <queue>
+#include <sstream>
+#include <string>
+#include <vector>
 #include <webots/Accelerometer.hpp>
 #include <webots/Camera.hpp>
 #include <webots/DistanceSensor.hpp>
 #include <webots/Emitter.hpp>
-#include <webots/Receiver.hpp>
+#include <webots/Gyro.hpp>
 #include <webots/Keyboard.hpp>
+#include <webots/Motor.hpp>
 #include <webots/PositionSensor.hpp>
+#include <webots/Receiver.hpp>
+#include <webots/Robot.hpp>
 #include <webots/Supervisor.hpp>
 
-#include <queue>
-#include <vector>
-#include <cmath>
-#include <unistd.h>
-
-#include "Algorithm1.hh"
-
+#include "StateMachine.hh"
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -40,13 +39,9 @@ using namespace webots;
 #define STOP 1.0e-8
 #define TINY 1.0e-30
 
-enum Side { LEFT, RIGHT, FORWARD, BACKWARD };
+enum Side {LEFT, RIGHT, FORWARD, BACKWARD};
 
 int main(int argc, char **argv) {
-  Algorithm1 algo;
-  algo.run();
-
-  
-
+    StateMachine stateMachine;
+    stateMachine.run();
 }
-
