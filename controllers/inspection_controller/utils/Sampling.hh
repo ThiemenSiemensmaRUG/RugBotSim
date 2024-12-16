@@ -32,7 +32,7 @@ std::vector<double> Sampling::getSample(int posx, int posy, int N_samples) {
     std::filesystem::path currentPath = std::filesystem::current_path();
     // Assuming this code is located in the controllers/inspection_controller directory
     std::filesystem::path basePath = currentPath.parent_path().parent_path();
-    std::string filePath = (basePath / "measurements" / ("acc_x" + std::to_string(posx) + "_y" + std::to_string(posy) + ".txt")).string();
+    std::string filePath = (basePath / "measurements" / "jobs" / "damaged" / "modal_shape_damaged.csv").string();
 
     std::ifstream inputFile(filePath);
     if (!inputFile.is_open()) {
@@ -40,20 +40,57 @@ std::vector<double> Sampling::getSample(int posx, int posy, int N_samples) {
         return {};
     }
 
-    double number;
-    std::vector<double> numbers;
-    for (int i = 0; i < N_samples; i++) {
-        std::string line;
-        if (std::getline(inputFile, line)) {
-            // Convert to a double and add it to the vector
-            number = std::stod(line);
-            numbers.push_back(number);
-        } else {
-            break;
+    // Skip the header line
+    std::string header;
+    std::getline(inputFile, header);
+
+    struct Point {
+        double x, y, u3, mode_num;
+        double distance(int px, int py) const {
+            return std::sqrt(std::pow(x - px, 2) + std::pow(y - py, 2));
+        }
+    };
+
+    std::vector<Point> points;
+    
+    std::string line;
+    while (std::getline(inputFile, line)) {
+        std::stringstream ss(line);
+        std::string token;
+        std::vector<double> values;
+
+        while (std::getline(ss, token, ',')) {
+            try {
+                values.push_back(std::stod(token));
+            } catch (const std::exception& e) {
+                std::cerr << "Error converting token to double: " << e.what() << std::endl;
+            }
+        }
+
+        if (values.size() >= 8) {
+            points.push_back({values[1], values[2], values[7], values[4]});
         }
     }
 
-    return numbers;
+    if (points.empty()) {
+        std::cerr << "No points found in file: " << filePath << std::endl;
+        return {};
+    }
+
+    Point closestPoint = points[0];
+    double closestDistance = closestPoint.distance(posx, posy);
+
+    for (const auto& point : points) {
+        double distance = point.distance(posx, posy);
+        if (distance < closestDistance) {
+            closestPoint = point;
+            closestDistance = distance;
+        }
+    }
+
+    std::vector<double> numbers;
+    
+    return {closestPoint.u3, closestPoint.mode_num, closestPoint.x, closestPoint.y};
 }
 
 /**

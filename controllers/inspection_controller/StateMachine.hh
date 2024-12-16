@@ -67,6 +67,7 @@ class StateMachine {
     std::vector<double> peak_freq;
     std::vector<double> peak_mag;
 
+    std::vector<std::vector<double>> samples;
     Sampling sampler;
 };
 
@@ -127,7 +128,14 @@ void StateMachine::run() {
                 sample_pause = 0.0;
                 pos = roundToNearestX(robot.getPos(), ACCURACY);
 
-                auto numbers = sampler.getSample(pos[0], pos[1], N_samples);
+                auto numbers = sampler.getSample(pos[0]*5, pos[1]*5, N_samples);
+                // Multiply by 5 since the data is -500 to 500
+                samples.push_back({
+                    (double)numbers[2], 
+                    (double)numbers[3],
+                    (double)numbers[0], 
+                    (double)numbers[1]}); // {x, y, u3, mode_num}
+
                 for (size_t i = 0; i < numbers.size(); ++i) {
                     fft_results[i] = Complex(numbers[i], 0);
                 }
@@ -155,7 +163,12 @@ void StateMachine::run() {
                                 "," + std::to_string(robot.getPos()[1]) +
                                 "," + std::to_string(naturalFreq.alpha) +
                                 "," + std::to_string(naturalFreq.beta) +
-                                "," + std::to_string(naturalFreq.iteration));
+                                "," + std::to_string(naturalFreq.iteration) +
+                                // Print the last sample
+                                "," + std::to_string(samples.back()[0]) +
+                                "," + std::to_string(samples.back()[1]) +
+                                "," + std::to_string(samples.back()[2]) +
+                                "," + std::to_string(samples.back()[3]));
         }
     }
 }
