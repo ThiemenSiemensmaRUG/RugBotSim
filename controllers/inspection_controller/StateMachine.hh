@@ -147,9 +147,9 @@ void StateMachine::run() {
             case STATE_PAUSE:
                 break;
         }
-        if (robot.d_robot->getTime() > 5) {
+        if (robot.d_robot->getTime() > 5 && samples.size() > 0) {
             robot.setCustomData(std::to_string((int)robot.d_robot->getTime()) +
-                                "," + std::string(robot.d_robot->getName().substr(1, 1)) +
+                                "," + std::string(robot.d_robot->getName().substr(1)) +
                                 "," + std::to_string(naturalFreq.getEstimatedFreq()) +
                                 "," + std::to_string(robot.getPos()[0]) +
                                 "," + std::to_string(robot.getPos()[1]) +

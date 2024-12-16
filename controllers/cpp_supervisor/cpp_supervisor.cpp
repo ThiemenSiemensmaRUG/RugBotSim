@@ -31,7 +31,7 @@ int main() {
   std::string rov_r = "r";
   int start_itt = 0;
   // Loop to gather robot nodes from the world
-  while (start_itt <= 10) {
+  while (start_itt <= 30) {
     try {
       std::string temp = rov_r;
       temp.append(std::to_string(start_itt));
@@ -45,7 +45,7 @@ int main() {
         break;
       }
 
-      if (start_itt > 10) {
+      if (start_itt > 30) {
         break;
       }
     } catch (const std::exception& e) {
