@@ -19,7 +19,7 @@ typedef std::complex<double> Complex;
 typedef std::vector<Complex> CArray;
 typedef std::vector<double> Array;
 
-#define ACCURACY 10
+#define ACCURACY 1
 
 class StateMachine {
    public:
@@ -127,9 +127,8 @@ void StateMachine::run() {
                 }
                 sample_pause = 0.0;
                 pos = roundToNearestX(robot.getPos(), ACCURACY);
-
-                auto numbers = sampler.getSample(pos[0]*5, pos[1]*5, N_samples);
-                // Multiply by 5 since the data is -500 to 500
+                // Since the position is between 0 and 1000, we subtract 500 to center to the data
+                auto numbers = sampler.getSample(pos[0] - 500, pos[1] - 500, N_samples);
                 samples.push_back({
                     (double)numbers[2], 
                     (double)numbers[3],

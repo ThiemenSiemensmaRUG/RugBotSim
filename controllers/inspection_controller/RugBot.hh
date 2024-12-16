@@ -262,8 +262,8 @@ std::vector<int> RugRobot::getPos() {
     const double xPos = coordinates[0];
     const double yPos = coordinates[2];
 
-    pos.push_back((int)(xPos * 100));
-    pos.push_back((int)(yPos * 100));
+    pos.push_back((int)(xPos * 1000));
+    pos.push_back((int)(yPos * 1000));
     // std::cout<<pos[0]<<","<<pos[1]<<'\n';
     return pos;
 }
