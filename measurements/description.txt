@@ -1,0 +1,4 @@
+In this state machine CA is include in tau.
+
+so if tau = 2, and if we spend two seconds in CA mode, the sample is on the same place.
+
