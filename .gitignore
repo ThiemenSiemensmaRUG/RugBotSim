@@ -1,11 +1,19 @@
-# Generated files
-measurements/*.txt
-*settings.txt
-data_rov.txt
+# Ignore all .txt files
+*.txt
+
+# Ignore all __pycache__ directories
+__pycache__/
+
+#ignore webots world files
 *.wbproj
 *.wbt
 
-jobfiles/Run_*/
+# Ignore all .csv files
+*.csv
+
+
+
+jobfiles/Run_*
 
 # IDE files
 /.vscode

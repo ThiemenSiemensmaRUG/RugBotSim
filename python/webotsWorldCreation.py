@@ -26,12 +26,13 @@ def rotate_Y(angle_rad):
 
 
 class createWorld():
-    def __init__(self,instance,seed,name,n_robots) -> None:
+    def __init__(self, run, instance, seed, name, n_robots) -> None:
+        self.run = run
         self.instance = instance
         self.seed = seed
         self.name = name
         self.n_robots = n_robots
-
+        self.run_dir = f"jobfiles/Run_{self.run}/"
 
     def create_header(self):
         self.file.write("""#VRML_SIM R2023b utf8
@@ -203,11 +204,11 @@ Robot {
         
 
 
-    def save_settings(self,run_dir,c_settings,s_settings):
+    def save_settings(self,c_settings,s_settings):
         # Open a file in write mode
 
-        fcsettings =  f"{run_dir}Instance_{self.instance}/c_settings.txt"
-        fssettings =  f"{run_dir}Instance_{self.instance}/s_settings.txt"
+        fcsettings =  f"{self.run_dir}Instance_{self.instance}/c_settings.txt"
+        fssettings =  f"{self.run_dir}Instance_{self.instance}/s_settings.txt"
         for file,setting in zip([fcsettings,fssettings],[c_settings,s_settings]):
             with open(file, 'w') as file:
                 for value in setting.values():

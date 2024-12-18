@@ -2,14 +2,27 @@ import os
 import subprocess
 import time
 from webotsWorldCreation import createWorld
+import shutil
 
 class WebotsEvaluation():
 
-    def __init__(self):
-        self.run =1
-        self.instance =1
-        self.robots = 4
+    def __init__(self, run_dir = 1, instance = 1, n_robots = 4):
+        self.run = run_dir
+        self.instance = instance
+        self.robots = n_robots
+        self.run_dir = f"jobfiles/Run_{self.run}/"
+        self.instance_dir = f"{self.run_dir}Instance_{self.instance}/"
         pass
+
+
+    def create_instance_dir(self):
+        try:
+            os.makedirs(self.instance_dir, exist_ok=True)
+            print(f"Created instance directory {self.instance_dir}\n")
+        except OSError as e:
+            print(f"Error creating instance directory {self.instance_dir}: {e}")
+        pass
+
     def run_webots_instance(self):
         # Method to run a Webots instance with given parameters
         subprocess.check_call(['.././run_webots.sh', str(self.run), str(self.instance), 
@@ -18,38 +31,63 @@ class WebotsEvaluation():
         os.chdir("../../")
         print(os.getcwd())
 
-    def job_setup(self,c_settings= {},s_settings = {},settings={}):
-        
+    def delete_instance_dir(self):
+        if os.path.exists(self.instance_dir):
+            shutil.rmtree(self.instance_dir)
+            print(f"Deleted run directory: {self.instance_dir}")
+        pass
+    
+    def delete_run_dir(self):
+        if os.path.exists(self.run_dir):
+            shutil.rmtree(self.run_dir)
+            print(f"Deleted run directory: {self.run_dir}")
+        pass
+    
 
-        run_dir = f"jobfiles/Run_{self.run}/"
-        os.makedirs(os.path.dirname(f"{run_dir}Instance_{self.instance}/"), exist_ok=True)
+    def job_setup(self, c_settings={}, s_settings={}, settings={}):
+        # Step 1: Create the instance directory for simulation files
+        self.create_instance_dir()
 
-        world = createWorld(self.instance,self.instance,f"world_{self.instance}",self.robots)
-        world.save_settings(run_dir,c_settings,s_settings)
+        # Step 2: Generate a world object to create Webots world files
+        world = createWorld(
+            run=self.run,
+            instance=self.instance,
+            seed=1,
+            name=f"world_{self.instance}",
+            n_robots=self.robots
+        )
+
+        # Step 3: Save controller and supervisor settings in the instance directory
+        world.save_settings(c_settings, s_settings)
+
+        # Step 4: Create the .wbt world file
         world.create_world()
-        setup =  f"{run_dir}Instance_{self.instance}/settings.txt"
 
+        # Step 5: Save general simulation settings to a settings.txt file in the instance directory
+        setup = f"{self.instance_dir}/settings.txt"
         with open(setup, 'w') as file:
             for value in [settings.values()]:
                 file.write(str(value) + '\n')
+
+        # Step 6: Pause briefly before proceeding (for stability)
         time.sleep(1)
 
-        os.chdir(run_dir)  # Changing directory to the run directory
-        
-
+        # Step 7: Change the working directory to the run directory
+        os.chdir(self.run_dir)
 
         pass
 
+    
 
 
 
-x = WebotsEvaluation()
-x.instance = 1
-x.robots = 6
+
+
+eval = WebotsEvaluation()
 
 c_settings = {"a0":1.0,"a1":0.96,"b0":0.98,"b1":0.98,"learning_rate":1,"upper_freq":100.0}
 s_settings = {"temp":1.0}
-x.job_setup(c_settings=c_settings,s_settings=s_settings)
-x.run_webots_instance()
-
-del x
+eval.job_setup(c_settings=c_settings,s_settings=s_settings)
+eval.run_webots_instance()
+eval.delete_run_dir()
+del eval

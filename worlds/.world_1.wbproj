@@ -7,9 +7,9 @@ centralWidgetVisible: 1
 orthographicViewHeight: 1
 textFiles: -1
 consoles: Console:All:All
-renderingDevicePerspectives: r0:camera;1;0.436111;0;0
-renderingDevicePerspectives: r1:camera;1;0.436111;0;0
-renderingDevicePerspectives: r2:camera;1;0.436111;0;0
-renderingDevicePerspectives: r3:camera;1;0.436111;0;0
-renderingDevicePerspectives: r4:camera;1;0.436111;0;0
-renderingDevicePerspectives: r5:camera;1;0.436111;0;0
+renderingDevicePerspectives: r0:camera;1;0.344444;0;0
+renderingDevicePerspectives: r1:camera;1;0.344444;0;0
+renderingDevicePerspectives: r2:camera;1;0.344444;0;0
+renderingDevicePerspectives: r3:camera;1;0.344444;0;0
+renderingDevicePerspectives: r4:camera;1;0.344444;0;0
+renderingDevicePerspectives: r5:camera;1;0.344444;0;0
