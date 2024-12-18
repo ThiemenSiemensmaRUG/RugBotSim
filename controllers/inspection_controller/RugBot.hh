@@ -86,6 +86,7 @@ class RugRobot {
     int RandomWalk();
     void generateRW();
     void setCustomData(const std::string &inputString);
+    const std::string getCustomData(); 
     std::vector<int> getPos();
 };
 
@@ -142,6 +143,9 @@ RugRobot::~RugRobot() {
 
 void RugRobot::setCustomData(const std::string &inputString) {
     customData->setSFString(inputString);
+}
+const std::string RugRobot::getCustomData() {
+    return customData->getSFString();
 }
 
 bool RugRobot::collAvoid() {
@@ -210,13 +214,13 @@ std::vector<int> RugRobot::getMessages() {
 void RugRobot::generateRW() {
     rw_time = rw_time_gen(generator);
     rw_angle = rw_angle_gen(generator);
-    rw_time = std::clamp(rw_time, 1000.0, 20000.0);
+    rw_time = std::clamp(rw_time, 500.0, 500.0);
     // std::cout<<"RW parameters= "<<rw_time<<',' <<rw_angle<<'\n';
     state = STATE_PAUSE;
 }
 
 int RugRobot::RandomWalk() {
-    if (spend_time == (double)timeStep) {
+    if (spend_time == (double) timeStep) {
         state = STATE_FW;
     }
     spend_time += (double)timeStep;

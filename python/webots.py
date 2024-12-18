@@ -12,8 +12,22 @@ class WebotsEvaluation():
         self.robots = n_robots
         self.run_dir = f"jobfiles/Run_{self.run}/"
         self.instance_dir = f"{self.run_dir}Instance_{self.instance}/"
+
+        
+
         pass
 
+
+
+    def check_main_directory(self):
+        # Get the current working directory
+        current_dir = os.getcwd()
+        
+        # Check if the current directory ends with 'RugBotSim'
+        if not current_dir.endswith("RugBotSim"):
+            raise OSError(f"Error: Current directory '{current_dir}' is not the main repo directory needed for starting simulations'.")
+        else:
+            print(f"Current directory is correct: {current_dir}")
 
     def create_instance_dir(self):
         try:
@@ -46,6 +60,7 @@ class WebotsEvaluation():
 
     def job_setup(self, c_settings={}, s_settings={}, settings={}):
         # Step 1: Create the instance directory for simulation files
+        self.check_main_directory()
         self.create_instance_dir()
 
         # Step 2: Generate a world object to create Webots world files
@@ -82,12 +97,15 @@ class WebotsEvaluation():
 
 
 
+for _, instance in enumerate(range(1,3)):
+    eval = WebotsEvaluation(n_robots=10, instance=instance)
 
-eval = WebotsEvaluation()
+    c_settings = {"isDamaged":_,"modeNumber":1}
+    s_settings = {"temp":1.0}
+    
 
-c_settings = {"a0":1.0,"a1":0.96,"b0":0.98,"b1":0.98,"learning_rate":1,"upper_freq":100.0}
-s_settings = {"temp":1.0}
-eval.job_setup(c_settings=c_settings,s_settings=s_settings)
-eval.run_webots_instance()
-eval.delete_run_dir()
-del eval
+
+    eval.job_setup(c_settings=c_settings,s_settings=s_settings )
+    eval.run_webots_instance()
+    #eval.delete_run_dir()
+    del eval

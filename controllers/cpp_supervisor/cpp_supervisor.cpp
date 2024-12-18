@@ -97,7 +97,7 @@ int main() {
       for (std::vector<Node*>::size_type i = 0; i < robots.size(); i++) {
         Field *data = customData[i];
         const std::string data_rov = data->getSFString();
-        std::cout << data_rov << '\n';
+        //std::cout << data_rov << '\n';
 
         // outputFile <<t<<","<< data_rov << '\n';
         // outputFile.flush(); // Ensure all buffered data is written to file
