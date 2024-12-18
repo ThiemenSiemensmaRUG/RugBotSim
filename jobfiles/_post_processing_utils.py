@@ -3,7 +3,21 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
 from scipy.ndimage import gaussian_filter
+from scipy.ndimage import convolve
 
+def apply_box_filter_2d(data, kernel_size=3):
+    """
+    Apply a 2D box low-pass filter to the data.
+
+    :param data: The 2D data to be filtered (e.g., the mode or mode_curvature).
+    :param kernel_size: The size of the square kernel (3x3, 5x5, etc.).
+    :return: The smoothed data after applying the box filter.
+    """
+    # Create a box kernel (uniform averaging filter)
+    kernel = np.ones((kernel_size, kernel_size)) / (kernel_size ** 2)
+    
+    # Apply convolution with the box kernel
+    return convolve(data, kernel)
 
 def plot_surface(X,Y,Z):
 
@@ -92,6 +106,7 @@ class WebotsLogProcessor:
 
     def compute_mode_shape(self, accuracy = 100):
         # Create a grid for x, y values
+        self.df = self.df.groupby(['x', 'y'], as_index=False)['z'].mean()
         points = points = self.df[['x', 'y']].values  # Array of (x, y) points
         values = self.df['z'].values  # Corresponding displacement magnitudes
         # Create a regular grid
@@ -103,9 +118,11 @@ class WebotsLogProcessor:
     
         # Interpolate the displacement magnitude onto the grid
         self.mode = griddata(points, values, (self.X, self.Y), method='linear')
+        #self.mode = gaussian_filter(self.mode, sigma=2)
+        self.mode = apply_box_filter_2d(self.mode)
         Z_xx = np.gradient(np.gradient(self.mode, axis=1), axis=1)
         Z_yy = np.gradient(np.gradient(self.mode, axis=0), axis=0)
         self.mode_curvature = Z_xx + Z_yy
-        self.mode_curvature = gaussian_filter(self.mode_curvature, sigma=1)
+        
         return self.mode , self.mode_curvature
   

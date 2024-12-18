@@ -30,7 +30,7 @@ Radio_Rover::Radio_Rover(Supervisor *robot, int timeStep) {
     emitter = robot->getEmitter("emitter");
     receiver = robot->getReceiver("receiver");
     receiver->enable(timeStep);
-}
+}   
 
 /**
  * @brief Sends a message to the rover.
