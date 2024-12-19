@@ -126,3 +126,54 @@ DEF r1 RovableV2 {
         }
     ]
     }
+DEF r2 RovableV2 {
+    translation 0.6364336754504867 0.0125 0.7598510160219618
+    rotation 0.918826254969443 -0.2790683726068107 -0.2790683726068107 4.627831690769712
+    name "r2"
+    controller "inspection_controller"
+    controllerArgs [
+        "1"
+    ]
+    supervisor TRUE
+    customData ""
+    extensionSlot [
+        Receiver {
+        }
+        Emitter {
+        }
+    ]
+    }
+DEF r3 RovableV2 {
+    translation 0.07551272886980567 0.0125 0.8021885935278827
+    rotation 0.14990231249639274 -0.6991170491084572 -0.6991170491084572 3.439181470269406
+    name "r3"
+    controller "inspection_controller"
+    controllerArgs [
+        "1"
+    ]
+    supervisor TRUE
+    customData ""
+    extensionSlot [
+        Receiver {
+        }
+        Emitter {
+        }
+    ]
+    }
+DEF r4 RovableV2 {
+    translation 0.7360520742121478 0.0125 0.05189544801599963
+    rotation 0.12161430757806287 -0.7018582336171274 -0.7018582336171274 3.383632678330523
+    name "r4"
+    controller "inspection_controller"
+    controllerArgs [
+        "1"
+    ]
+    supervisor TRUE
+    customData ""
+    extensionSlot [
+        Receiver {
+        }
+        Emitter {
+        }
+    ]
+    }

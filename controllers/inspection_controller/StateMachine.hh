@@ -20,7 +20,7 @@ typedef std::vector<double> Array;
 
 
 
-#define ACCURACY 1
+#define ACCURACY 100
 
 // Structure to hold x, y, and sample value
 struct SampleData {
@@ -54,12 +54,14 @@ class StateMachine {
           robot(TIME_STEP),
           radio(robot.d_robot, TIME_STEP) {};
     void run();
+    void update(SampleData newSample);
     void set_custom_data();
     void print_custom_data();
     void pause(int *pauseCount);
     void SetSimulationVariables();
         // Send a sample to other robots
     void SendSample(const SampleData &data);
+    void updateCoverage(int x, int y);
 
     // Receive a sample from other robots
     void RecvSample();
@@ -74,6 +76,12 @@ class StateMachine {
     Radio_Rover radio;
     std::vector<SampleData> all_samples;
     std::vector<int> pos;
+    // Dynamically adjust the grid size based on the ACCURACY
+    int gridSize = (int) (1000 / ACCURACY);
+    double coverage = 0.0;
+    int filledSquares = 0;
+    std::vector<std::vector<bool>> grid = std::vector<std::vector<bool>>(gridSize, std::vector<bool>(gridSize, false));
+
     
 };
 
@@ -82,7 +90,7 @@ class StateMachine {
  */
 void StateMachine::run() {
     robot.setCustomData("");
-    // Assuming settings.values contains values that need to be converted to int
+
     settings.readSettings();
     SetSimulationVariables();
     while (robot.d_robot->step(TIME_STEP) != -1) {
@@ -96,7 +104,6 @@ void StateMachine::run() {
                 robot.RandomWalk();
                 RecvSample();
                 if(robot.state == 0){intersample_time+=TIME_STEP;}
-                //if(robot.state == 3){intersample_time = 0;}
                 if(robot.state == 6){intersample_time = 0;}
                 if(robot.state == 7){intersample_time = 0;}
     
@@ -107,17 +114,17 @@ void StateMachine::run() {
 
                 intersample_time = 0;
                 pauseCount = 500;
-                pos = roundToNearestX(robot.getPos(), ACCURACY);
+                pos = roundToNearestX(robot.getPos(), 1);
                 sampler.getSample(pos[0], pos[1]);                
  
                 // Directly store the gathered sample
                 SampleData newSample(pos[0], pos[1], sampler.lastSample);
-                all_samples.push_back(newSample);
+                update(newSample);
 
                 // Send the sample to other robots
                 SendSample(newSample);
                 set_custom_data();
-                //print_custom_data();
+                print_custom_data();
                 
                 states = STATE_RW;
                 break;
@@ -152,14 +159,19 @@ void StateMachine::SetSimulationVariables(){
 
 }
 
-
+void StateMachine::update(SampleData newSample){
+    all_samples.push_back(newSample);
+    updateCoverage(newSample.x, newSample.y);
+}
 
 void StateMachine::set_custom_data(){
     robot.setCustomData(std::to_string((double)robot.d_robot->getTime()) +
                     "," + std::string(robot.d_robot->getName().substr(1)) +
                     "," + std::to_string(robot.getPos()[0]) +
                     "," + std::to_string(robot.getPos()[1]) +
-                    "," + std::to_string(sampler.lastSample) 
+                    "," + std::to_string(sampler.lastSample) +
+                    "," + std::to_string(all_samples.size()) +
+                    "," + std::to_string(coverage)
                     );
 }
 
@@ -167,6 +179,25 @@ void StateMachine::print_custom_data(){
     std::cout << robot.getCustomData() << '\n';
 }
 
+void StateMachine::updateCoverage(int x, int y) {
+    // Calculate the scaling factor to map coordinates to the grid
+
+
+    // Map the coordinates to the grid using accuracy
+    int grid_x = static_cast<int>(x / ACCURACY);
+    int grid_y = static_cast<int>(y / ACCURACY);
+ 
+    if (!grid[grid_x][grid_y]) {
+        grid[grid_x][grid_y] = true;
+        ++filledSquares;
+    }
+    
+
+    // Calculate the total number of grid cells
+    int totalCells = grid[0].size() * grid[0].size();  // 1000x1000 grid
+    // Calculate and return the filled percentage
+    coverage =  static_cast<double>(filledSquares) / totalCells * 100.0 ;
+}
 
 void StateMachine::pause(int *pause_Time) {
     // Stop the robot's movement
@@ -210,11 +241,8 @@ void StateMachine::RecvSample() {
             SampleData receivedSample(x, y, sample_value);
 
             // Optionally, store the received sample
-            all_samples.push_back(receivedSample);
+            update(receivedSample);
 
-            // Print out the received sample for debugging
-            std::cout << "Received Sample: x=" << x << ", y=" << y 
-                      << ", value=" << sample_value << std::endl;
         }
     }
 }
