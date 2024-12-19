@@ -194,9 +194,9 @@ void StateMachine::updateCoverage(int x, int y) {
     
 
     // Calculate the total number of grid cells
-    int totalCells = grid[0].size() * grid[0].size();  // 1000x1000 grid
+    int totalCells = grid[0].size() * grid[0].size();  
     // Calculate and return the filled percentage
-    coverage =  static_cast<double>(filledSquares) / totalCells * 100.0 ;
+    coverage =  static_cast<double>((double)(filledSquares) / (double) totalCells * 100.0 );
 }
 
 void StateMachine::pause(int *pause_Time) {
