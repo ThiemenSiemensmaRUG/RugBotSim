@@ -39,6 +39,14 @@ Radio_Rover::Radio_Rover(Supervisor *robot, int timeStep) {
  * @param size The size of the data.
  */
 void Radio_Rover::sendMessage(const int *data, int size) {
+    // Print the entire array for debugging
+    std::cout << "Sending data: ";
+    for (int i = 0; i < ((size) / sizeof(int)); ++i) {
+        std::cout << data[i] << " ";  // Print each integer in the array
+    }
+    std::cout << std::endl;
+
+    // Send the data via the emitter
     emitter->send(data, size);
 }
 
@@ -47,13 +55,24 @@ void Radio_Rover::sendMessage(const int *data, int size) {
  *
  * @return std::vector<int> The received messages.
  */
+
+
 std::vector<int> Radio_Rover::getMessages() {
     std::vector<int> messages;
 
+    // Iterate through all received packets
     while (receiver->getQueueLength() > 0) {
-        int temp = *(const int *)receiver->getData();
-        messages.push_back(temp);
+        // Get a pointer to the incoming data (interpreted as an array of integers)
+        const int* data = static_cast<const int*>(receiver->getData());
+        int dataSize = receiver->getDataSize() ;
+        int numIntegers = dataSize / sizeof(int);  // Assuming sizeof(int) == 4 bytes
 
+        // Assuming each packet consists of 3 integers (x, y, sample_value)
+        for (int i = 0; i < numIntegers; ++i) {
+            messages.push_back(data[i]); // Add each integer to the messages vector
+        }
+
+        // Move to the next packet in the receiver's queue
         receiver->nextPacket();
     }
 

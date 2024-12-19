@@ -5,7 +5,7 @@ from scipy.interpolate import griddata
 from scipy.ndimage import gaussian_filter
 from scipy.ndimage import convolve
 
-def apply_box_filter_2d(data, kernel_size=3):
+def apply_box_filter_2d(data, kernel_size=7):
     """
     Apply a 2D box low-pass filter to the data.
 
@@ -95,6 +95,8 @@ class WebotsLogProcessor:
         
         # Drop NaN values
         self.df = self.df.dropna()
+        self.df = self.df[self.df['z'] != 0.0]
+    
 
     def plot_density(self, bins = 10):
         plt.figure(figsize=(8, 6))
@@ -106,7 +108,7 @@ class WebotsLogProcessor:
 
     def compute_mode_shape(self, accuracy = 100):
         # Create a grid for x, y values
-        self.df = self.df.groupby(['x', 'y'], as_index=False)['z'].mean()
+
         points = points = self.df[['x', 'y']].values  # Array of (x, y) points
         values = self.df['z'].values  # Corresponding displacement magnitudes
         # Create a regular grid
@@ -115,14 +117,16 @@ class WebotsLogProcessor:
         x_grid = np.linspace(x_min, x_max, accuracy)
         y_grid = np.linspace(y_min, y_max, accuracy)
         self.X, self.Y = np.meshgrid(x_grid, y_grid)
-    
+       
         # Interpolate the displacement magnitude onto the grid
-        self.mode = griddata(points, values, (self.X, self.Y), method='linear')
+        self.mode = griddata(points, values, (self.X, self.Y), method='linear',fill_value=0)
+  
         #self.mode = gaussian_filter(self.mode, sigma=2)
-        self.mode = apply_box_filter_2d(self.mode)
+        self.mode = apply_box_filter_2d(self.mode, 10)
         Z_xx = np.gradient(np.gradient(self.mode, axis=1), axis=1)
         Z_yy = np.gradient(np.gradient(self.mode, axis=0), axis=0)
         self.mode_curvature = Z_xx + Z_yy
+        self.mode_curvature = apply_box_filter_2d(self.mode_curvature, 10)
         
         return self.mode , self.mode_curvature
   

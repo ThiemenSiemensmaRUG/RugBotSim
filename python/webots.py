@@ -98,7 +98,7 @@ class WebotsEvaluation():
 
 
 for _, instance in enumerate(range(1,3)):
-    eval = WebotsEvaluation(n_robots=10, instance=instance)
+    eval = WebotsEvaluation(n_robots=2, instance=instance)
 
     c_settings = {"isDamaged":_,"modeNumber":1,"time between samples[ms]":250}
     s_settings = {"temp":1.0}

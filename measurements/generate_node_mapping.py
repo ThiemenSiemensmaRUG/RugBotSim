@@ -11,6 +11,8 @@ def return_unique_node_positions_and_labels(df):
 
     # Select only the 'x', 'y', and 'label_num' columns
     df_unique = df_unique[['x', 'y', '# label_num']]
+    df_unique['x'] = df_unique['x'] + 500
+    df_unique['y'] = df_unique['y'] + 500
         # Convert all columns to integers, ensuring they are numeric first
     df_unique = df_unique.apply(pd.to_numeric, errors='coerce')  # Convert all columns to numeric, invalid parsing will be set as NaN
     df_unique = df_unique.fillna(0).astype(int)  # Replace NaNs with 0 and convert all to integers

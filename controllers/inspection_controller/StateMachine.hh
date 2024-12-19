@@ -18,7 +18,19 @@ typedef std::complex<double> Complex;
 typedef std::vector<Complex> CArray;
 typedef std::vector<double> Array;
 
+
+
 #define ACCURACY 1
+
+// Structure to hold x, y, and sample value
+struct SampleData {
+    int x;
+    int y;
+    double sample_value;
+
+    SampleData(int x, int y, double sample_value)
+        : x(x), y(y), sample_value(sample_value) {}
+};
 
 class StateMachine {
    public:
@@ -46,6 +58,11 @@ class StateMachine {
     void print_custom_data();
     void pause(int *pauseCount);
     void SetSimulationVariables();
+        // Send a sample to other robots
+    void SendSample(const SampleData &data);
+
+    // Receive a sample from other robots
+    void RecvSample();
    private:
 
   
@@ -53,13 +70,11 @@ class StateMachine {
     double sample_length = 1.0;  // Sample length in seconds
     ControllerSettings settings;
     RugRobot robot;
-    Radio_Rover radio;
-    std::vector<int> pos;
-    std::vector<double> numbers;
-
-
-    std::vector<std::vector<double>> samples;
     Sampling sampler;
+    Radio_Rover radio;
+    std::vector<SampleData> all_samples;
+    std::vector<int> pos;
+    
 };
 
 /**
@@ -79,6 +94,7 @@ void StateMachine::run() {
                     break;
                 }
                 robot.RandomWalk();
+                RecvSample();
                 if(robot.state == 0){intersample_time+=TIME_STEP;}
                 //if(robot.state == 3){intersample_time = 0;}
                 if(robot.state == 6){intersample_time = 0;}
@@ -92,10 +108,17 @@ void StateMachine::run() {
                 intersample_time = 0;
                 pauseCount = 500;
                 pos = roundToNearestX(robot.getPos(), ACCURACY);
-                sampler.getSample(pos[0] - 500, pos[1] - 500);                
-                set_custom_data();
-                print_custom_data();
+                sampler.getSample(pos[0], pos[1]);                
+ 
+                // Directly store the gathered sample
+                SampleData newSample(pos[0], pos[1], sampler.lastSample);
+                all_samples.push_back(newSample);
 
+                // Send the sample to other robots
+                SendSample(newSample);
+                set_custom_data();
+                //print_custom_data();
+                
                 states = STATE_RW;
                 break;
             }
@@ -124,10 +147,12 @@ void StateMachine::run() {
 }}}
 
 void StateMachine::SetSimulationVariables(){
-    sampler.initializer(static_cast<int>(settings.values[0]), static_cast<int>(settings.values[1]));
+    sampler.initializer(static_cast<int>(settings.values[0]), static_cast<int>(settings.values[1]), 1);
     tau = static_cast<int>(settings.values[2]);
 
 }
+
+
 
 void StateMachine::set_custom_data(){
     robot.setCustomData(std::to_string((double)robot.d_robot->getTime()) +
@@ -155,6 +180,43 @@ void StateMachine::pause(int *pause_Time) {
     
     // Decrease pause time based on the time step
     *pause_Time = *pause_Time - 1 * TIME_STEP;
+}
+
+// Sending sample data to other robots
+void StateMachine::SendSample(const SampleData &data) {
+    // Send x, y, and sample_value as a list of integers
+    int sample[3];
+    sample[0] = data.x;                          // x coordinate
+    sample[1] = data.y;                          // y coordinate
+    sample[2] = static_cast<int>(data.sample_value * 1000000);  // sample value scaled (multiply by 1000000 for precision)
+    radio.sendMessage(sample, sizeof(sample)); // Send 3 integers (x, y, scaled sample_value)
+
+}
+
+// Receiving sample data from other robots
+void StateMachine::RecvSample() {
+    // Get the messages from the radio receiver
+    std::vector<int> messages = radio.getMessages();
+
+    // Process each received message in groups of 3 (x, y, sample_value)
+    for (size_t i = 0; i < messages.size(); i += 3) {
+        // Ensure there are at least 3 values to process
+        if (i + 2 < messages.size()) {
+            int x = messages[i];
+            int y = messages[i + 1];
+            double sample_value = (double) (messages[i + 2] / 1000000.0 ); // Convert back to original sample value
+
+            // Create a SampleData object from received values
+            SampleData receivedSample(x, y, sample_value);
+
+            // Optionally, store the received sample
+            all_samples.push_back(receivedSample);
+
+            // Print out the received sample for debugging
+            std::cout << "Received Sample: x=" << x << ", y=" << y 
+                      << ", value=" << sample_value << std::endl;
+        }
+    }
 }
 
 #endif  // INCLUDED_STATEMACHINE_HH_
