@@ -9,9 +9,9 @@
 #include <vector>
 
 #include "RugBot.hh"
-#include "controller_settings.hh"
+#include "utils/controller_settings.hh"
 #include "utils/Filtering.hh"
-#include "radio.hh"
+#include "utils/radio.hh"
 #include "utils/Sampling.hh"
 
 typedef std::complex<double> Complex;
@@ -96,7 +96,6 @@ void StateMachine::run() {
     while (robot.d_robot->step(TIME_STEP) != -1) {
         switch (states) {
             case STATE_RW: {
-                
                 if (((intersample_time - tau) > 0) ) {
                     pause(&pauseCount);
                     break;
@@ -180,9 +179,6 @@ void StateMachine::print_custom_data(){
 }
 
 void StateMachine::updateCoverage(int x, int y) {
-    // Calculate the scaling factor to map coordinates to the grid
-
-
     // Map the coordinates to the grid using accuracy
     int grid_x = static_cast<int>(x / ACCURACY);
     int grid_y = static_cast<int>(y / ACCURACY);
